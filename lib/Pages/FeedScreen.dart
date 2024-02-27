@@ -376,21 +376,24 @@ class _FeedScreenState extends State<FeedScreen> {
                             },
                             child: CircleAvatar(
                               radius: 25,
-                              child: ClipOval(
-                                child: myProfile.containsKey('profile')
-                                    ? Image.network(
-                                  myProfile['profile'],
+                              child:
+                              ClipOval(
+                                child:
+                                Image.network(
+                                  myProfile['profile'] ?? '',
                                   fit: BoxFit.cover,
                                   width: 90.0, // adjust width as needed
-                                  height:
-                                  90.0, // adjust height as needed
-                                )
-                                    : Icon(
-                                  Icons.person,
-                                  size: 50,
-                                  color: Colors.grey[400],
+                                  height: 90.0,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Icon(
+                                      Icons.person,
+                                      size: 50,
+                                      color: Colors.grey[400],
+                                    );
+                                  },
                                 ),
                               ),
+
                             ),
                           ),
                           Row(
