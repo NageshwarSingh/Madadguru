@@ -23,7 +23,6 @@ bool isLoading=false;
   Map<String, dynamic> Data = {};
 
     List<dynamic> Data2 = [];
-
     Future<void> sendSelectedAPI(String value) async {
       setState(() {
         isLoading = true;
@@ -41,29 +40,32 @@ bool isLoading=false;
           body: {
             "i_want": iwant,
           },
-        );
+          );
         print(" response${response}");
         if (response.statusCode == 200) {
           print(response.body);
           Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => ProfilePreference(
+                  MaterialPageRoute(
+                  builder: (context) => ProfilePreference(
                   device: widget.device,
                 ),
               ),
                   (route) => false);
           print('i_want selection sent to API successfully.');
-        } else {
+          } else {
           print('Failed to send i_want selection to API. Status code: ${response.statusCode}');
-        }}catch (error) {
+           }
+          }
+        catch (error) {
         print('Error sending i_want selection to API: $error');
-      }finally {
-        setState(() {
+        }
+         finally {
+          setState(() {
           isLoading = false;
         });
       }
     }
-  }
+    }
 
   @override
   void initState() {

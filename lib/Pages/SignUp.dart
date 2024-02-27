@@ -56,15 +56,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool isLoading = false;
   var gender = ["Male", "Female", "Other"];
   Map<String, dynamic> data = {};
-
   Future<void> ApiProfile() async {
     setState(() {
       isLoading = true;
     });
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usertoken = prefs.getString('token');
+
     // if (authToken != null && authToken.isNotEmpty) {
     //   final Uri uri = Uri.parse("https://madadguru.webkype.net/api/updateProfile/${widget.userid}?_method=PATCH");
+
     final Uri uri =
         Uri.parse("https://madadguru.webkype.net/api/updateProfile");
     var request = http.MultipartRequest('Post', uri);
@@ -72,20 +74,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
       "Accept": "multipart/form-data",
       "Authorization": 'Bearer $usertoken',
     };
-    request.headers.addAll(headers);
+       request.headers.addAll(headers);
     if (imageFile != null) {
       request.files
           .add(await http.MultipartFile.fromPath('profile', imageFile!.path));
-    }
+          }
+
     request.fields['userotp'] = widget.userotp;
     request.fields['mobile'] = widget.mobile;
     request.fields['about'] = _aboutController.text;
     request.fields['gender'] = _genderController.text;
     request.fields['name'] = _nameController.text;
-
     request.fields['dob'] = _dobController.text;
     request.fields['email'] = _emailController.text;
-
     request.fields['profession'] = _professionController.text;
     request.fields['language'] = "";
     request.fields['i_want'] = "";
@@ -115,19 +116,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
           data = responseData;
         });
         print(responseData);
-
         // responseData.forEach((key, value) {
         //   print('$key: $value');
         // });
-
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => LanguageScreen(
+             Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => LanguageScreen(
                 device: widget.device,
               ),
             ),
             (route) => false);
-      } else {
+           } else {
         print('HTTP request failed with status code: ${response.statusCode}');
       }
     } catch (error) {
@@ -135,13 +134,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } finally {
       setState(() {
         isLoading = false;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+        });
+       }}
+       @override
+       Widget build(BuildContext context) {
+      return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(children: [
         const Background(),
@@ -160,7 +157,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           SizedBox(
                             height: 20,
                           ),
-                          Container(
+                             Container(
                             alignment: Alignment.center,
                             width: double.infinity,
                             child: GestureDetector(
@@ -261,9 +258,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         );
                                       });
                                     });
-                              },
-                              child: Stack(clipBehavior: Clip.none, children: [
-                                (imageFile == null)
+                                          },
+                                    child: Stack(clipBehavior: Clip.none, children: [
+                                   (imageFile == null)
                                     ? CircleAvatar(
                                         radius: 45,
                                         child: ClipOval(
@@ -675,20 +672,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ]),
     );
    }
-  // _getFromCamera() async {
-  //   XFile? pickedFile = await ImagePicker().pickImage(
-  //     source: ImageSource.camera,
-  //     imageQuality: 50,
-  //   );
-  //   if (pickedFile != null) {
-  //     File? img = File(pickedFile.path);
-  //     setState(() {
-  //       imageFile = img;
-  //     });
-  //   }
-  // }
-  //
-
   _getFromGallery() async {
     XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
@@ -715,7 +698,3 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 }
-
-// multipart ke through
-//documents Send
-// image path

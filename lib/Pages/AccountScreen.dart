@@ -43,22 +43,21 @@ class _AccountScreenState extends State<AccountScreen> {
   String selectedGender = '';
   String need_help_in = '';
   bool isfieldsIn = false;
-  List<dynamic> items = [
-    'hjfjg',
-    'bdbds',
-    'vdvsb',
-    'sndkj',
-    'jhsdh',
-  ];
 
+  // List<dynamic> items = [
+  //   'hjfjg',
+  //   'bdbds',
+  //   'vdvsb',
+  //   'sndkj',
+  //   'jhsdh',
+  // ];
 
   @override
   void initState() {
     super.initState();
     switchStates = List<bool>.filled(Data2.length, false);
     fetchMyProfile();
-  }
-
+    }
   Map<String, dynamic> Mydata = {};
   Future<void> fetchMyProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -72,7 +71,7 @@ class _AccountScreenState extends State<AccountScreen> {
             'Authorization': 'Bearer $usertoken',
           },
           body: {},
-        );
+          );
         if (response.statusCode == 200) {
           var responseData = json.decode(response.body);
           print("object $responseData");
@@ -87,7 +86,6 @@ class _AccountScreenState extends State<AccountScreen> {
               phoneController.text = Mydata['mobile'];
               selectedGender = Mydata['gender'];
               dobController.text = Mydata['dob'];
-              // profile
               _aboutController.text = Mydata['about'];
               fetchDatagetWant(Mydata['i_want']);
               // switchStates = List<bool>.filled(DepartmentList.length, false);
@@ -116,10 +114,9 @@ class _AccountScreenState extends State<AccountScreen> {
         print('Error fetching data: $error');
       }
     }
-  }
+    }
 
-  // Map<String, dynamic> data = {};
-  List<bool> switchStates = [];
+    List<bool> switchStates = [];
   Map<String, dynamic> Data = {};
   List<dynamic> Data2 = [];
   String iwant = "";
@@ -161,27 +158,26 @@ class _AccountScreenState extends State<AccountScreen> {
           //       ),
           //     ),
           //         (route) => false);
-          print('Data fetched successfully');
-        } else {
-          print('Failed to fetch Data. Status code: ${response.statusCode}');
-        }
-      } catch (error) {
-        print('Error fetching data: $error');
-      }
-    }
-  }
 
-  void updateIWant() {
-    if (Mydata.containsKey('i_want')) {
-      setState(() {
-        iwant = Mydata['i_want'];
+          print('Data fetched successfully');
+           } else {
+          print('Failed to fetch Data. Status code: ${response.statusCode}');
+          }
+           } catch (error) {
+            print('Error fetching data: $error');
+        }
+         }
+       }
+     void updateIWant() {
+      if (Mydata.containsKey('i_want')) {
+        setState(() {
+           iwant = Mydata['i_want'];
       });
       print("i want's value: $iwant");
-    }
-  }
-  void updateSwitchStates() {
-    // Update switchStates based on i_want value
-    if (Mydata.containsKey('i_want')) {
+      }
+     }
+     void updateSwitchStates() {
+      if (Mydata.containsKey('i_want')) {
       print('Updating switchStates based on i_want');
       setState(() {
         switchStates = List<bool>.filled(Data2.length, false);
@@ -192,11 +188,10 @@ class _AccountScreenState extends State<AccountScreen> {
       });
     } else {
       print('i_want data not found');
-    }
-    // Update department based on i_need_help value
-    if (Mydata.containsKey('i_need_help')) {
-      setState(() {
-        department = DepartmentList.where(
+      }
+       if (Mydata.containsKey('i_need_help')) {
+         setState(() {
+            department = DepartmentList.where(
                 (item) => Mydata['i_need_help'].contains(item['id'].toString()))
             .toList();
       });
@@ -213,7 +208,8 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(children: <Widget>[
+        child: Column(
+            children: <Widget>[
           Stack(children: [
             Container(
               width: MediaQuery.of(context).size.width,

@@ -16,14 +16,11 @@ class MyProfileDetailScreen extends StatefulWidget {
   @override
   State<MyProfileDetailScreen> createState() => _MyProfileDetailScreenState();
 }
-
 class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
   int segmentedControlValue = 0;
   Map JobDetail = {};
   Map<String, dynamic> data = {};
-
   List<dynamic> department = [];
-
   List<bool> switchStates = [];
   String iwant = "";
   String needhelpin = "";
@@ -36,9 +33,7 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
     switchStates = List<bool>.filled(Data2.length, false);
     fetchDataMyProfile();
         }
-
         // ==============      *************    MyProfile    *************      ================
-
     Future<void> fetchDataMyProfile() async {
     setState(() {
       isLoading = true;
@@ -76,11 +71,11 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
                 DepartmentList.forEach((departmentItem) {
                   if (departmentItem['id'].toString() == departmentId) {
                     departmentItem['isSelected'] = true;
-                  }
-                   });
+                      }
+                    });
                   });
-              await fetchDataNeedHelp(data['need_help_in']);
-              await fetchDatagetWant(data['i_want']);
+                await fetchDataNeedHelp(data['need_help_in']);
+                await fetchDatagetWant(data['i_want']);
               updateSwitchStates();
               isLoading = false;
             });
@@ -194,6 +189,7 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
   bool isLoading = false;
   // ==============         *******   Need Help Api   ******          ============
   Future<void> fetchDataNeedHelp(data) async {
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usertoken = prefs.getString('token');
     if (usertoken != null) {
