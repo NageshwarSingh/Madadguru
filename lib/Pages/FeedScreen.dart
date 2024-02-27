@@ -7,7 +7,6 @@ import 'package:madadguru/Pages/NewPostScreen.dart';
 import 'package:madadguru/Pages/publicPostProfile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Allwidgets/ContactsScreen.dart';
-
 import 'FilterScreen.dart';
 import 'MyProfileDetailScreen.dart';
 import 'NotificationScreen.dart';
@@ -558,22 +557,39 @@ class _FeedScreenState extends State<FeedScreen> {
                                       child: CircleAvatar(
                                         radius: 25,
                                         child: ClipOval(
-                                          child: post.containsKey(
-                                                  'add_by_user_image')
-                                              ? Image.network(
-                                                  post['add_by_user_image'],
-                                                  fit: BoxFit.cover,
-                                                  width:
-                                                      90.0, // adjust width as needed
-                                                  height:
-                                                      90.0, // adjust height as needed
-                                                )
-                                              : Icon(
-                                                  Icons.person,
-                                                  size: 50,
-                                                  color: Colors.grey[400],
-                                                ),
+                                          child:
+                                          Image.network(
+                                            post['add_by_user_image'] ?? '',
+                                            fit: BoxFit.cover,
+                                            width: 90.0, // adjust width as needed
+                                            height: 90.0,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return Icon(
+                                                Icons.person,
+                                                size: 50,
+                                                color: Colors.grey[400],
+                                              );
+                                            },
+                                          ),
+                                          //     : Icon(
+                                          //   Icons.person,
+                                          //   size: 50,
+                                          //   color: Colors.grey[400],
+                                          // ),
+                                          // post['profile'],
+                                          // fit: BoxFit.cover,
+                                          // width:
+                                          // 90.0, // adjust width as needed
+                                          // height:
+                                          // 90.0, // adjust height as needed
+                                          // )
+                                          //     : Icon(
+                                          //   Icons.person,
+                                          //   size: 50,
+                                          //   color: Colors.grey[400],
+                                          // ),
                                         ),
+
                                       ),
                                     ),
                                   ),

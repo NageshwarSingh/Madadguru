@@ -158,14 +158,13 @@ class _AccountScreenState extends State<AccountScreen> {
           //       ),
           //     ),
           //         (route) => false);
-
           print('Data fetched successfully');
            } else {
           print('Failed to fetch Data. Status code: ${response.statusCode}');
           }
            } catch (error) {
             print('Error fetching data: $error');
-        }
+           }
          }
        }
      void updateIWant() {
@@ -195,15 +194,14 @@ class _AccountScreenState extends State<AccountScreen> {
                 (item) => Mydata['i_need_help'].contains(item['id'].toString()))
             .toList();
       });
-    }
-  }
-  void onChangedSwitch(int index, bool value) {
+    }}
+
+    void onChangedSwitch(int index, bool value) {
     setState(() {
       switchStates[index] = value;
       updateIWant(); // Update i_want value
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -236,61 +234,48 @@ class _AccountScreenState extends State<AccountScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                            Padding(
+                          Padding(
                             padding: const EdgeInsets.only(left: 10, top: 20),
-                            child: CircleAvatar(
+                             child: CircleAvatar(
                               radius: 46,
-                              backgroundColor: Colors.black38,
+                               backgroundColor: Colors.black38,
                                 child: CircleAvatar(
-                                radius: 45,
-                                child: ClipOval(
-                                     child: Mydata.containsKey('profile')
-                                      ? Image.network(
-                                       Mydata['profile'],
-                                          fit: BoxFit.cover,
-                                          width: 90.0, // adjust width as needed
-                                          height:
-                                              90.0, // adjust height as needed
-                                        )
-                                      : Icon(
-                                          Icons.person,
-                                          size: 50,
-                                          color: Colors.grey[400],
-                                        ),
-                                      ),
-
-                                // ClipOval(
-                                //   child: Mydata != null && Mydata.containsKey('profile') && Mydata['profile'] != null
-                                //       ? Image.network(
-                                //     Mydata['profile'],
-                                //     fit: BoxFit.cover,
-                                //     width: 90.0,
-                                //     height: 90.0,
-                                //        )
-                                //       : Icon(
-                                //     Icons.person,
-                                //     size: 50,
-                                //     color: Colors.grey[400],
-                                //   ),
-                                // ),
-
+                                 radius: 45,
+                                   child:
+                                   ClipOval(
+                                     child:
+                                     Image.network(
+                                       Mydata['profile'] ?? '',
+                                       fit: BoxFit.cover,
+                                       width: 90.0, // adjust width as needed
+                                       height: 90.0,
+                                       errorBuilder: (context, error, stackTrace) {
+                                         return Icon(
+                                           Icons.person,
+                                           size: 50,
+                                           color: Colors.grey[400],
+                                         );
+                                       },
+                                     ),
+                                   ),
                               ),
                             ),
                           ),
                           SizedBox(
                             height: 10,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Text(
+                                ),
+                              Padding(
+                               padding: EdgeInsets.only(left: 10.0),
+                                 child: Text(
                                 Mydata.containsKey('name')
                                     ? Mydata['name']
                                     : 'Name not available',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 14)),
-                          ),
+                                    fontSize: 14),
+                                 ),
+                             ),
                           SizedBox(
                             height: 5,
                           ),
@@ -310,8 +295,8 @@ class _AccountScreenState extends State<AccountScreen> {
                           SizedBox(
                             height: 20,
                           ),
-                          InkWell(
-                            onTap: () {
+                            InkWell(
+                              onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) {

@@ -14,11 +14,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ProfilePreference extends StatefulWidget {
   final String device;
   const ProfilePreference({super.key, required this.device});
-
   @override
   State<ProfilePreference> createState() => _ProfilePreferenceState();
 }
-
 class _ProfilePreferenceState extends State<ProfilePreference> {
   bool isLoading = false;
   String needhelpin = "";
