@@ -348,6 +348,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 cursorColor: Color(0xffFF9228),
                                 controller: _mobilController,
                                 inputType: TextInputType.number,
+
                                 inputAction: TextInputAction.next,
                                 obscureText: false,
                                 labeltext: "Mobile Number",

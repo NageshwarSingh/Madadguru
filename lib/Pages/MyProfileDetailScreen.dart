@@ -59,7 +59,6 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
           print("object $responseData");
           if (responseData['success'] == true) {
             var userData = responseData['data'];
-
             // setState(() async {
             //   data = Map<String, dynamic>.from(userData);
             //   department = userData['need_help_in'].split(',').map((e) => int.parse(e)).toList();
@@ -285,15 +284,26 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
                       child: Column(
                         children: [
                           Text(
-                            data.containsKey('name')
+                            data.containsKey('name') && data['name'] != null
                                 ? data['name']
-                                : 'Name not available',
+                                : '',
                             style: GoogleFonts.roboto(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                               color: Colors.black,
                             ),
                           ),
+
+                          // Text(
+                          //   data.containsKey('name')
+                          //       ? data['name']
+                          //       : 'Name not available',
+                          //   style: GoogleFonts.roboto(
+                          //     fontSize: 14,
+                          //     fontWeight: FontWeight.w600,
+                          //     color: Colors.black,
+                          //   ),
+                          // ),
                           SizedBox(
                             height: 5,
                           ),
@@ -407,10 +417,10 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
                                         fit: BoxFit.cover,
                                         width: 90.0, // adjust width as needed
                                         height: 90.0, // adjust height as needed
-                                      )
+                                        )
                                     : Icon(
                                         Icons.person,
-                                        size: 50,
+                                        size: 20,
                                         color: Colors.grey[400],
                                       ),
                               ),

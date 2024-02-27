@@ -21,22 +21,19 @@ class MyApp extends StatelessWidget {
       home: SplashScreen(),
     );
   }
-}
-
-class SplashScreen extends StatefulWidget {
+  }
+  class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
   @override
   State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
+  }
+  class _SplashScreenState extends State<SplashScreen> {
   String device = "IOS";
   @override
   void initState() {
     super.initState();
     Timer(const Duration(milliseconds: 3000), () => checkLogin());
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 'assets/images/mimage.png',
                 height: 234,
                 width: 276,
-              ),
+                ),
               backgroundColor: Colors.transparent,
               duration: 3000,
               splashIconSize: 350,
@@ -72,32 +69,32 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
           ],
-        ));
-  }
-// }
-
-  checkLogin() async {
+        ),
+       );
+    }
+    checkLogin() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var userID = preferences.getString("userId");
     if (userID != null) {
       if (mounted) {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-                builder: (context) => BottomNavBar(
-                      device: device,
-                    ),
-                ),
+              builder: (context) => BottomNavBar(
+                device: device,
+              ),
+            ),
             (route) => false);
-             }
-             } else {
-             if (mounted) {
-           Navigator.of(context).pushAndRemoveUntil(
-             MaterialPageRoute(
+           }
+         } else {
+           if (mounted) {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
                 builder: (context) => IntroSliderScreen(
                       device: device,
-                    )),
+                    ),
+            ),
             (route) => false);
       }
     }
-  }
-}
+    }
+    }

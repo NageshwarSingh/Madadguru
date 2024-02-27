@@ -130,72 +130,65 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Colors.grey.shade200,
+    return Scaffold(
+      backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
           backgroundColor: Colors.grey.shade200,
-        title: Text('Gallery'),
+          title: Text('Gallery'),
           actions: [
-            PopupMenuButton<String>(color: Colors.white,
-      icon: Icon(Icons.more_vert_rounded),
-      onSelected: (value) {
-        // Implement functionality based on the selected option
-        switch (value) {
-          case 'Video editor':
-          // Implement video editor option
-            break;
-          case 'Collage':
-          // Implement collage option
-            break;
-          case 'Clip':
-          // Implement clip option
-            break;
-          case 'Free up space':
-          // Implement free up space option
-            break;
-          case 'Sort and view':
-          // Implement sort and view option
-            break;
-          case 'Create an album':
-          // Implement create an album option
-            break;
-          case 'Settings':
-          // Implement settings option
-            break;
-        }
-      },
-      itemBuilder: (BuildContext context) => [
-        PopupMenuItem<String>(
-          value: 'Video editor',
-          child: Text('Video editor'),
-        ),
-        PopupMenuItem<String>(
-          value: 'Collage',
-          child: Text('Collage'),
-        ),
-        PopupMenuItem<String>(
-          value: 'Clip',
-          child: Text('Clip'),
-        ),
-        PopupMenuItem<String>(
-          value: 'Free up space',
-          child: Text('Free up space'),
-        ),
-        PopupMenuItem<String>(
-          value: 'Sort and view',
-          child: Text('Sort and view'),
-        ),
-        PopupMenuItem<String>(
-          value: 'Create an album',
-          child: Text('Create an album'),
-        ),
-        PopupMenuItem<String>(
-          value: 'Settings',
-          child: Text('Settings'),
-        ),
-      ],
-    ),
-]
-    ),
+            PopupMenuButton<String>(
+              color: Colors.white,
+              icon: Icon(Icons.more_vert_rounded),
+              onSelected: (value) {
+                switch (value) {
+                  case 'Video editor':
+                    break;
+                  case 'Collage':
+                    break;
+                  case 'Clip':
+                    break;
+                  case 'Free up space':
+                    break;
+                  case 'Sort and view':
+                    break;
+                  case 'Create an album':
+                    break;
+                  case 'Settings':
+                    break;
+                }
+              },
+              itemBuilder: (BuildContext context) => [
+                PopupMenuItem<String>(
+                  value: 'Video editor',
+                  child: Text('Video editor'),
+                ),
+                PopupMenuItem<String>(
+                  value: 'Collage',
+                  child: Text('Collage'),
+                ),
+                PopupMenuItem<String>(
+                  value: 'Clip',
+                  child: Text('Clip'),
+                ),
+                PopupMenuItem<String>(
+                  value: 'Free up space',
+                  child: Text('Free up space'),
+                ),
+                PopupMenuItem<String>(
+                  value: 'Sort and view',
+                  child: Text('Sort and view'),
+                ),
+                PopupMenuItem<String>(
+                  value: 'Create an album',
+                  child: Text('Create an album'),
+                ),
+                PopupMenuItem<String>(
+                  value: 'Settings',
+                  child: Text('Settings'),
+                ),
+              ],
+            ),
+          ]),
       body: buildListView(),
     );
   }
@@ -239,12 +232,13 @@ class _GalleryScreenState extends State<GalleryScreen> {
             },
             child: Padding(
               padding: const EdgeInsets.only(top: 5, left: 5, right: 5),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.center,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Container(
-                      height: 152,
+                      height: 155,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         // color: Colors.grey.shade200,
@@ -253,10 +247,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
                             (post["icon"] != null)
                                 ? post["icon"]
                                 : 'Name not available',
-                          ), // Provide the correct key for the image URL
-                          fit: BoxFit
+                                ), // Provide the correct key for the image URL
+                            fit: BoxFit
                               .fill, // Adjust this based on your requirements
-                        ),
+                            ),
                         borderRadius: BorderRadius.circular(12),
                         gradient: LinearGradient(
                           colors: [
@@ -290,16 +284,15 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     ),
                   ),
                   SizedBox(height: 5),
-
-                  Row(mainAxisAlignment: MainAxisAlignment.center,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                         " ${(post["name"] != null) ? post["name"] : 'Name not available'}",
+                        " ${(post["name"] != null) ? post["name"] : 'Name not available'}",
                         style: GoogleFonts.roboto(
                           color: Colors.black,
                           fontSize: 13,
-                          fontWeight: FontWeight.bold
-                            ,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
@@ -327,7 +320,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
         });
   }
 }
-
 
 class Grid extends StatefulWidget {
   const Grid({Key? key}) : super(key: key);

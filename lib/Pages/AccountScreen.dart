@@ -240,15 +240,15 @@ class _AccountScreenState extends State<AccountScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Padding(
+                            Padding(
                             padding: const EdgeInsets.only(left: 10, top: 20),
                             child: CircleAvatar(
                               radius: 46,
                               backgroundColor: Colors.black38,
-                              child: CircleAvatar(
+                                child: CircleAvatar(
                                 radius: 45,
                                 child: ClipOval(
-                                  child: Mydata.containsKey('profile')
+                                     child: Mydata.containsKey('profile')
                                       ? Image.network(
                                        Mydata['profile'],
                                           fit: BoxFit.cover,
@@ -261,7 +261,23 @@ class _AccountScreenState extends State<AccountScreen> {
                                           size: 50,
                                           color: Colors.grey[400],
                                         ),
-                                ),
+                                      ),
+
+                                // ClipOval(
+                                //   child: Mydata != null && Mydata.containsKey('profile') && Mydata['profile'] != null
+                                //       ? Image.network(
+                                //     Mydata['profile'],
+                                //     fit: BoxFit.cover,
+                                //     width: 90.0,
+                                //     height: 90.0,
+                                //        )
+                                //       : Icon(
+                                //     Icons.person,
+                                //     size: 50,
+                                //     color: Colors.grey[400],
+                                //   ),
+                                // ),
+
                               ),
                             ),
                           ),

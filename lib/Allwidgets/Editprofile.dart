@@ -1187,6 +1187,7 @@
 //     }
 //   }
 // }
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
@@ -1239,8 +1240,24 @@ class _EditProfileState extends State<EditProfile> {
 
   var gender = ["Male", "Female", "Other"];
   Map<String, dynamic> data = {};
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   if (mounted) {
+  //     ApiProfile();
+  //     // new Timer.periodic(Duration(seconds: 60), (Timer t) => setState(() {}));
+  //   }
+  //   // ApiProfile();
+  // }
+
+  @override
+  void dispose() {
+    // Break references here
+    super.dispose();
+  }
 
   Future<void> ApiProfile() async {
+    if(!mounted)return;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usertoken = prefs.getString('token');
       final Uri uri =
@@ -1259,10 +1276,8 @@ class _EditProfileState extends State<EditProfile> {
     request.fields['about'] = _aboutController.text;
     request.fields['gender'] = _genderController.text;
     request.fields['name'] = _nameController.text;
-
     request.fields['dob'] = _dobController.text;
     request.fields['email'] = _emailController.text;
-
     request.fields['profession'] = _professionController.text;
     request.fields['language'] = "";
     request.fields['i_want'] = "";
@@ -1293,10 +1308,7 @@ class _EditProfileState extends State<EditProfile> {
         });
         print(responseData);
 
-        // responseData.forEach((key, value) {
-        //   print('$key: $value');
-        // });
-        Navigator.pop(context);
+        // Navigator.pop(context);
         // Navigator.of(context).pushAndRemoveUntil(
         //     MaterialPageRoute(
         //       builder: (context) => LanguageScreen(
@@ -1307,7 +1319,26 @@ class _EditProfileState extends State<EditProfile> {
       } else {
         print('HTTP request failed with status code: ${response.statusCode}');
       }
-    } catch (error) {
+    }
+    // try {
+    //   final streamedResponse = await request.send();
+    //   final response = await http.Response.fromStream(streamedResponse);
+    //   if (mounted) {
+    //     // Check if the widget is still mounted before updating the state
+    //     setState(() {
+    //       print(response.body);
+    //       if (response.statusCode == 200) {
+    //         var responseData = jsonDecode(response.body);
+    //         data = responseData;
+    //         print(responseData);
+    //         // Navigator.pop(context);
+    //       } else {
+    //         print('HTTP request failed with status code: ${response.statusCode}');
+    //       }
+    //     });
+    //   }
+    // }
+    catch (error) {
       print('Error making HTTP request: $error');
     }
   }
@@ -1331,7 +1362,7 @@ class _EditProfileState extends State<EditProfile> {
               children: [
                 SizedBox(
                   height: 20,
-                ),
+                   ),
                 Container(
                   alignment: Alignment.center,
                   width: double.infinity,
@@ -1498,12 +1529,9 @@ class _EditProfileState extends State<EditProfile> {
                     // labeltext: 'Enter your old password',
                   ),
                 ),
-
-
                 SizedBox(
                   height: 10,
                 ),
-
                 Text(
                   "Mobile",
                   style: TextStyle(
@@ -1848,8 +1876,16 @@ class _EditProfileState extends State<EditProfile> {
 
                 InkWell(
                   onTap: () {
-                    ApiProfile();
+                    if (mounted) {
+                      ApiProfile();
+                      Navigator.pop(context);
+                    }
                   },
+
+                  // onTap: () {
+                  //   ApiProfile();
+                  //   Navigator.pop(context);
+                  // },
                   child: Padding(
                     padding: const EdgeInsets.only(left: 50, right: 50.0),
                     child: Card(

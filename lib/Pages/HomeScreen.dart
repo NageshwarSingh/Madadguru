@@ -337,9 +337,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                               ),
-                            ),
-                          ),
-                          Container(
+                             ),
+                               ),
+                            Container(
                             height: 35,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
@@ -367,9 +367,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(
               height: 10,
-            ),
-            GestureDetector(
-              onTap: () {
+               ),
+              GestureDetector(
+                onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
@@ -768,7 +768,8 @@ class _HomeScreenState extends State<HomeScreen> {
           return AlertDialog(
             title: Text('Enter your Complains'),
             content: Container(
-              height: 200,
+              // height: 200,
+              height:220,
               child: Column(
                 children: [
                   TextField(

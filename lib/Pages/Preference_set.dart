@@ -52,7 +52,6 @@ bool isLoading=false;
                 ),
               ),
                   (route) => false);
-
           print('i_want selection sent to API successfully.');
         } else {
           print('Failed to send i_want selection to API. Status code: ${response.statusCode}');
@@ -96,6 +95,7 @@ bool isLoading=false;
             Data2 = Data['data'];
             switchStates = List.generate(Data2.length, (index) => false);
             print("data from api is $Data");
+            isLoading = false;
           });
           // if (jData['data'] != null) {
           //   initializeSwitches(jData['data']);
@@ -116,7 +116,8 @@ bool isLoading=false;
         }
       } catch (error) {
         print('Error fetching data: $error');
-      }finally {
+      }
+      finally {
         setState(() {
           isLoading = false;
         });

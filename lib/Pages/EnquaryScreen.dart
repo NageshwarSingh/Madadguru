@@ -81,18 +81,18 @@ class _EnquaryScreenState extends State<EnquaryScreen> {
               return GestureDetector(
                 onTap: () {},
                 child: Container(
-                    margin: const EdgeInsets.only(
-                      bottom: 15,
-                    ),
-                    decoration: BoxDecoration(
+                        margin: const EdgeInsets.only(
+                        bottom: 15,
+                        ),
+                        decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(0)),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
+                        child: Padding(
+                          padding:EdgeInsets.only(
                           right: 10, left: 10.0, top: 10, bottom: 10),
-                      child: Row(
+                          child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
+                          children:[
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -106,7 +106,7 @@ class _EnquaryScreenState extends State<EnquaryScreen> {
                                       //   ),
                                       // ),
                                       CircleAvatar(
-                                    radius: 35,
+                                    radius: 25,
                                     child: ClipOval(
                                       child: Image.asset(
                                         imagesDp[index],
@@ -116,22 +116,21 @@ class _EnquaryScreenState extends State<EnquaryScreen> {
                                     ),
                                   ),
                                   SizedBox(
-                                  width: 15,
+                                  width: 10,
                                   ),
                                   Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                         "Gajendra Singh ",
+                                          Text(
+                                          "Gajendra Singh ",
                                           style: GoogleFonts.roboto(
                                           color: Colors.black,
                                           fontSize: 12,
                                           fontWeight: FontWeight.bold),
                                           ),
-                                      SizedBox(
-                                      height: 3,
+                                         SizedBox(
+                                         height: 3,
                                          ),
-
                                          Text(
                                         "Lowyer",
                                          style: GoogleFonts.roboto(
@@ -142,16 +141,14 @@ class _EnquaryScreenState extends State<EnquaryScreen> {
                                         SizedBox(
                                         height: 3,
                                          ),
-
                                       Text(
                                       "Greater Noida",
                                       style: GoogleFonts.roboto(
                                           color: Colors.black,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w400),
-                                      ),
-
-                                     SizedBox(
+                                         ),
+                                       SizedBox(
                                       height: 2,
                                       ),
                                       Text(
