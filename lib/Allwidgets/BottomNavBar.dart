@@ -26,9 +26,7 @@ class _MySplashScreenState extends State<MySplashScreen> {
       splashTransition: SplashTransition.fadeTransition,
     );
   }
-
 }
-
 class WelcomePopupSplash extends StatelessWidget {
   late final String device;
   @override

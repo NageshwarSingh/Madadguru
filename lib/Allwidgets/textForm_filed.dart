@@ -197,7 +197,7 @@ class _TextFormFieldWidget2State extends State<TextFormFieldWidget2> {
               fontSize: 12, fontWeight: FontWeight.w400, color: Colors.black45),
         ),
         style: TextStyle(
-          color: Colors.black45,
+          color: Colors.black,
           fontWeight: FontWeight.w400,
           fontSize: 12,
         ),

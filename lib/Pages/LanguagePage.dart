@@ -15,8 +15,11 @@ class LanguageScreen extends StatefulWidget {
      class _LanguageScreenState extends State<LanguageScreen> {
      String value="";
 
-
+bool isLoading=false;
      Future<void> sendSelectedAPI(String value) async {
+       setState(() {
+         isLoading=true;
+       });
        SharedPreferences prefs = await SharedPreferences.getInstance();
        var usertoken = prefs.getString('token');
        if (usertoken != null){
@@ -34,13 +37,13 @@ class LanguageScreen extends StatefulWidget {
          print(" response${response}");
          if (response.statusCode == 200) {
            print(response.body);
-           Navigator.of(context).pushAndRemoveUntil(
-               MaterialPageRoute(
-                 builder: (context) => PreferenceSet(
-                   device: widget.device,
-                 ),
-               ),
-                   (route) => false);
+           // Navigator.of(context).pushAndRemoveUntil(
+           //     MaterialPageRoute(
+           //       builder: (context) => PreferenceSet(
+           //         device: widget.device,
+           //       ),
+           //     ),
+           //         (route) => false);
 
            print('Language selection sent to API successfully.');
          } else {
@@ -48,6 +51,7 @@ class LanguageScreen extends StatefulWidget {
          }}catch (error) {
          print('Error sending language selection to API: $error');
        }
+
        }
      }
 
@@ -283,18 +287,25 @@ class LanguageScreen extends StatefulWidget {
           bottom: 40,
           child: GestureDetector(
             onTap: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => PreferenceSet(
+                      device: widget.device,
+                    ),
+                  ),
+                      (route) => false);
                // Navigate to the second page
-               Navigator.push(
-                 context,
-                 MaterialPageRoute(
-                     builder: (context) =>
-                         // MapScreen
-                         PreferenceSet
-                      (
-                       device: widget.device,
-                     ),
-                 ),
-               );
+               // Navigator.push(
+               //   context,
+               //   MaterialPageRoute(
+               //       builder: (context) =>
+               //           // MapScreen
+               //           PreferenceSet
+               //        (
+               //         device: widget.device,
+               //       ),
+               //   ),
+               // );
              },
             child: const CircleAvatar(
               radius: 25,

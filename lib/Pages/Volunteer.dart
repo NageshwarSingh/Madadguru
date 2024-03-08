@@ -1,7 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:madadguru/Pages/publicPostProfile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'VolunteerProfileDetail.dart';
 import 'VolunteerUserProfile.dart';
@@ -18,19 +18,6 @@ class VolunteerScreen extends StatefulWidget {
 }
 
 class _VolunteerScreenState extends State<VolunteerScreen> {
-  List<String> imagesDp = [
-    'assets/images/dp1.png',
-    'assets/images/dp2.jpeg',
-    'assets/images/dp3.webp',
-    'assets/images/dp4.jpeg',
-    'assets/images/girl.png',
-    'assets/images/dp3.webp',
-    'assets/images/girl.png',
-    'assets/images/dp3.webp',
-    'assets/images/dp4.jpeg',
-    'assets/images/people.webp',
-  ];
-
   @override
   Widget build(BuildContext context) {
     // searchController
@@ -44,43 +31,44 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
   }
 
   AppBar buildAppBar() {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.grey.shade200,
-      title: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: Container(
-          height: 40,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            // color: const Color(0xffffffff),
-            border: Border.all(color: Colors.black38, width: 1.5),
-            borderRadius: const BorderRadius.all(Radius.circular(12)),
-          ),
-          child: TextField(
-              autofocus: false,
-              // controller: searchController,
-              keyboardType: TextInputType.text,
-              textInputAction: TextInputAction.search,
-              decoration: InputDecoration(
-                  suffixIcon: const Icon(
-                    Icons.search,
-                    color: Color(0xff7a7979),
-                    size: 25,
-                  ),
-                  contentPadding: EdgeInsets.only(left: 10, right: 10),
-                  // const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                  border: InputBorder.none,
-                  hintText: "Search",
-                  hintStyle: TextStyle(
-                    color: const Color(0xff7a7979),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  )),
-              onSubmitted: (_) {}),
-        ),
-      ),
-    );
+    return AppBar(title: Text('Madadguru'),backgroundColor: Colors.grey.shade200,);
+    //   AppBar(
+    //   automaticallyImplyLeading: false,
+    //   backgroundColor: Colors.grey.shade200,
+    //   title: Padding(
+    //     padding: const EdgeInsets.only(left: 20, right: 20),
+    //     child: Container(
+    //       height: 40,
+    //       alignment: Alignment.center,
+    //       decoration: BoxDecoration(
+    //         // color: const Color(0xffffffff),
+    //         border: Border.all(color: Colors.black38, width: 1.5),
+    //         borderRadius: const BorderRadius.all(Radius.circular(12)),
+    //       ),
+    //       child: TextField(
+    //           autofocus: false,
+    //           // controller: searchController,
+    //           keyboardType: TextInputType.text,
+    //           textInputAction: TextInputAction.search,
+    //           decoration: InputDecoration(
+    //               suffixIcon: const Icon(
+    //                 Icons.search,
+    //                 color: Color(0xff7a7979),
+    //                 size: 25,
+    //               ),
+    //               contentPadding: EdgeInsets.only(left: 10, right: 10),
+    //               // const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+    //               border: InputBorder.none,
+    //               hintText: "Search",
+    //               hintStyle: TextStyle(
+    //                 color: const Color(0xff7a7979),
+    //                 fontSize: 14,
+    //                 fontWeight: FontWeight.w500,
+    //               )),
+    //           onSubmitted: (_) {}),
+    //     ),
+    //   ),
+    // );
   }
 }
 
@@ -90,14 +78,12 @@ class Body extends StatefulWidget {
   @override
   State<Body> createState() => _BodyState();
 }
-
-class _BodyState extends State<Body> with TickerProviderStateMixin {
+  class _BodyState extends State<Body> with TickerProviderStateMixin {
   var value = 0;
   bool isdataLoading = false;
   late TabController _mainTabController;
   late TabController _tabController;
   Map<dynamic, dynamic> QuizList = {};
-
   @override
   void initState() {
     super.initState();
@@ -108,40 +94,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       vsync: this,
     );
   }
-
-  List<String> profession = [
-    'Artist',
-    'Teacher',
-    'Chef',
-    'Construction Worker',
-    'Doctor',
-    'Police',
-    'Artist',
-    'Teacher',
-    'Chef',
-    'Construction Worker',
-    'Doctor',
-    'Police',
-    'Doctor',
-    'Police',
-  ];
-  // List<String> names = [
-  //   'Jessamine',
-  //   'Juni',
-  //   'Kelilah',
-  //   'Kerensa',
-  //   'Layana',
-  //   'Jessamine',
-  //   'Juni',
-  //   'Kelilah',
-  //   'Kerensa',
-  //   'Layana',
-  //   'Juni',
-  //   'Kelilah',
-  //   'Kerensa',
-  //   'Layana',
-  // ];
-
   bool isLoading = false;
   Map jsonData = {};
 
@@ -192,7 +144,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     setState(() {
       isLoading = true;
     });
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usertoken = prefs.getString('token');
     if (usertoken != null) {
@@ -244,24 +195,24 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         // top: 10,
       ),
       child: Column(children: [
-        SizedBox(
-          height: 10,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              'Madadguru',
-              style: GoogleFonts.roboto(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 10,
-        ),
+        // SizedBox(
+        //   height: 10,
+        // ),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.start,
+        //   children: [
+        //     Text(
+        //       'Madadguru',
+        //       style: GoogleFonts.roboto(
+        //           fontSize: 16,
+        //           fontWeight: FontWeight.bold,
+        //           color: Colors.black),
+        //     ),
+        //   ],
+        // ),
+        // SizedBox(
+        //   height: 10,
+        // ),
         _buildMainTabBar(),
         Expanded(child: _buildMainTabBarView()),
       ]),
@@ -328,28 +279,28 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           controller: _mainTabController,
           physics: NeverScrollableScrollPhysics(),
           children: [
-            _buildMainTabContent1("Main Tab Content 1"),
-            _buildMainTabContent2("Main Tab Content 2"),
-            // _buildMainTabContent3("Main Tab Content 3"),
+            _buildMainTabContentUser("Main Tab Content 1"),
+            _buildMainTabContentVolunteer("Main Tab Content 2"),
           ],
         ),
       ),
-    );
-  }
+     );
+    }
 
-  Widget _buildMainTabContent1(String s) {
+    Widget _buildMainTabContentUser(String s) {
     return GridView.builder(
+
       padding: const EdgeInsets.only(bottom: 20, top: 15),
-      itemCount: jsonData != null && jsonData["data"] != null
-          ? jsonData["data"].length
+      itemCount: jsonDataVolunteer != null && jsonDataVolunteer["data"] != null
+          ? jsonDataVolunteer["data"].length
           : 0,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 15.0,
         mainAxisSpacing: 15.0,
       ),
       itemBuilder: (BuildContext context, int index) {
-        var post = jsonData['data'][index];
+        var post = jsonDataVolunteer['data'][index];
         if (post == null || post.isEmpty) {
           return SizedBox();
            }
@@ -357,30 +308,31 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             onTap: () {
              Navigator.push(
               context,
-               MaterialPageRoute(
-                builder: (context) => ProfileDetailScreen(
+                 MaterialPageRoute(
+                 // builder: (context) => ProfileDetailScreen(
+                 builder: (context) => PublicPostProfile(
                   device: widget.device,
                   postId: post["id"],
-                ),
-              ),
-            );
-          },
-          child: Card(
-            elevation: 1,
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
+                  ),
+                 ),
+               );
+              },
+             child: Card(
+             elevation: 1,
+              child: Container(
+               padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Column(
+              child:Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
                     height: 10,
-                  ),
-                  Container(
+                     ),
+                    Container(
                     height: 60,
                     width: 60,
                     decoration: BoxDecoration(
@@ -431,28 +383,31 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                     height: 5,
                   ),
                   Text(
-                    post['name'] ?? '',
+                    (post["name"] != null) ? post["name"] : 'Name not available',
+                    // post['name'] ?? '',
                     style: GoogleFonts.roboto(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Colors.black),
-                  ),
-                  SizedBox(
+                     ),
+                    SizedBox(
                     height: 3,
-                  ),
-                  Text(
-                    post['profession'] ?? '',
-                    style: GoogleFonts.roboto(
+                       ),
+                     Text(
+                        (post["profession"] != null) ? post["profession"] : 'profession not available',
+                       style: GoogleFonts.roboto(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                         color: Colors.black38),
-                  ),
-                  SizedBox(
-                    height: 3,
-                  ),
-                  Text(
-                    post['location'] ?? '',
+                           ),
 
+                      SizedBox(
+                    height: 3,
+                    ),
+
+                   Text(
+                    (post["location"] != null) ? post["location"] : 'location not available',
+                    // post['location'] ?? '',
                     // 'Greater Noida',
                     style: GoogleFonts.roboto(
                         fontSize: 12,
@@ -467,114 +422,231 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       },
     );
   }
-
-  Widget _buildMainTabContent2(String s) {
-    return GridView.builder(
-      padding: const EdgeInsets.only(bottom: 20, top: 15),
-      itemCount: jsonDataVolunteer != null && jsonDataVolunteer["data"] != null
-          ? jsonDataVolunteer["data"].length
-          : 0,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 15.0,
-        mainAxisSpacing: 15.0,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        var post = jsonDataVolunteer['data'][index];
-        if (post == null || post.isEmpty) {
-          return SizedBox();
-        }
-        return InkWell(
-
-          onTap: () {
-            // Navigate to the second page
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => VolunteerProfileDetailScreen(
-                        device: widget.device,
-                      postId:post['id']
-                      )),
-            );
-          },
-          child: Card(
-            elevation: 1,
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(12)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    height: 60,
-                    width: 60,
-                    decoration: BoxDecoration(
+  Widget _buildMainTabContentVolunteer(String s) {
+    if (isLoading) {
+      return Center(child: CircularProgressIndicator());
+      } else if (jsonData == null || jsonData["data"] == null || jsonData["data"].isEmpty) {
+      return Center(child: Text("Not available data"));
+      }
+      else {
+      return GridView.builder(
+        padding: const EdgeInsets.only(bottom: 20, top: 15),
+        itemCount: jsonData["data"].length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 15.0,
+          mainAxisSpacing: 15.0,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          var post = jsonData['data'][index];
+          if (post == null || post.isEmpty) {
+            return SizedBox();
+              }
+               return InkWell(
+                 onTap: () {
+                   Navigator.push(
+                    context,
+                      MaterialPageRoute(
+                       builder: (context) =>
+                       VolunteerProfileDetailScreen(
+                       device: widget.device,
+                      postId: post['id'],
+                      ),
+                    ),
+                    );
+                   },
+                 child: Card(
+                   elevation: 1,
+                    child: Container(
+                     padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                       color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                    ),
+                  child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 10),
+                    Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
                         color: Colors.grey.shade200,
-                        // border: Border.all(w, color: Colors.grey.shade200),
-                        borderRadius: BorderRadius.circular(30)),
-                    child: Center(
-                      child: CircleAvatar(
-                        radius: 35,
-                        child: ClipOval(
-                          child: Image.network(
-                            post['profile'] ?? '',
-                            fit: BoxFit.cover,
-                            width: 90.0, // adjust width as needed
-                            height: 90.0,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Icon(
-                                Icons.person,
-                                size: 50,
-                                color: Colors.grey[400],
-                              );
-                            },
+                        borderRadius: BorderRadius.circular(30),
+                          ),
+                         child: Center(
+                          child: CircleAvatar(
+                          radius: 35,
+                          child: ClipOval(
+                            child: Image.network(
+                              post['profile'] ?? '',
+                              fit: BoxFit.cover,
+                              width: 90.0,
+                              height: 90.0,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(
+                                  Icons.person,
+                                  size: 50,
+                                  color: Colors.grey[400],
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-
-                    post['name'] ?? '',
-                    style: GoogleFonts.roboto(
+                    SizedBox(height: 5),
+                    Text(
+                      post["name"] != null ? post["name"] : 'Name not available',
+                      style: GoogleFonts.roboto(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                  SizedBox(
-                    height: 3,
-                  ),
-                  Text(
-                    post['profession'] ?? '',
-                    style: GoogleFonts.roboto(
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 3),
+                    Text(
+                      post["profession"] != null
+                          ? post["profession"]
+                          : 'Profession not available',
+                      style: GoogleFonts.roboto(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
-                        color: Colors.black38),
-                  ),
-                  SizedBox(
-                    height: 3,
-                  ),
-                  Text(
-                    post['location'] ?? '',
-                    style: GoogleFonts.roboto(
+                        color: Colors.black38,
+                      ),
+                    ),
+                    SizedBox(height: 3),
+                    Text(
+                      post["location"] != null
+                          ? post["location"]
+                          : 'Location not available',
+                      style: GoogleFonts.roboto(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
-                        color: Colors.black38),
-                  ),
-                ],
+                        color: Colors.black38,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      },
-    );
+          );
+        },
+      );
+    }
   }
 }
+
+// Widget _buildMainTabContentVolunteer(String s) {
+//   return GridView.builder(
+//     padding: const EdgeInsets.only(bottom: 20, top: 15),
+//     itemCount: jsonDataVolunteer != null && jsonDataVolunteer["data"] != null
+//         ? jsonDataVolunteer["data"].length
+//         : 0,
+//     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//       crossAxisCount: 2,
+//       crossAxisSpacing: 15.0,
+//       mainAxisSpacing: 15.0,
+//     ),
+//     itemBuilder: (BuildContext context, int index) {
+//       var post = jsonDataVolunteer['data'][index];
+//       if (post == null || post.isEmpty) {
+//         return SizedBox();
+//       }
+//       return InkWell(
+//
+//         onTap: () {
+//           // Navigate to the second page
+//           Navigator.push(
+//             context,
+//             MaterialPageRoute(
+//                 builder: (context) => VolunteerProfileDetailScreen(
+//                       device: widget.device,
+//                     postId:post['id']
+//                     )),
+//           );
+//         },
+//         child: Card(
+//           elevation: 1,
+//           child: Container(
+//             padding: const EdgeInsets.all(12),
+//             decoration: BoxDecoration(
+//                 color: Colors.white, borderRadius: BorderRadius.circular(12)),
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.start,
+//               crossAxisAlignment: CrossAxisAlignment.center,
+//               children: [
+//                 SizedBox(
+//                   height: 10,
+//                 ),
+//                 Container(
+//                   height: 60,
+//                   width: 60,
+//                   decoration: BoxDecoration(
+//                       color: Colors.grey.shade200,
+//                       // border: Border.all(w, color: Colors.grey.shade200),
+//                       borderRadius: BorderRadius.circular(30),
+//                      ),
+//                      child: Center(
+//                       child: CircleAvatar(
+//                       radius: 35,
+//                       child: ClipOval(
+//                         child: Image.network(
+//                           post['profile'] ?? '',
+//                           fit: BoxFit.cover,
+//                           width: 90.0, // adjust width as needed
+//                           height: 90.0,
+//                           errorBuilder: (context, error, stackTrace) {
+//                             return Icon(
+//                               Icons.person,
+//                               size: 50,
+//                               color: Colors.grey[400],
+//                             );
+//                           },
+//                         ),
+//                       ),
+//                     ),
+//                     ),
+//                   ),
+//                 SizedBox(
+//                   height: 5,
+//                 ),
+//                 Text(
+//                   (post["name"] != null) ? post["name"] : 'Name not available',
+//                   // post['name'] ?? '',
+//                   style: GoogleFonts.roboto(
+//                       fontSize: 14,
+//                       fontWeight: FontWeight.bold,
+//                       color: Colors.black),
+//                 ),
+//                 SizedBox(
+//                   height: 3,
+//                 ),
+//                 Text(
+//                   (post["profession"] != null) ? post["profession"] : 'profession not available',
+//                   // post['profession'] ?? '',
+//                   style: GoogleFonts.roboto(
+//                       fontSize: 12,
+//                       fontWeight: FontWeight.w400,
+//                       color: Colors.black38),
+//                 ),
+//                 SizedBox(
+//                   height: 3,
+//                 ),
+//                 Text(
+//                   (post["location"] != null) ? post["location"] : 'location not available',
+//                   // post['location'] ?? '',
+//                   style: GoogleFonts.roboto(
+//                       fontSize: 12,
+//                       fontWeight: FontWeight.w400,
+//                       color: Colors.black38),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       );
+//     },
+//   );
+// }

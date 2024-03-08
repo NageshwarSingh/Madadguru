@@ -7,16 +7,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:madadguru/Pages/EnquaryScreen.dart';
-import 'package:madadguru/Pages/SettingScreen.dart';
 import '../AllWidgets/buttons.dart';
 import '../Allwidgets/AboutUs.dart';
 import '../Allwidgets/Account_JobPreference.dart';
+import '../Allwidgets/ContactsScreen.dart';
 import '../Allwidgets/Editprofile.dart';
 import '../Allwidgets/FaqScreen.dart';
 import 'package:share/share.dart';
 import 'SubcriptionScreen.dart';
 
-class AccountScreen extends StatefulWidget {
+  class AccountScreen extends StatefulWidget {
   final String device;
   const AccountScreen({
     super.key,
@@ -24,9 +24,8 @@ class AccountScreen extends StatefulWidget {
   });
   @override
   State<AccountScreen> createState() => _AccountScreenState();
-}
-
-class _AccountScreenState extends State<AccountScreen> {
+   }
+  class _AccountScreenState extends State<AccountScreen> {
   final TextEditingController gmailController = TextEditingController();
   final TextEditingController profileController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -34,7 +33,6 @@ class _AccountScreenState extends State<AccountScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController dobController = TextEditingController();
   final TextEditingController _aboutController = TextEditingController();
-
   String text = '';
   String subject = '';
   String uri = '';
@@ -42,24 +40,21 @@ class _AccountScreenState extends State<AccountScreen> {
   List<String> imagePaths = [];
   String selectedGender = '';
   String need_help_in = '';
-  bool isfieldsIn = false;
+  bool isLoading = false;
 
-  // List<dynamic> items = [
-  //   'hjfjg',
-  //   'bdbds',
-  //   'vdvsb',
-  //   'sndkj',
-  //   'jhsdh',
-  // ];
+  get switchesEnabled => false;
 
   @override
   void initState() {
     super.initState();
-    switchStates = List<bool>.filled(Data2.length, false);
+    // switchStates = List<bool>.filled(Data2.length, false);
     fetchMyProfile();
     }
   Map<String, dynamic> Mydata = {};
   Future<void> fetchMyProfile() async {
+    setState(() {
+      // isLoading = true;
+    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usertoken = prefs.getString('token');
     if (usertoken != null) {
@@ -70,17 +65,16 @@ class _AccountScreenState extends State<AccountScreen> {
           headers: {
             'Authorization': 'Bearer $usertoken',
           },
-          body: {},
           );
         if (response.statusCode == 200) {
           var responseData = json.decode(response.body);
           print("object $responseData");
           if (responseData['success'] == true) {
             var userData = responseData['data'];
+            print("respons${userData}");
             setState(() {
               Mydata = Map<String, dynamic>.from(
                   userData); // Convert userData to Map
-              // Update controllers or variables with API response data
               nameController.text = Mydata['name'];
               gmailController.text = Mydata['email'];
               phoneController.text = Mydata['mobile'];
@@ -88,7 +82,7 @@ class _AccountScreenState extends State<AccountScreen> {
               dobController.text = Mydata['dob'];
               _aboutController.text = Mydata['about'];
               fetchDatagetWant(Mydata['i_want']);
-              // switchStates = List<bool>.filled(DepartmentList.length, false);
+                // switchStates = List<bool>.filled(DepartmentList.length, false);
               // if (data['i_want'] is List) {
               //   for (var iWantId in data['i_want']) {
               //     var index = DepartmentList.indexWhere(
@@ -101,9 +95,10 @@ class _AccountScreenState extends State<AccountScreen> {
               // if (data['need_help_in'] is List) {
               //   department = List<dynamic>.from(data['need_help_in']);
               // }
-            });
-          } else {
-            print('API request failed: ${responseData["message"]}');
+              isLoading = false;
+               });
+               } else {
+             print('API request failed: ${responseData["message"]}');
           }
           print('Data fetched successfully');
           print(response.body);
@@ -113,8 +108,8 @@ class _AccountScreenState extends State<AccountScreen> {
       } catch (error) {
         print('Error fetching data: $error');
       }
-    }
-    }
+      }
+      }
 
     List<bool> switchStates = [];
   Map<String, dynamic> Data = {};
@@ -133,9 +128,9 @@ class _AccountScreenState extends State<AccountScreen> {
           uri,
           headers: {
             'Authorization': 'Bearer $usertoken',
-          },
-        );
-        if (response.statusCode == 200) {
+            },
+          );
+          if (response.statusCode == 200) {
           var jData = json.decode(response.body);
           setState(() {
             Data = jData;
@@ -151,6 +146,7 @@ class _AccountScreenState extends State<AccountScreen> {
             print("Data From Api$Data");
           });
           print(response.body);
+
           // Navigator.of(context).pushAndRemoveUntil(
           //     MaterialPageRoute(
           //       builder: (context) => ProfilePreference(
@@ -158,6 +154,7 @@ class _AccountScreenState extends State<AccountScreen> {
           //       ),
           //     ),
           //         (route) => false);
+          
           print('Data fetched successfully');
            } else {
           print('Failed to fetch Data. Status code: ${response.statusCode}');
@@ -182,30 +179,34 @@ class _AccountScreenState extends State<AccountScreen> {
         switchStates = List<bool>.filled(Data2.length, false);
         for (int i = 0; i < Data2.length; i++) {
           switchStates[i] = Mydata['i_want'].contains(Data2[i]['id'].toString());
-        }
+           }
         print('Updated switchStates: $switchStates');
       });
     } else {
       print('i_want data not found');
       }
-       if (Mydata.containsKey('i_need_help')) {
-         setState(() {
-            department = DepartmentList.where(
-                (item) => Mydata['i_need_help'].contains(item['id'].toString()))
-            .toList();
-      });
-    }}
+       // if (Mydata.containsKey('i_need_help')) {
+      //    setState(() {
+      //       department = DepartmentList.where(
+      //           (item) => Mydata['i_need_help'].contains(item['id'].toString()))
+      //       .toList();
+      // });
+    // }
+}
 
-    void onChangedSwitch(int index, bool value) {
-    setState(() {
-      switchStates[index] = value;
-      updateIWant(); // Update i_want value
-    });
-  }
+  //   void onChangedSwitch(int index, bool value) {
+  //   setState(() {
+  //     switchStates[index] = value;
+  //     updateIWant(); // Update i_want value
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
         child: Column(
             children: <Widget>[
           Stack(children: [
@@ -304,7 +305,8 @@ class _AccountScreenState extends State<AccountScreen> {
                                     device: widget.device,
                                   );
                                 }),
-                              );
+                              ).whenComplete(() =>  fetchMyProfile());
+
                             },
                             child: Container(
                               height: 40,
@@ -481,126 +483,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                                       const SizedBox(
                                                         height: 20,
                                                       ),
-                                                      GestureDetector(
-                                                        onTap: () async {
-                                                          Navigator.pop(
-                                                              context);
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                              return
-                                                                  // UpdatePassword
-                                                                  UpdatePassword(
-                                                                device: widget
-                                                                    .device,
-                                                              );
-                                                            }),
-                                                          );
-                                                        },
-                                                        child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Row(children: [
-                                                                Image.asset(
-                                                                  "assets/icon/password.png",
-                                                                  width: 23,
-                                                                  color: Color(
-                                                                      0xffFF9228),
-                                                                ),
-                                                                const SizedBox(
-                                                                  width: 20,
-                                                                ),
-                                                                Text(
-                                                                  "Update Password",
-                                                                  style:
-                                                                      GoogleFonts
-                                                                          .roboto(
-                                                                    textStyle:
-                                                                        const TextStyle(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          16,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                    ),
-                                                                  ),
-                                                                )
-                                                              ]),
-                                                              Icon(
-                                                                Icons
-                                                                    .arrow_forward_ios,
-                                                                size: 20,
-                                                              )
-                                                            ]),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      GestureDetector(
-                                                        onTap: () async {
-                                                          Navigator.pop(
-                                                              context);
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) {
-                                                            return myPreferece(
-                                                              device:
-                                                                  widget.device,
-                                                            );
-                                                          }),
-                                                          );
-                                                        },
-                                                        child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Row(children: [
-                                                                Image.asset(
-                                                                  "assets/icon/choose.png",
-                                                                  width: 23,
-                                                                  color: Color(
-                                                                      0xffFF9228),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: 20,
-                                                                ),
-                                                                Text(
-                                                                  "My Preference",
-                                                                  style:
-                                                                      GoogleFonts
-                                                                          .roboto(
-                                                                    textStyle:
-                                                                        const TextStyle(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          16,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                    ),
-                                                                  ),
-                                                                )
-                                                              ]),
-                                                              Icon(
-                                                                Icons
-                                                                    .arrow_forward_ios,
-                                                                size: 20,
-                                                              )
-                                                            ]),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 20,
-                                                      ),
+
                                                       GestureDetector(
                                                         onTap: () {
                                                           Share.share(
@@ -649,20 +532,20 @@ class _AccountScreenState extends State<AccountScreen> {
                                                         height: 20,
                                                       ),
                                                       GestureDetector(
-                                                        onTap: () async {
-                                                          Navigator.pop(
-                                                              context);
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) {
-                                                            return Privacy_JobPreference(
-                                                              device:
-                                                                  widget.device,
-                                                            );
-                                                          }));
-                                                        },
+                                                        // onTap: () async {
+                                                        //   Navigator.pop(
+                                                        //       context);
+                                                        //   Navigator.push(
+                                                        //       context,
+                                                        //       MaterialPageRoute(
+                                                        //           builder:
+                                                        //               (context) {
+                                                        //     return Privacy_JobPreference(
+                                                        //       device:
+                                                        //           widget.device,
+                                                        //     );
+                                                        //   }));
+                                                        // },
                                                         child: Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
@@ -706,21 +589,21 @@ class _AccountScreenState extends State<AccountScreen> {
                                                         height: 20,
                                                       ),
                                                       GestureDetector(
-                                                        onTap: () async {
-                                                          Navigator.pop(
-                                                              context);
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                              return Term_JobPreference(
-                                                                device: widget
-                                                                    .device,
-                                                              );
-                                                            }),
-                                                          );
-                                                        },
+                                                        // onTap: () async {
+                                                        //   Navigator.pop(
+                                                        //       context);
+                                                        //   Navigator.push(
+                                                        //     context,
+                                                        //     MaterialPageRoute(
+                                                        //         builder:
+                                                        //             (context) {
+                                                        //       return Term_JobPreference(
+                                                        //         device: widget
+                                                        //             .device,
+                                                        //       );
+                                                        //     }),
+                                                        //   );
+                                                        // },
                                                         child: Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
@@ -761,53 +644,53 @@ class _AccountScreenState extends State<AccountScreen> {
                                                               )
                                                             ]),
                                                       ),
-                                                      const SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      GestureDetector(
-                                                        onTap: () async {
-                                                          _ShowDialoguePop1();
-                                                        },
-                                                        child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Row(children: [
-                                                                Image.asset(
-                                                                  "assets/icon/choose.png",
-                                                                  width: 23,
-                                                                  color: Color(
-                                                                      0xffFF9228),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: 20,
-                                                                ),
-                                                                Text(
-                                                                  "Contact Madadguru",
-                                                                  style:
-                                                                      GoogleFonts
-                                                                          .roboto(
-                                                                    textStyle:
-                                                                        const TextStyle(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          16,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                    ),
-                                                                  ),
-                                                                )
-                                                              ]),
-                                                              Icon(
-                                                                Icons
-                                                                    .arrow_forward_ios,
-                                                                size: 20,
-                                                              )
-                                                            ]),
-                                                      ),
+                                                      // const SizedBox(
+                                                      //   height: 20,
+                                                      // ),
+                                                      // GestureDetector(
+                                                      //   onTap: () async {
+                                                      //     _ShowDialoguePop1();
+                                                      //   },
+                                                      //   child: Row(
+                                                      //       mainAxisAlignment:
+                                                      //           MainAxisAlignment
+                                                      //               .spaceBetween,
+                                                      //       children: [
+                                                      //         Row(children: [
+                                                      //           Image.asset(
+                                                      //             "assets/icon/choose.png",
+                                                      //             width: 23,
+                                                      //             color: Color(
+                                                      //                 0xffFF9228),
+                                                      //           ),
+                                                      //           SizedBox(
+                                                      //             width: 20,
+                                                      //           ),
+                                                      //           Text(
+                                                      //             "Contact Madadguru",
+                                                      //             style:
+                                                      //                 GoogleFonts
+                                                      //                     .roboto(
+                                                      //               textStyle:
+                                                      //                   const TextStyle(
+                                                      //                 color: Colors
+                                                      //                     .black,
+                                                      //                 fontSize:
+                                                      //                     16,
+                                                      //                 fontWeight:
+                                                      //                     FontWeight
+                                                      //                         .w500,
+                                                      //               ),
+                                                      //             ),
+                                                      //           )
+                                                      //         ]),
+                                                      //         Icon(
+                                                      //           Icons
+                                                      //               .arrow_forward_ios,
+                                                      //           size: 20,
+                                                      //         )
+                                                      //       ]),
+                                                      // ),
                                                       const SizedBox(
                                                         height: 20,
                                                       ),
@@ -815,17 +698,11 @@ class _AccountScreenState extends State<AccountScreen> {
                                                         onTap: () async {
                                                           SharedPreferences prefs = await SharedPreferences.getInstance();
                                                         prefs.clear();
-                                                        Navigator.push(context, MaterialPageRoute(builder: (context)=> Login(device: "ios")));
+                                                        Navigator.push(context,
+                                                          MaterialPageRoute(builder: (context)=> Login(device: widget.device,),
+                                                        ),
+                                                        );
 
-                                                        // Navigator.push(context)
-                                                          // await prefs.setString(
-                                                          //   "token",
-                                                          //   Data['data']['token'],
-                                                          // );
-                                                          // await prefs.setBool("isLoggedIn", true);
-                                                          // await prefs.setString("userId", Data["data"]["id"].toString());
-                                                          // Navigator.pop(
-                                                          //     context);
                                                         },
                                                         child: Row(children: [
                                                           Image.asset(
@@ -895,7 +772,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               ),
                               child: Center(
                                 child: Text(
-                                  'Enquiry',
+                                  'Quick Help',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w400,
@@ -912,7 +789,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) {
-                                  return EnquaryScreen(
+                                  return ContactsScreen(
                                     device: widget.device,
                                   );
                                 }),
@@ -1035,10 +912,9 @@ class _AccountScreenState extends State<AccountScreen> {
                           : 'Name not available',
                       style: TextStyle(fontSize: 12),
                     ),
+                    ),
                   ),
-                ),
-
-                SizedBox(
+                  SizedBox(
                   height: 10,
                 ),
                 Text(
@@ -1193,9 +1069,9 @@ class _AccountScreenState extends State<AccountScreen> {
                   itemBuilder: (context, index) {
                     if (index >= Data2.length) {
                       return Container();
-                    }
-                    return ListTile(
-                      title: Container(
+                        }
+                        return ListTile(
+                        title: Container(
                         padding: EdgeInsets.zero,
                         decoration: BoxDecoration(
                           borderRadius:
@@ -1222,44 +1098,61 @@ class _AccountScreenState extends State<AccountScreen> {
                                   ),
                                 ],
                               ),
+                              // code isCorrect but editabled code implemtation is editprofile
+
+                              // Switch(
+                              //     value: switchStates[index],
+                              //     onChanged: (value) {
+                              //       setState(() {
+                              //       switchStates[index] =
+                              //           value; // Update switch state
+                              //       updateIWant(); // Update i_want value
+                              //     });
+                              //   }, // Call onChangedSwitch method
+                              //   activeTrackColor:
+                              //   Colors.lightGreenAccent,
+                              //   activeColor: Colors.green,
+                              // ),
                               Switch(
+                                // value:true,
+                                autofocus: true,
                                 value: switchStates[index],
-                                onChanged: (value) {
+                                onChanged: switchesEnabled ? (value) {
                                   setState(() {
-                                    switchStates[index] =
-                                        value; // Update switch state
-                                    updateIWant(); // Update i_want value
+                                    switchStates[index] = value;
+                                    updateIWant();
                                   });
-                                }, // Call onChangedSwitch method
+                                } : null,
+
                                 activeTrackColor:
                                 Colors.lightGreenAccent,
-                                activeColor: Colors.green,
+                                activeColor: Colors.green.shade200,
                               ),
                             ],
                           ),
                         ),
                       ),
                     );
-                  },
-                ),
+                    },
+                   ),
 
                 SizedBox(
                   height: 20,
                 ),
 
-                Text(
-                  "Need Help In:",
-                  // textAlign: TextAlign.center,
-                  style: GoogleFonts.roboto(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-
-                SizedBox(
-                  height: 10,
-                ),
+                // Text(
+                //   "Need Help In:",
+                //   // textAlign: TextAlign.center,
+                //   style: GoogleFonts.roboto(
+                //     color: Colors.black,
+                //     fontWeight: FontWeight.bold,
+                //     fontSize: 14,
+                //   ),
+                // ),
+                //
+                // SizedBox(
+                //   height: 10,
+                // ),
                 // ===========================================   Choice Chips List        ========================================================
 
 
@@ -1283,7 +1176,7 @@ class _AccountScreenState extends State<AccountScreen> {
             content: Padding(
               padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
               child: Container(
-                height: 380,
+                height: 330,
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   children: [
@@ -1291,7 +1184,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       elevation: 1,
                       child: Container(
                         width: MediaQuery.of(context).size.width,
-                        height: 220,
+                        height: 160,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(32),
@@ -1307,7 +1200,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               // Image.network('')
                               Image.asset(
                             'assets/images/images.jpg',
-                            fit: BoxFit.fill,
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),
@@ -1352,7 +1245,7 @@ class _AccountScreenState extends State<AccountScreen> {
           return AlertDialog(
             title: Text('Contact Madadguru'),
             content: Container(
-              height: 200,
+              height: 215,
               child: Column(
                 children: [
                   TextField(
@@ -1404,26 +1297,26 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
           );
         });
-  }
+      }
 
-  void _onShare(BuildContext context) async {
-    final RenderBox box = context.findRenderObject() as RenderBox;
-
-    if (imagePaths.isNotEmpty) {
-      await Share.shareFiles(
-        imagePaths,
-        text: text,
-        subject: subject,
-        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-      );
-    } else {
-      await Share.share(
-        text,
-        subject: subject,
-        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-      );
-    }
-  }
+  // void _onShare(BuildContext context) async {
+  //   final RenderBox box = context.findRenderObject() as RenderBox;
+  //
+  //   if (imagePaths.isNotEmpty) {
+  //     await Share.shareFiles(
+  //       imagePaths,
+  //       text: text,
+  //       subject: subject,
+  //       sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+  //     );
+  //   } else {
+  //     await Share.share(
+  //       text,
+  //       subject: subject,
+  //       sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+  //     );
+  //   }
+  // }
 }
 
 // class _WelcomePopupSplash extends StatelessWidget {

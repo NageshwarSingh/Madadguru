@@ -267,68 +267,8 @@ class _photoViewState extends State<photoView> {
             );
           },
         ),
-        //Correct code but not use.....
 
-        //     PhotoViewGallery.builder(
-        //   scrollPhysics: const BouncingScrollPhysics(),
-        //   builder: (BuildContext context, int index) {
-        //     return PhotoViewGalleryPageOptions(
-        //       imageProvider: NetworkImage(widget.image[index]["image"]),
-        //       initialScale: PhotoViewComputedScale.contained * 1.0,
-        //       heroAttributes:
-        //           PhotoViewHeroAttributes(tag: widget.image[index]["image"]),
-        //       // controller:_imageController,
-        //       controller:  _imageController,
-        //     );
-        //   },
-        //   itemCount: widget.image.length,
-        //   loadingBuilder: (context, event) => Center(
-        //     child: Container(
-        //       child: CircularProgressIndicator(
-        //         value: event == null
-        //             ? 0
-        //             : event.cumulativeBytesLoaded /
-        //                 (event.expectedTotalBytes ?? 0),
-        //       ),
-        //     ),
-        //   ),
-        //   // backgroundDecoration: widget.backgroundDecoration,
-        //   // pageController: widget.pageController,
-        //   // onPageChanged: onPageChanged,
-        // ),
       ),
     );
   }
 }
-
-// },
-
-// onTap: () {
-
-//   SwipeImageGallery(
-//   backgroundColor: Colors.white,
-//   initialIndex: index,
-//   zoom: 8,
-//   context: context,
-//   // itemBuilder: (context, index) {
-//   //   return Transform.rotate(
-//   //     angle: _rotationAngle, // Define the rotation angle
-//   //     child: Image.network(
-//   //       galleryImages[index]["image"],
-//   //       fit: BoxFit.contain,
-//   //     ),
-//   //   );
-//   // },
-//   itemBuilder: (context, index) {
-//     return Image.network(galleryImages[index]["image"]);
-//   },
-//   itemCount: galleryImages.length,
-//   // backButton:
-//   // IconButton(
-//   //   icon: Icon(Icons.arrow_back),
-//   //   onPressed: () {
-//   //     Navigator.pop(context); // Pop the gallery dialog
-//   //   },
-//   // ),
-// ).show();
-// },

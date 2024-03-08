@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Allwidgets/BottomNavBar.dart';
 import '../Allwidgets/background_screen.dart';
@@ -22,25 +25,59 @@ class _LoginState extends State<Login> {
   TextEditingController _mobileController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isButtonEnabled = false;
+  bool isLoading=false;
+
   void LoginApi() async {
-    var res = await http
-        .post(Uri.parse("https://madadguru.webkype.net/api/userLogin"), body: {
-      "mobile": _mobileController.text.toString(),
-      "userotp": "",
+    setState(() {
+      isLoading = true; // Set isLoading to true when API call starts
     });
-    if (res.statusCode == 200) {
-      print('response${res.body}');
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => otpScreen(
-            device: widget.device,
-            mobile: _mobileController.text.toString(),
+    try {
+      var res = await http.post(Uri.parse("https://madadguru.webkype.net/api/userLogin"), body: {
+        "mobile": _mobileController.text.toString(),
+        "userotp": "",
+      });
+      if (res.statusCode == 200) {
+        print('response${res.body}');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => otpScreen(
+              device: widget.device,
+              mobile: _mobileController.text.toString(),
+            ),
           ),
-        ),
-      );
-      var jsonData = jsonDecode(res.body);
+        );
+        var jsonData = jsonDecode(res.body);
+        _showToast(context,'Otp verification Success: 1234'
+        // 'otp verification Success:${jsonData['message']}
+        );
+
+      } else {
+        // Show toast message for invalid OTP
+        _showToast(context, 'Invalid OTP: 1234');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+      // Show toast message for error
+      _showToast(context, 'Error occurred: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
+  }
+
+  void _showToast(BuildContext context, String message) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.black
+        ,
+        content: Text(message),
+        duration: Duration(seconds: 5),
+        action: SnackBarAction(label: 'UNDO',onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
   }
 
   @override
@@ -61,123 +98,127 @@ class _LoginState extends State<Login> {
       body: Stack(
         children: [
           const Background(),
-          SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: 250),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                    ),
-                    child: Text(
-                      "Verify Me",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 30,
-                        color: Colors.orange,
+          SafeArea(
+            child: isLoading
+                ? Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 250),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        right: 20,
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
-                      child: TextFormField(
-                        controller: _mobileController,
-                        onChanged: (value) {
-                          _checkButtonEnabled();
-                        },
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter username';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          suffixIcon: Icon(Icons.call),
-                          suffixIconColor: Colors.green.shade200,
-                          label: Text('Mobile'),
-                          labelStyle: TextStyle(color: Colors.black38),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                          contentPadding: EdgeInsets.only(
-                              left: 10, right: 10, bottom: 5, top: 5),
+                      child: Text(
+                        "Verify Me",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 30,
+                          color: Colors.orange,
                         ),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(10),
-                          FilteringTextInputFormatter.allow(
-                            RegExp(r'^[0-9]*$'),
-                          ), // Allows only numeric input
-                        ],
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  InkWell(
-                    onTap: _isButtonEnabled
-                        ? () {
-                            if (_formKey.currentState!.validate()) {
-                              LoginApi();
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => otpScreen(
-                              //       device: widget.device,
-                              //       mobile: _mobileController.text.toString(),
-                              //     ),
-                              //   ),
-                              // );
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
+                        child: TextFormField(
+                          controller: _mobileController,
+                          onChanged: (value) {
+                            _checkButtonEnabled();
+                          },
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter username';
                             }
-                          }
-                        : null,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 50, right: 50, top: 20.0),
-                      child: Card(
-                        elevation: 2,
-                        child: Container(
-                          height: 45,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            suffixIcon: Icon(Icons.call),
+                            suffixIconColor: Colors.green.shade200,
+                            label: Text('Mobile'),
+                            labelStyle: TextStyle(color: Colors.black38),
+                            enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              color: Color(0xffFFEADD)),
-                          child: Center(
-                            child: Text(
-                              'Send OTP',
-                              style: TextStyle(
-                                  color: Colors.orange,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17),
+                              borderSide: BorderSide(color: Colors.orange),
+                            ),
+                            disabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.orange),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.orange),
+                            ),
+                            contentPadding: EdgeInsets.only(
+                                left: 10, right: 10, bottom: 5, top: 5),
+                          ),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(10),
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^[0-9]*$'),
+                            ), // Allows only numeric input
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    InkWell(
+                      onTap: _isButtonEnabled
+                          ? () {
+                              if (_formKey.currentState!.validate()) {
+                                LoginApi();
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => otpScreen(
+                                //       device: widget.device,
+                                //       mobile: _mobileController.text.toString(),
+                                //     ),
+                                //   ),
+                                // );
+                              }
+                            }
+                          : null,
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: 50, right: 50, top: 20.0),
+                        child: Card(
+                          elevation: 2,
+                          child: Container(
+                            height: 45,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: Color(0xffFFEADD)),
+                            child: Center(
+                              child: Text(
+                                'Send OTP',
+                                style: TextStyle(
+                                    color: Colors.orange,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
 
-                  // Positioned.fill(child: Background()),
-                ],
+                    // Positioned.fill(child: Background()),
+                  ],
+                ),
               ),
             ),
           ),
@@ -186,6 +227,9 @@ class _LoginState extends State<Login> {
     );
   }
 }
+
+
+
 
 class otpScreen extends StatefulWidget {
   final String device;
@@ -204,62 +248,75 @@ class _otpScreenState extends State<otpScreen> {
   TextEditingController _pinController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isButtonEnabled = false;
+  bool isLoading=false;
 
   void OtpApi() async {
-    var res = await http
-        .post(Uri.parse("https://madadguru.webkype.net/api/userLogin"), body: {
-      "mobile": widget.mobile, // Add this line to include the mobile number
-      "userotp": _pinController.text.toString(),
+    setState(() {
+      isLoading = true; // Set isLoading to true when API call starts
     });
-    if (res.statusCode == 200) {
-      print('Response: ${res.body}');
-      var Data = jsonDecode(res.body);
-      if (Data['status'] == 200 && Data['success'] == true) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString(
-          "token",
-          Data['data']['token'],
-        );
-        await prefs.setBool("isLoggedIn", true);
-        await prefs.setString("userId", Data["data"]["id"].toString());
-        // await prefs.setString("userOtp", _pinController.text.toString());
-        if (Data['data']['is_profile_comp'] == "1") {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => MySplashScreen(
-                device: widget.device,
+
+    try {
+      var res = await http.post(Uri.parse("https://madadguru.webkype.net/api/userLogin"), body: {
+        "mobile": widget.mobile,
+        "userotp": _pinController.text.toString(),
+      });
+      if (res.statusCode == 200) {
+        print('Response: ${res.body}');
+        var Data = jsonDecode(res.body);
+        if (Data['status'] == 200 && Data['success'] == true) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString("token", Data['data']['token']);
+          await prefs.setBool("isLoggedIn", true);
+          await prefs.setString("userId", Data["data"]["id"].toString());
+          if (Data['data']['is_profile_comp'] == "1") {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => BottomNavBar(
+                  device: widget.device,
+                ),
               ),
-            ),
-          );
+            );
+          } else {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => SignUpScreen(
+                  device: widget.device,
+                  mobile: widget.mobile,
+                  userid: Data["data"]["id"].toString(),
+                  userotp: _pinController.text.toString(),
+                ),
+              ),
+            );
+            }
+          print('OTP verification Success: ${Data['message']}');
+          _showToast(context, 'OTP verification Success: ${Data['message']}',Colors.blue);
         } else {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => SignUpScreen(
-                device: widget.device,
-                mobile: widget.mobile,
-                userid: Data["data"]["id"].toString(),
-                userotp: _pinController.text.toString(),
-              ),
-            ),
-          );
+          print('OTP verification failed');
+          _showToast(context, 'OTP verification failed',Colors.red);
         }
-        // Navigator.of(context).pushAndRemoveUntil(
-        //     MaterialPageRoute(
-        //       builder: (context) => SignUpScreen(
-        //         device: widget.device,
-        //         mobile: widget.mobile,
-        //         userid: Data["data"]["id"].toString(),
-        //         userotp: _pinController.text.toString(),
-        //       ),
-        //     ),
-        //     (route) => false);
-        print('OTP verification Success: ${Data['message']}');
       } else {
-        print('OTP verification failed');
+        print('API request failed with status code: ${res.statusCode}');
+        _showToast(context, 'API request failed with status code: ${res.statusCode}',Colors.blue);
       }
-    } else {
-      print('API request failed with status code: ${res.statusCode}');
+    } catch (e) {
+      print('Error occurred: $e');
+      _showToast(context, 'Error occurred: $e',Colors.red);
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+     }
     }
+    void _showToast(BuildContext context, String message, MaterialColor red) {
+    final scaffold = ScaffoldMessenger.of(context);
+      scaffold.showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.black,
+        content: Text(message),
+        duration: Duration(seconds: 3),
+        action: SnackBarAction(label: 'UNDO', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
   }
 
   @override
@@ -303,106 +360,109 @@ class _otpScreenState extends State<otpScreen> {
       body: Stack(
         children: [
           const Background(),
-          SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: 250),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                    ),
-                    child: Text(
-                      "OTP Verification",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 30,
-                        color: Colors.orange,
+          SafeArea(
+            child: isLoading
+                ? Center(child: CircularProgressIndicator())
+                :  SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 250),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                      ),
+                      child: Text(
+                        "OTP Verification",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 30,
+                          color: Colors.orange,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Center(
-                      child: Pinput(
-                        length: 4,
-                        keyboardType: TextInputType.number,
-                        controller: _pinController,
-                        defaultPinTheme: defaultPinTheme,
-                        focusedPinTheme: focusedPinTheme,
-                        submittedPinTheme: submittedPinTheme,
-                        onChanged: (value) {
-                          _checkButtonEnabled();
-                        },
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter username';
-                          }
-                          return null;
-                        },
-                        textInputAction: TextInputAction.next,
-                        showCursor: true,
-                        onCompleted: null,
-                      ),
+                    SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  InkWell(
-                    onTap: _isButtonEnabled
-                        ? () {
-                            if (_formKey.currentState!.validate()) {
-                              OtpApi();
-
-                              // Navigator.of(
-                              //   context,
-                              //
-                              //     MaterialPageRoute(
-                              //       builder: (context) => SignUpScreen(
-                              //       device: widget.device,
-                              //       mobile:widget.mobile,
-                              //       userotp: _pinController.text.toString(),
-                              //     ),
-                              //   ),
-                              // );
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Center(
+                        child: Pinput(
+                          length: 4,
+                          keyboardType: TextInputType.number,
+                          controller: _pinController,
+                          defaultPinTheme: defaultPinTheme,
+                          focusedPinTheme: focusedPinTheme,
+                          submittedPinTheme: submittedPinTheme,
+                          onChanged: (value) {
+                            _checkButtonEnabled();
+                          },
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter username';
                             }
-                          }
-                        : null,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 50, right: 50, top: 20.0),
-                      child: Card(
-                        elevation: 2,
-                        child: Container(
-                          height: 45,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Color(0xffFFEADD)),
-                          child: Center(
-                            child: Text(
-                              'Verify',
-                              style: TextStyle(
-                                  color: Colors.orange,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17),
+                            return null;
+                          },
+                          textInputAction: TextInputAction.next,
+                          showCursor: true,
+                          onCompleted: null,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    InkWell(
+                      onTap: _isButtonEnabled
+                          ? () {
+                              if (_formKey.currentState!.validate()) {
+                                OtpApi();
+
+                                // Navigator.of(
+                                //   context,
+                                //
+                                //     MaterialPageRoute(
+                                //       builder: (context) => SignUpScreen(
+                                //       device: widget.device,
+                                //       mobile:widget.mobile,
+                                //       userotp: _pinController.text.toString(),
+                                //     ),
+                                //   ),
+                                // );
+                              }
+                            }
+                          : null,
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: 50, right: 50, top: 20.0),
+                        child: Card(
+                          elevation: 2,
+                          child: Container(
+                            height: 45,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: Color(0xffFFEADD)),
+                            child: Center(
+                              child: Text(
+                                'Verify',
+                                style: TextStyle(
+                                    color: Colors.orange,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-
-                  // Positioned.fill(child: Background()),
-                ],
+                    // Positioned.fill(child: Background()),
+                  ],
+                ),
               ),
             ),
           ),

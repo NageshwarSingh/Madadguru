@@ -20,13 +20,19 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
   int segmentedControlValue = 0;
   Map JobDetail = {};
   Map<String, dynamic> data = {};
+
   List<dynamic> department = [];
+
+
   List<bool> switchStates = [];
+
   String iwant = "";
   String needhelpin = "";
   List<Map<String, dynamic>> DepartmentList = [];
   Map<String, dynamic> Data = {};
   List<dynamic> Data2 = [];
+
+  get switchesEnabled => false;
   @override
   void initState() {
     super.initState();
@@ -188,6 +194,8 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
 
   bool isLoading = false;
   // ==============         *******   Need Help Api   ******          ============
+
+
   Future<void> fetchDataNeedHelp(data) async {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -508,17 +516,19 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
                                                 ],
                                               ),
                                               Switch(
+                                                // value:true,
+                                                autofocus: true,
                                                 value: switchStates[index],
-                                                onChanged: (value) {
+                                                onChanged: switchesEnabled ? (value) {
                                                   setState(() {
-                                                    switchStates[index] =
-                                                        value; // Update switch state
-                                                    updateIWant(); // Update i_want value
+                                                    switchStates[index] = value;
+                                                    updateIWant();
                                                   });
-                                                }, // Call onChangedSwitch method
+                                                } : null,
+
                                                 activeTrackColor:
-                                                    Colors.lightGreenAccent,
-                                                activeColor: Colors.green,
+                                                Colors.lightGreenAccent,
+                                                activeColor: Colors.green.shade200,
                                               ),
                                             ],
                                           ),
@@ -581,23 +591,23 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
                                   wrapped: true,
                                 ),
                                 SizedBox(
-                                  height: 20,
+                                  height: 10,
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    showDialogue();
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 40, right: 40.0),
-                                    child: ButtonWidget(
-                                      text: " Contact",
-                                      color: Color(0xffFBCD96),
-                                      textColor: Colors.orange,
-                                      width: MediaQuery.of(context).size.width,
-                                    ),
-                                  ),
-                                ),
+                                // GestureDetector(
+                                //   onTap: () {
+                                //     showDialogue();
+                                //   },
+                                //   child: Padding(
+                                //     padding: const EdgeInsets.only(
+                                //         left: 40, right: 40.0),
+                                //     child: ButtonWidget(
+                                //       text: " Contact",
+                                //       color: Color(0xffFBCD96),
+                                //       textColor: Colors.orange,
+                                //       width: MediaQuery.of(context).size.width,
+                                //     ),
+                                //   ),
+                                // ),
                                 SizedBox(
                                   height: (widget.device == "IOS") ? 80 : 30,
                                 ),

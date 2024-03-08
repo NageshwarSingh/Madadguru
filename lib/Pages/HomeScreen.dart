@@ -298,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Colors.white38,
                             ),
                             child: Text(
-                              "70% Complete",
+                              "Completed",
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 14,
@@ -526,7 +526,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return AlertDialog(
             title: Text(
               'KYC Verification',
-            ),
+                ),
             content: Container(
               height: 300,
               width: MediaQuery.of(context).size.width,

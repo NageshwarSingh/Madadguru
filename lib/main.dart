@@ -29,13 +29,16 @@ class MyApp extends StatelessWidget {
   }
   class _SplashScreenState extends State<SplashScreen> {
   String device = "IOS";
+  late BuildContext _context;
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   @override
-  void initState() {
+    void initState() {
     super.initState();
     Timer(const Duration(milliseconds: 3000), () => checkLogin());
-  }
+     }
   @override
-  Widget build(BuildContext context) {
+   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
         body: Stack(
@@ -97,4 +100,11 @@ class MyApp extends StatelessWidget {
       }
     }
     }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _context = context;
+  }
+
+
     }

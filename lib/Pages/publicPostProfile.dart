@@ -1,9 +1,9 @@
 import 'dart:convert';
-
-import 'package:chips_choice/chips_choice.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../AllWidgets/buttons.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,14 +17,18 @@ class PublicPostProfile extends StatefulWidget {
   });
   @override
   State<PublicPostProfile> createState() => _PublicPostProfileState();
-  }
-  class _PublicPostProfileState extends State<PublicPostProfile> {
+}
+
+class _PublicPostProfileState extends State<PublicPostProfile> {
   int segmentedControlValue = 0;
   bool isLoading = false;
+  bool alreadyContacted = false;
+bool contactButton=true;
   Map JobDetail = {};
-
+  bool showButton=true;
   Map profileData = {};
   TextEditingController _textController = TextEditingController();
+  get switchesEnabled => false;
   @override
   void initState() {
     super.initState();
@@ -33,19 +37,19 @@ class PublicPostProfile extends StatefulWidget {
 
   Map<String, dynamic> userData = {};
   // wrong APi
+
   Future<void> fetchuserProfile() async {
     print("TheUseridididid${widget.postId}");
     setState(() {
       isLoading = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var usertoken = prefs.getString('token');
-    if (usertoken != null) {
-      final Uri uri =
+     var usertoken = prefs.getString('token');
+      if (usertoken != null) {
+        final Uri uri =
           Uri.parse("https://madadguru.webkype.net/api/userProfile");
-      try {
-        final response = await http.post(uri,
-            headers: {
+        try {
+        final response = await http.post(uri, headers: {
           'Authorization': 'Bearer $usertoken',
         }, body: {
           'user_id': widget.postId.toString(),
@@ -58,33 +62,46 @@ class PublicPostProfile extends StatefulWidget {
             setState(() {
               userData = userDataa;
               fetchDatagetWant(userData['i_want']);
-            });
-          } else {
-            print('userData API request failed: ${responseData["message"]}');
-          }
+              var myUserId = prefs.getString('userId');
+              var addByUserId = userData['id'].toString();
+              print('My User ID: $myUserId');
+              print('Add By User ID: $addByUserId');
+                 if (addByUserId == myUserId) {
+                  showButton = false;
+                  }
+              var myUserid = prefs.getString('userId');
+              var addByUserid = userData['contactdata'][0]['user_id'].toString();
+              print('myUsermobile: $myUserid');
+              print('addByUsermobile: $addByUserid');
+              if (myUserid==addByUserid){
+                  contactButton = false;
+                       }
+                    });
+                  } else {
+               print('userData API request failed: ${responseData["message"]}');
+             }
           print('userData fetched successfully');
           print(response.body);
-        } else {
-          print(
-              'Failed to fetch userData. Status code: ${response.statusCode}');
+          } else {
+          print('Failed to fetch userData. Status code: ${response.statusCode}');
         }
       } catch (error) {
         print('Error fetching data: $error');
       } finally {
-        setState(() {
+          setState(() {
           isLoading = false;
-        });
-      }
-    }
-  }
-
-  void contactUserPopUp(String id, String message) async {
-    try {
+            });
+          }
+       }
+     }
+     void contactUserPopUp(String id, String message) async {
+      try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       if (prefs != null) {
         var usertoken = prefs.getString('token');
         if (usertoken != null) {
-          final Uri uri = Uri.parse("https://madadguru.webkype.net/api/addUserContact");
+          final Uri uri =
+              Uri.parse("https://madadguru.webkype.net/api/addUserContact");
           final response = await http.post(
             uri,
             headers: {
@@ -103,9 +120,9 @@ class PublicPostProfile extends StatefulWidget {
             } else {
               print('Failed to send addUserContact: ${Data['message']}');
             }
-
           } else {
-            print('API request failed with status code: ${response.statusCode}');
+            print(
+                'API request failed with status code: ${response.statusCode}');
           }
         } else {
           print('No token found in SharedPreferences.');
@@ -117,9 +134,6 @@ class PublicPostProfile extends StatefulWidget {
       print('Error: $error');
     }
   }
-
-
-  // Map<String, dynamic> data = {};
   List<bool> switchStates = [];
   Map<String, dynamic> Data = {};
   List<dynamic> Data2 = [];
@@ -145,6 +159,7 @@ class PublicPostProfile extends StatefulWidget {
             Data = jData;
             Data2 = Data['data'];
             switchStates = List<bool>.filled(Data2.length, false);
+
             for (int i = 0; i < Data2.length; i++) {
               if (activeValues.contains(Data2[i]['id'].toString())) {
                 switchStates[i] = true;
@@ -180,6 +195,7 @@ class PublicPostProfile extends StatefulWidget {
       print("i want's value: $iwant");
     }
   }
+
   void updateSwitchStates() {
     // Update switchStates based on i_want value
     if (userData.containsKey('i_want')) {
@@ -187,7 +203,8 @@ class PublicPostProfile extends StatefulWidget {
       setState(() {
         switchStates = List<bool>.filled(Data2.length, false);
         for (int i = 0; i < Data2.length; i++) {
-          switchStates[i] = userData['i_want'].contains(Data2[i]['id'].toString());
+          switchStates[i] =
+              userData['i_want'].contains(Data2[i]['id'].toString());
         }
         print('Updated switchStates: $switchStates');
       });
@@ -197,22 +214,18 @@ class PublicPostProfile extends StatefulWidget {
     // Update department based on i_need_help value
     if (userData.containsKey('i_need_help')) {
       setState(() {
-        department = DepartmentList.where(
-                (item) => userData['i_need_help'].contains(item['id'].toString()))
-            .toList();
+        department = DepartmentList.where((item) =>
+            userData['i_need_help'].contains(item['id'].toString())).toList();
       });
     }
   }
+
   void onChangedSwitch(int index, bool value) {
     setState(() {
       switchStates[index] = value;
       updateIWant(); // Update i_want value
     });
   }
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -248,7 +261,7 @@ class PublicPostProfile extends StatefulWidget {
                             (userData["name"] != null)
                                 ? userData["name"]
                                 : 'Name not available',
-                                 // "Gajendra Singh",
+                            // "Gajendra Singh",
                             style: GoogleFonts.roboto(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -273,7 +286,7 @@ class PublicPostProfile extends StatefulWidget {
                             height: 5,
                           ),
 
-                            Text(
+                          Text(
                             "Mobile: ${(userData["mobile"] != null) ? userData["mobile"] : 'mobile not available'}",
                             // "Phone : +918877665544",
                             style: GoogleFonts.roboto(
@@ -286,8 +299,7 @@ class PublicPostProfile extends StatefulWidget {
                             height: 5,
                           ),
                           Text(
-                            "Dob: ${(userData["dob"] != null) ?
-                            userData["dob"] : "dob not available"}",
+                            "Dob: ${(userData["dob"] != null) ? userData["dob"] : "dob not available"}",
                             // "DOB : 12/12/1999",
                             style: GoogleFonts.roboto(
                               fontSize: 12,
@@ -335,8 +347,7 @@ class PublicPostProfile extends StatefulWidget {
                                     color: Color(0x4d6cabff),
                                   ),
                                   child: Text(
-                                    "Gender: ${(userData["gender"] != null) ?
-                                    userData["gender"] : "dob not available"}",
+                                    "Gender: ${(userData["gender"] != null) ? userData["gender"] : "dob not available"}",
 
                                     // "Gender: Female",
                                     style: GoogleFonts.roboto(
@@ -353,10 +364,9 @@ class PublicPostProfile extends StatefulWidget {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
                                     color: Color(0x4D8EE386),
-                                      ),
-                                      child: Text(
-                                      "Language: ${(userData["language"] != null)
-                                          ? userData["language"] : "dob not available"}",
+                                  ),
+                                  child: Text(
+                                      "Language: ${(userData["language"] != null) ? userData["language"] : "dob not available"}",
 
                                       // "Language: English",
                                       style: GoogleFonts.roboto(
@@ -377,19 +387,21 @@ class PublicPostProfile extends StatefulWidget {
                           child: Center(
                             child: CircleAvatar(
                               radius: 45,
-                              child: ClipOval(
-                                child: userData.containsKey('profile')
-                                    ? Image.network(
-                                        userData['profile'],
-                                        fit: BoxFit.cover,
-                                        width: 90.0, // adjust width as needed
-                                        height: 90.0, // adjust height as needed
-                                      )
-                                       : Icon(
-                                        Icons.person,
-                                        size: 50,
-                                        color: Colors.grey[400],
-                                      ),
+                              child:  ClipOval(
+                                child:
+                                Image.network(
+                                  userData['profile'],
+                                  fit: BoxFit.cover,
+                                  width: 90.0,
+                                  height: 90.0,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Icon(
+                                      Icons.person,
+                                      size: 50,
+                                      color: Colors.grey[400],
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ),
@@ -399,12 +411,12 @@ class PublicPostProfile extends StatefulWidget {
                     SingleChildScrollView(
                       child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: Text(
                                     "About",
                                     style: GoogleFonts.roboto(
                                       fontSize: 14,
@@ -412,10 +424,13 @@ class PublicPostProfile extends StatefulWidget {
                                       color: Colors.black,
                                     ),
                                   ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10,right: 10),
+                                  child: Text(
                                     (userData["about"] != null)
                                         ? userData["about"]
                                         : 'about not available',
@@ -426,11 +441,14 @@ class PublicPostProfile extends StatefulWidget {
                                       color: Colors.black,
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    "I want",
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10,right: 10),
+                                  child: Text(
+                                    "I want:",
                                     // textAlign: TextAlign.center,
                                     style: GoogleFonts.roboto(
                                       fontSize: 14,
@@ -438,222 +456,568 @@ class PublicPostProfile extends StatefulWidget {
                                       color: Colors.black,
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
 
+                                ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: Data.length,
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.zero,
+                                  itemBuilder: (context, index) {
+                                    if (index >= Data2.length) {
+                                      return Container();
+                                    }
+                                    return ListTile(
+                                      title: Container(
+                                        padding: EdgeInsets.zero,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          border: Border.all(
+                                              width: 1, color: Colors.orange),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 5, right: 5.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Image.asset(
+                                                      'assets/images/icon.png'),
+                                                  Text(
+                                                    Data2[index]['name']
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        fontSize: 14),
+                                                  ),
+                                                ],
+                                              ),
+                                              Switch(
+                                                // value:true,
+                                                autofocus: true,
+                                                value: switchStates[index],
+                                                onChanged: switchesEnabled
+                                                    ? (value) {
+                                                        setState(() {
+                                                          switchStates[
+                                                              index] = value;
+                                                          updateIWant();
+                                                        });
+                                                      }
+                                                    : null,
 
-                                  ListView.builder(
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: Data.length,
-                                    shrinkWrap: true,
-                                    padding: EdgeInsets.zero,
-                                    itemBuilder: (context, index) {
-                                      if (index >= Data2.length) {
-                                        return Container();
-                                      }
-                                      return ListTile(
-                                        title: Container(
-                                          padding: EdgeInsets.zero,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.circular(12),
-                                            border: Border.all(
-                                                width: 1, color: Colors.orange),
+                                                activeTrackColor:
+                                                    Colors.lightGreenAccent,
+                                                activeColor:
+                                                    Colors.green.shade200,
+                                              ),
+                                              // Switch(
+                                              //   value: switchStates[index],
+                                              //   onChanged: (value) {
+                                              //     setState(() {
+                                              //       switchStates[index] =
+                                              //           value; // Update switch state
+                                              //       updateIWant(); // Update i_want value
+                                              //     });
+                                              //   }, // Call onChangedSwitch method
+                                              //   activeTrackColor:
+                                              //   Colors.lightGreenAccent,
+                                              //   activeColor: Colors.green,
+                                              // ),
+                                            ],
                                           ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 5, right: 5.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Image.asset(
-                                                        'assets/images/icon.png'),
-                                                    Text(
-                                                      Data2[index]['name']
-                                                          .toString(),
-                                                      style:
-                                                      TextStyle(fontSize: 14),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10,right: 10),
+                                  child: Text("Contacts",
+                                    style: GoogleFonts.roboto(
+                                      color: Colors
+                                          .black,
+                                      fontSize: 14,
+                                      fontWeight:
+                                      FontWeight
+                                          .bold),),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                userData == null || userData['contactdata'] == null
+                                    ? Padding(
+                                  padding: const EdgeInsets.only(top: 250),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      // radius: 30,
+                                      color: Colors.indigo[900],
+                                    ),
+                                  ),
+                                )
+                                    : userData['contactdata'].length == 0
+                                    ? Padding(
+                                  padding: const EdgeInsets.only(top: 200),
+                                  child: Center(
+                                    child: Text(
+                                      'No Post Available',
+                                      style: TextStyle(fontSize: 25),
+                                    ),
+                                  ),
+                                )
+                                    : ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: userData['contactdata'].length,
+                                    // itemCount: Mydata['data'].length,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      var post = userData['contactdata'][index];
+                                      return GestureDetector(
+                                        onTap: () {},
+                                        child: Container(
+                                          margin: const EdgeInsets.only(
+                                            bottom: 15,
+                                          ),
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey.shade100,
+                                              borderRadius:
+                                              BorderRadius.circular(0)),
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                right: 10,
+                                                left: 10.0,
+                                                top: 10,
+                                                bottom: 10
+                                               ),
+                                               child: Column(
+                                                children: [
+                                                    Row(
+
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                    children: [
+                                                      Row(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                left: 10),
+                                                            child:
+                                                            // CircleAvatar(
+                                                            //   radius: 35,
+                                                            //   backgroundImage: NetworkImage(
+                                                            //     'https://i.pinimg.com/originals/5a/6b/16/5a6b16956a2753892d9ee5714f6f112a.jpg',
+                                                            //   ),
+                                                            // ),
+                                                            CircleAvatar(
+                                                              radius: 30,
+                                                              child: ClipOval(
+                                                                child:
+                                                                Image.network(
+                                                                  post['icon'] ??
+                                                                      '',
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  width:
+                                                                  60.0, // adjust width as needed
+                                                                  height: 60.0,
+                                                                  errorBuilder:
+                                                                      (context,
+                                                                      error,
+                                                                      stackTrace) {
+                                                                    return Icon(
+                                                                      Icons
+                                                                          .person,
+                                                                      size: 50,
+                                                                      color: Colors
+                                                                          .grey[
+                                                                      400],
+                                                                    );
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 15,
+                                                          ),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                            // mainAxisAlignment: MainAxisAlignment.s,
+                                                            children: [
+                                                              Text(
+                                                                post['user_name'] ??
+                                                                    '',
+                                                                style: GoogleFonts.roboto(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize: 12,
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 3,
+                                                              ),
+                                                              Text(
+                                                                post['user_email'] ??
+                                                                    '',
+                                                                style: GoogleFonts.roboto(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize: 12,
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .w400),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 3,
+                                                              ),
+                                                              Text(
+
+                                                                post['user_mobile'] ??
+                                                                    '',
+                                                                style: GoogleFonts.roboto(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize: 12,
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .w400),
+                                                                  ),
+                                                                SizedBox(
+                                                                height: 3,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(width: 100,),
+
+                                                      Column(
+                                                        // crossAxisAlignment: CrossAxisAlignment.end,
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                        children: [
+                                                          Visibility(
+                                                            visible:contactButton,
+                                                            child: InkWell(
+                                                                onTap: () {
+                                                                  showDialog(
+                                                                      context:
+                                                                      context,
+                                                                      builder:
+                                                                          (BuildContext
+                                                                      context) {
+                                                                        return AlertDialog(
+                                                                          title: Text(
+                                                                              'Call'),
+                                                                          content: Text(
+                                                                              'Are you sure you want to Call?'),
+                                                                          actions: [
+                                                                            TextButton(
+                                                                              onPressed:
+                                                                                  () {
+                                                                                Navigator.of(context).pop();
+                                                                              },
+                                                                              child:
+                                                                              Text('No'),
+                                                                            ),
+                                                                            TextButton(
+                                                                              onPressed:
+                                                                                  () async
+
+                                                                              {
+                                                                                var phoneNumber =
+                                                                                    post['user_mobile'] ??
+                                                                                        '';
+                                                                                var url =
+                                                                                    "tel:$phoneNumber";
+                                                                                print(
+                                                                                    "Calling $phoneNumber");
+                                                                                await launchUrl(
+                                                                                    Uri.parse(
+                                                                                        url));
+
+                                                                              },
+                                                                              child:
+                                                                              Text('Yes'),
+                                                                            ),
+                                                                          ],
+                                                                        );
+                                                                      });
+                                                                    },
+                                                                    child: Icon(
+                                                                    Icons.call,
+                                                                    color: Colors
+                                                                        .greenAccent),
+                                                                   ),
+                                                               ),
+                                                                Visibility(
+                                                                 visible: contactButton,
+                                                                child: InkWell(
+                                                                onTap: () {
+                                                                  showDialog(
+                                                                    context:
+                                                                      context,
+                                                                       builder:
+                                                                        (BuildContext
+                                                                    context) {
+                                                                      return AlertDialog(
+                                                                        title: Text(
+                                                                            'WhatsApp'),
+                                                                        content: Text(
+                                                                            'Are you sure you want to WhatsApp Message?'),
+                                                                        actions: [
+                                                                          TextButton(
+                                                                            onPressed:
+                                                                                () {
+                                                                              Navigator.of(context)
+                                                                                  .pop();
+                                                                            },
+                                                                            child: Text(
+                                                                                'No'),
+                                                                          ),
+                                                                          TextButton(
+                                                                            onPressed:
+                                                                                () async
+                                                                            {
+                                                                              var phoneNumber =
+                                                                                  post['user_mobile'] ??
+                                                                                      ''; // Extract mobile number from post
+                                                                              var message =
+                                                                                  "Hello"; // Predefined message
+                                                                              var url =
+                                                                                  "https://wa.me/$phoneNumber?text=${Uri.encodeFull(message)}";
+                                                                              print(
+                                                                                  "The URL is $url");
+                                                                              await launchUrl(
+                                                                                  Uri.parse(
+                                                                                      url),
+                                                                                   );
+                                                                                 },
+                                                                            //     {
+                                                                            //   var url =
+                                                                            //       "https://wa.me/?text=Hello";
+                                                                            //   print(
+                                                                            //       "the url is $url");
+                                                                            //   await launchUrl(
+                                                                            //     Uri.parse(url),
+                                                                            //   );
+                                                                            //   Navigator.of(context)
+                                                                            //       .pop();
+                                                                            // },
+                                                                            child: Text(
+                                                                                'Yes'),
+                                                                          ),
+                                                                        ],
+                                                                      );
+                                                                    });
+                                                                    },
+                                                                 child: Image.asset(
+                                                                'assets/images/whats.png',
+                                                                height: 50,
+                                                                width: 50,
+                                                                ),
+                                                               ),
+                                                             ),
+                                                            ],
+                                                           ),
+                                                          ]),
+                                                         Row(
+                                                         children: [
+                                                          Expanded(
+                                                          child: Text(
+                                                          (post["message"] != null) ? post["message"] : 'message not available',
+                                                           style: GoogleFonts.roboto(
+                                                            color: Colors.black,
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                            FontWeight.w400),
+                                                             overflow:
+                                                            TextOverflow.ellipsis,
+                                                           maxLines: 3,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
-                                                Switch(
-                                                  value: switchStates[index],
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      switchStates[index] =
-                                                          value; // Update switch state
-                                                      updateIWant(); // Update i_want value
-                                                    });
-                                                  }, // Call onChangedSwitch method
-                                                  activeTrackColor:
-                                                  Colors.lightGreenAccent,
-                                                  activeColor: Colors.green,
+                                                Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                     "Gender: ${(post["user_gender"] !=null)? post["user_gender"]: 'gender not available'}",
+                                                      // "Gender: ${post['user_gender'] ?? ''}",
+                                                      style: GoogleFonts.roboto(
+                                                          color: Colors.black,
+                                                          fontSize: 12,
+                                                          fontWeight: FontWeight.w500),
+                                                      ),
+                                                    Text(
+                                                      (post["created_at"] != null) ? post["created_at"] : 'date not available',
+                                                      // post['created_at'] ?? '',
+                                                      style: GoogleFonts.roboto(
+                                                          color: Colors.black,
+                                                          fontSize: 12,
+                                                          fontWeight: FontWeight.w500),
+                                                    ),
+                                                  ],
                                                 ),
                                               ],
                                             ),
                                           ),
+                                          // subtitle:
                                         ),
                                       );
-                                    },
-                                  ),
+                                    }),
+                                SizedBox(
+                                  height: 20,
+                                ),
 
-
-
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    "Need Help In:",
-                                    // textAlign: TextAlign.center,
-                                    style: GoogleFonts.roboto(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  // ChipsChoice<dynamic>.multiple(
-                                  //   choiceItems:
-                                  //       C2Choice.listFrom<dynamic, dynamic>(
-                                  //     source: DepartmentList,
-                                  //     value: (index1, item) =>
-                                  //         DepartmentList[index1]['id'],
-                                  //     label: (index1, item) =>
-                                  //         DepartmentList[index1]['filterValue'],
-                                  //   ),
-                                  //   value: department,
-                                  //   onChanged: (val) =>
-                                  //       setState(() => department = val),
-                                  //   choiceCheckmark: true,
-                                  //   choiceStyle: C2ChipStyle.outlined(
-                                  //     color: Color(0xFFA2A09D),
-                                  //     checkmarkColor: Colors.white,
-                                  //     foregroundStyle: const TextStyle(
-                                  //         color: Color(0xFF2F2924),
-                                  //         fontSize: 12),
-                                  //     selectedStyle: C2ChipStyle.filled(
-                                  //       foregroundStyle: TextStyle(
-                                  //           color: Colors.white, fontSize: 12),
-                                  //       color: Color(0xff655D53),
-                                  //       borderRadius: BorderRadius.all(
-                                  //         Radius.circular(10),
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  //   wrapped: true,
-                                  // ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  GestureDetector(
+                                Visibility(
+                                  visible: showButton,
+                                  child: GestureDetector(
                                     onTap: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text('Contact'),
-                                              content: Container(
-                                                height: 200,
-                                                child: Column(
-                                                  children: [
-                                                    TextField(
-                                                      maxLines: 5,
-                                                      controller: _textController,
-                                                      decoration: InputDecoration(
-                                                        hintText: 'Text here....',
-                                                        labelStyle: TextStyle(color: Colors.orange),
-                                                        enabledBorder: OutlineInputBorder(
-                                                          borderRadius: BorderRadius.circular(12),
-                                                          borderSide: BorderSide(color: Colors.orange),
-                                                        ),
-                                                        disabledBorder: OutlineInputBorder(
-                                                          borderRadius: BorderRadius.circular(12),
-                                                          borderSide: BorderSide(color: Colors.orange),
-                                                        ),
-                                                        focusedBorder: OutlineInputBorder(
-                                                          borderRadius: BorderRadius.circular(12),
-                                                          borderSide: BorderSide(color: Colors.orange),
-                                                        ),
-                                                        contentPadding: EdgeInsets.only(
-                                                            left: 10,
-                                                            right: 10,
-                                                            // bottom: 10,
-                                                            top: 10),
-                                                      ),
-                                                      keyboardType: TextInputType.text,
-                                                      onChanged: (value) {
-                                                        // Handle text changes
-                                                      },
-                                                    ),
-                                                    SizedBox(
-                                                      height: 30,
-                                                    ),
-                                                    GestureDetector(
-                                                      // onTap: () {
-                                                      //   addPostEnquiryPopUp(widget.postId.toString(),
-                                                      //       _textController.text);
-                                                      //   Navigator.pop(context);
-                                                      // },
-                                                      onTap: () {
-                                                              contactUserPopUp(widget.postId.toString(),
-                                                            _textController.text);
-                                                            Navigator.pop(context);
-                                                           },
-                                                         child: ButtonWidget(
-                                                        text: "Send",
-                                                        color: const Color(0xffFF9228),
-                                                        textColor: Colors.white,
-                                                        width: 100,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          });
-                                      // _ShowDialoguePopText(jsonData['id']);
-                                      // Navigator.pop(context);
+                                      _showDialogue(context);
+                                      setState(() {
+                                        alreadyContacted = true;
+                                      });
                                     },
-                                    // onTap: () {
-                                    //
-                                    //
-                                    //
-                                    //   Navigator.pop(context);
-                                    //
-                                    //   // Navigator.push(
-                                    //   //   context,
-                                    //   //   MaterialPageRoute(builder: (context) {
-                                    //   //     return (
-                                    //   //       device: widget.device, Device: '' ,
-                                    //   //     );
-                                    //   //   }),
-                                    //   // );
-                                    // },
                                     child: Padding(
                                       padding: const EdgeInsets.only(
                                           left: 30, right: 30.0),
                                       child: ButtonWidget(
-                                        text: " Contact",
+                                        text: alreadyContacted ? "Already Contacted" : "Contact",
                                         color: Color(0xffFBCD96),
                                         textColor: Colors.orange,
-                                        width:
-                                            MediaQuery.of(context).size.width,
+                                        width: MediaQuery.of(context).size.width,
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: (widget.device == "IOS") ? 80 : 30,
-                                  ),
-                                ]),
-                          ),
+                                ),
+
+                                SizedBox(
+                                  height: (widget.device == "IOS") ? 80 : 30,
+                                ),
+                              ]),
                         ],
                       ),
                     ),
                   ]),
                 ),
-        ));
+        ),
+    );
+  }
+  void _showDialogue(BuildContext context){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Contact'),
+            content: Container(
+              height: 200,
+              child: Column(
+                children: [
+                  TextField(
+                    maxLines: 5,
+                    controller:
+                    _textController,
+                    decoration:
+                    InputDecoration(
+                      hintText:
+                      'Text here....',
+                      labelStyle: TextStyle(
+                          color:
+                          Colors.orange),
+                      enabledBorder:
+                      OutlineInputBorder(
+                        borderRadius:
+                        BorderRadius
+                            .circular(12),
+                        borderSide:
+                        BorderSide(
+                            color: Colors
+                                .orange),
+                      ),
+                      disabledBorder:
+                      OutlineInputBorder(
+                        borderRadius:
+                        BorderRadius
+                            .circular(12),
+                        borderSide:
+                        BorderSide(
+                            color: Colors
+                                .orange),
+                      ),
+                      focusedBorder:
+                      OutlineInputBorder(
+                        borderRadius:
+                        BorderRadius
+                            .circular(12),
+                        borderSide:
+                        BorderSide(
+                            color: Colors
+                                .orange),
+                      ),
+                      contentPadding:
+                      EdgeInsets.only(
+                          left: 10,
+                          right: 10,
+                          // bottom: 10,
+                          top: 10),
+                    ),
+                    keyboardType:
+                    TextInputType.text,
+                    onChanged: (value) {
+                      // Handle text changes
+                    },
+                  ),
+
+                  SizedBox(
+                    height: 30,
+                  ),
+                  GestureDetector(
+
+                    onTap: () {
+                      contactUserPopUp(
+                          widget.postId
+                              .toString(),
+                          _textController
+                              .text);
+                      Navigator.pop(context);
+                    },
+                    child: ButtonWidget(
+                      text: "Send",
+                      color: const Color(
+                          0xffFF9228),
+                      textColor: Colors.white,
+                      width: 100,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
