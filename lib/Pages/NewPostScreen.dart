@@ -935,12 +935,11 @@ import '../Allwidgets/textForm_filed.dart';
 
                 SizedBox(
                   height: 30,
-                ),
-
-                InkWell(
-                  onTap: () {
-                    if(_formKey.currentState!.validate())
-                      addPostApi();
+                    ),
+                     InkWell(
+                     onTap: () {
+                      if(_formKey.currentState!.validate())
+                       addPostApi();
                   },
 
                   child: Padding(

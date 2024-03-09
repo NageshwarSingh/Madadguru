@@ -1430,15 +1430,6 @@ final TextEditingController _genderController = TextEditingController();
 
 
 
-
-
-
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1881,72 +1872,7 @@ final TextEditingController _genderController = TextEditingController();
                         SizedBox(
                           height: 10,
                         ),
-                        // Container(
-                        //   padding: EdgeInsets.only(left: 7),
-                        //   alignment: Alignment.center,
-                        //   decoration: BoxDecoration(
-                        //     color: Color(0xffFFEADD),
-                        //     borderRadius: BorderRadius.all(
-                        //       Radius.circular(10),
-                        //     ),
-                        //   ),
-                        //   child: InputDecorator(
-                        //     decoration: InputDecoration(
-                        //       border: InputBorder.none,
-                        //       contentPadding: EdgeInsets.symmetric(
-                        //         horizontal: 10,
-                        //       ),
-                        //     ),
-                        //     child: DropdownButtonHideUnderline(
-                        //       child: DropdownButton<Map<String, dynamic>>(
-                        //         style: GoogleFonts.roboto(
-                        //             fontSize: 15,
-                        //             fontWeight: FontWeight.w400,
-                        //             color: Colors.orange
-                        //         ),
-                        //         dropdownColor: Colors.white,
-                        //         borderRadius: BorderRadius.circular(10),
-                        //         value: selectedProfession,
-                        //         isExpanded: true,
-                        //         icon: const Icon(
-                        //           Icons.keyboard_arrow_down,
-                        //           size: 30,
-                        //           color: Colors.black38,
-                        //         ),
-                        //         hint: Text(
-                        //           "Profession",
-                        //           style: GoogleFonts.roboto(
-                        //               fontSize: 12,
-                        //               fontWeight: FontWeight.w400,
-                        //               color: Colors.black38
-                        //           ),
-                        //         ),
-                        //         elevation: 1,
-                        //         onChanged: (Map<String, dynamic>? newValue) {
-                        //           setState(() {
-                        //             selectedProfession = newValue;
-                        //             _professionController.text = newValue?['name'] ?? '';
-                        //           });
-                        //         },
-                        //         items: professionList.map<DropdownMenuItem<Map<String, dynamic>>>(
-                        //                 (Map<String, dynamic> profession) {
-                        //               return DropdownMenuItem<Map<String, dynamic>>(
-                        //                 value: profession,
-                        //                 child: Text(
-                        //                   profession['name'].toString(),
-                        //                   style: GoogleFonts.roboto(
-                        //                       fontSize: 12,
-                        //                       fontWeight: FontWeight.w400,
-                        //                       color: Colors.black
-                        //                   ),
-                        //                 ),
-                        //               );
-                        //             }
-                        //         ).toList(),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
+
                         Container(
                           padding: EdgeInsets.only(left: 7),
                           alignment: Alignment.center,

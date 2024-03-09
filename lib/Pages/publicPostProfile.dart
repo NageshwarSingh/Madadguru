@@ -697,7 +697,6 @@ bool contactButton=true;
                                                                             TextButton(
                                                                               onPressed:
                                                                                   () async
-
                                                                               {
                                                                                 var phoneNumber =
                                                                                     post['user_mobile'] ??
@@ -755,9 +754,9 @@ bool contactButton=true;
                                                                             {
                                                                               var phoneNumber =
                                                                                   post['user_mobile'] ??
-                                                                                      ''; // Extract mobile number from post
+                                                                                      '';
                                                                               var message =
-                                                                                  "Hello"; // Predefined message
+                                                                                  "Hello";
                                                                               var url =
                                                                                   "https://wa.me/$phoneNumber?text=${Uri.encodeFull(message)}";
                                                                               print(
@@ -816,7 +815,6 @@ bool contactButton=true;
                                                     //   ),
                                                     Text(
                                                       (post["created_at"] != null) ? post["created_at"] : 'date not available',
-
                                                       style: GoogleFonts.roboto(
                                                           color: Colors.black,
                                                           fontSize: 12,
@@ -827,14 +825,12 @@ bool contactButton=true;
                                               ],
                                             ),
                                           ),
-                                          // subtitle:
                                         ),
                                       );
                                     }),
                                 SizedBox(
                                   height: 20,
                                 ),
-
                                 Visibility(
                                   visible: showButton,
                                   child: GestureDetector(
@@ -924,28 +920,26 @@ bool contactButton=true;
                       EdgeInsets.only(
                           left: 10,
                           right: 10,
-                          // bottom: 10,
                           top: 10),
-                    ),
+                        ),
                     keyboardType:
                     TextInputType.text,
                     onChanged: (value) {
                       // Handle text changes
                     },
                   ),
-
                   SizedBox(
                     height: 30,
                   ),
-                  GestureDetector(
-
-                    onTap: () {
+                    GestureDetector(
+                    onTap: () async {
                       contactUserPopUp(
                           widget.postId
                               .toString(),
                           _textController
                               .text);
                       Navigator.pop(context);
+                    await fetchuserProfile();
                     },
                     child: ButtonWidget(
                       text: "Send",

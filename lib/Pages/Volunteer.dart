@@ -29,7 +29,9 @@ import 'package:http/http.dart' as http;
   }
 
   AppBar buildAppBar() {
-    return AppBar(title: Text('Madadguru'),backgroundColor: Colors.grey.shade200,);
+    return AppBar(
+      automaticallyImplyLeading: false,
+      title: Text('Madadguru'),backgroundColor: Colors.grey.shade200,);
 
   }
 }
@@ -211,13 +213,13 @@ class Body extends StatefulWidget {
               ),
               tabs: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 50, right: 50),
+                  padding: const EdgeInsets.only(left: 50, right: 40),
                   child: Tab(
                     text: 'User',
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 40, right: 40.0),
+                  padding: const EdgeInsets.only(left: 30, right: 40.0),
                   child: Tab(text: 'Volunteer'),
                 ),
               ],

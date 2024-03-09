@@ -20,7 +20,6 @@ class MyPostDetail extends StatefulWidget {
 }
 
 class _MyPostDetailState extends State<MyPostDetail> {
-
   bool isLoading = false;
   Map Mydata = {};
   @override
@@ -251,7 +250,7 @@ class _MyPostDetailState extends State<MyPostDetail> {
                           Padding(
                             padding: const EdgeInsets.only(
                                 left: 10, right: 10, bottom: 8),
-                               child: Row(
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
@@ -285,7 +284,6 @@ class _MyPostDetailState extends State<MyPostDetail> {
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
@@ -294,7 +292,6 @@ class _MyPostDetailState extends State<MyPostDetail> {
                               style: GoogleFonts.roboto(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-
                                   color: Colors.black),
                             ),
                           ],
@@ -413,7 +410,6 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                         (Mydata["second_party"] != null)
                                             ? Mydata["second_party"]
                                             : 'Name not available',
-                                        // "2nd party (if Any)",
                                         style: GoogleFonts.roboto(
                                             color: Colors.black54,
                                             fontSize: 12,
@@ -437,7 +433,6 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                         (Mydata["problem_statement"] != null)
                                             ? Mydata["problem_statement"]
                                             : 'Name not available',
-                                        // "Problems",
                                         style: GoogleFonts.roboto(
                                             color: Colors.black54,
                                             fontSize: 12,
@@ -461,13 +456,12 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                         (Mydata["already_reported"] != null)
                                             ? Mydata["already_reported"]
                                             : 'Name not available',
-                                        // " Madadguru",
                                         style: GoogleFonts.roboto(
                                             color: Colors.black54,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w400)),
                                   ]),
-                              const SizedBox(
+                              SizedBox(
                                 height: 10,
                               ),
                               Row(
@@ -485,13 +479,12 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                         (Mydata["financial_status"] != null)
                                             ? Mydata["financial_status"]
                                             : 'Name not available',
-                                        // " Status",
                                         style: GoogleFonts.roboto(
                                             color: Colors.black54,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w400)),
                                   ]),
-                              const SizedBox(
+                              SizedBox(
                                 height: 10,
                               ),
                               Row(
@@ -507,7 +500,6 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                     ),
                                     Text(
                                         " ${(Mydata["problem_start_month"] != null) ? Mydata["problem_start_month"] : 'Name not available'}-${(Mydata["problem_start_year"] != null) ? Mydata["problem_start_year"] : 'Name not available'}",
-                                        // "Hospitality",
                                         style: GoogleFonts.roboto(
                                             color: Colors.black54,
                                             fontSize: 12,
@@ -529,8 +521,6 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                     ),
                                     Text(
                                         " ${(Mydata["exp_solution_month"] != null) ? Mydata["exp_solution_month"] : 'Name not available'}-${(Mydata["exp_solution_year"] != null) ? Mydata["exp_solution_year"] : 'Name not available'}",
-
-                                        // "Hospitality",
                                         style: GoogleFonts.roboto(
                                             color: Colors.black54,
                                             fontSize: 12,
@@ -579,7 +569,6 @@ class _MyPostDetailState extends State<MyPostDetail> {
                               : ListView.builder(
                                   shrinkWrap: true,
                                   itemCount: Mydata['post_contacts'].length,
-                                  // itemCount: Mydata['data'].length,
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     var post = Mydata['post_contacts'][index];
@@ -595,12 +584,12 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                                   BorderRadius.circular(0)),
                                           child: Padding(
                                             padding: const EdgeInsets.only(
-                                                right: 10,
-                                                left: 10.0,
-                                                top: 10,
-                                                ),
-                                               child: Column(
-                                                 children: [
+                                              right: 10,
+                                              left: 10.0,
+                                              top: 10,
+                                            ),
+                                            child: Column(
+                                              children: [
                                                 Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -616,8 +605,7 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                                                 const EdgeInsets
                                                                     .only(
                                                                     left: 10),
-                                                            child:
-                                                                CircleAvatar(
+                                                            child: CircleAvatar(
                                                               radius: 30,
                                                               child: ClipOval(
                                                                 child: Image
@@ -653,7 +641,6 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
                                                                     .start,
-
                                                             children: [
                                                               Text(
                                                                 post['name'] ??
@@ -716,67 +703,60 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                                           ),
                                                         ],
                                                       ),
-
-
                                                       Column(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
                                                                 .center,
-                                                                children: [
-
-                                                               InkWell(
+                                                        children: [
+                                                          InkWell(
                                                               onTap: () {
                                                                 showDialog(
-                                                                    context: context,
-                                                                    builder: (BuildContext
-                                                                    context) {
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (BuildContext
+                                                                            context) {
                                                                       return AlertDialog(
-                                                                        title:
-                                                                        Text('Call'),
-                                                                        content: Text(
-                                                                            'Are you sure you want to Call?'),
+                                                                        title: Text(
+                                                                            'Call'),
+                                                                        content:
+                                                                            Text('Are you sure you want to Call?'),
                                                                         actions: [
                                                                           TextButton(
                                                                             onPressed:
                                                                                 () {
-                                                                              Navigator.of(
-                                                                                  context)
-                                                                                  .pop();
+                                                                              Navigator.of(context).pop();
                                                                             },
-                                                                            child: Text(
-                                                                                'No'),
+                                                                            child:
+                                                                                Text('No'),
                                                                           ),
                                                                           TextButton(
                                                                             onPressed:
                                                                                 () async {
-                                                                              var phoneNumber =
-                                                                                  post['mobile'] ??
-                                                                                      '';
-                                                                              var url =
-                                                                                  "tel:$phoneNumber";
-                                                                              print(
-                                                                                  "Calling $phoneNumber");
-                                                                              await launchUrl(
-                                                                                  Uri.parse(
-                                                                                      url));
+                                                                              var phoneNumber = post['mobile'] ?? '';
+                                                                              var url = "tel:$phoneNumber";
+                                                                              print("Calling $phoneNumber");
+                                                                              await launchUrl(Uri.parse(url));
                                                                             },
-
-                                                                            child: Text(
-                                                                                'Yes'),
+                                                                            child:
+                                                                                Text('Yes'),
                                                                           ),
                                                                         ],
                                                                       );
                                                                     });
                                                               },
-                                                              child: Icon(Icons.call,
+                                                              child: Icon(
+                                                                  Icons.call,
                                                                   color: Colors
                                                                       .greenAccent)),
                                                           InkWell(
                                                             onTap: () {
                                                               showDialog(
-                                                                  context: context,
-                                                                  builder: (BuildContext
-                                                                  context) {
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (BuildContext
+                                                                          context) {
                                                                     return AlertDialog(
                                                                       title: Text(
                                                                           'WhatsApp'),
@@ -784,35 +764,27 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                                                           'Are you sure you want to WhatsApp Message?'),
                                                                       actions: [
                                                                         TextButton(
-                                                                          onPressed: () {
-                                                                            Navigator.of(
-                                                                                context)
-                                                                                .pop();
+                                                                          onPressed:
+                                                                              () {
+                                                                            Navigator.of(context).pop();
                                                                           },
                                                                           child:
-                                                                          Text('No'),
+                                                                              Text('No'),
                                                                         ),
-
-
-                                                                          TextButton(
+                                                                        TextButton(
                                                                           onPressed:
                                                                               () async {
                                                                             var phoneNumber =
-                                                                                post['mobile'] ??
-                                                                                    ''; // Extract mobile number from post
+                                                                                post['mobile'] ?? '';
                                                                             var message =
-                                                                                "Hello"; // Predefined message
+                                                                                "Hello";
                                                                             var url =
                                                                                 "https://wa.me/$phoneNumber?text=${Uri.encodeFull(message)}";
-                                                                            print(
-                                                                                "The URL is $url");
-                                                                            await launchUrl(
-                                                                                Uri.parse(
-                                                                                    url));
+                                                                            print("The URL is $url");
+                                                                            await launchUrl(Uri.parse(url));
                                                                           },
-
                                                                           child:
-                                                                          Text('Yes'),
+                                                                              Text('Yes'),
                                                                         ),
                                                                       ],
                                                                     );
@@ -834,9 +806,7 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
-                                                     children: [
-
-                                                  ],
+                                                  children: [],
                                                 ),
                                               ],
                                             ),
@@ -845,8 +815,9 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                           ),
                                     );
                                   }),
-                         SizedBox(height: 20,)
-
+                      SizedBox(
+                        height: 20,
+                      )
                     ],
                   ),
                 ]),
@@ -867,10 +838,8 @@ class _MyPostDetailState extends State<MyPostDetail> {
                 children: [
                   TextField(
                     maxLines: 5,
-                    // controller: _professionController,
                     decoration: InputDecoration(
                       hintText: 'Text here....',
-                      // label: Text('/'),
                       labelStyle: TextStyle(color: Colors.orange),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -929,8 +898,6 @@ class _MyPostDetailState extends State<MyPostDetail> {
               ),
               TextButton(
                 onPressed: () {
-                  // Perform the delete operation and close the dialog
-                  // Add your delete logic here
                   Navigator.of(context).pop();
                 },
                 child: Text('Yes'),

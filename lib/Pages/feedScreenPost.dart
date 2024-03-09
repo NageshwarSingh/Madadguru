@@ -959,10 +959,11 @@ class _feedScreenPostState extends State<feedScreenPost> {
                     height: 30,
                   ),
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       addPostEnquiryPopUp(
                           widget.postId.toString(), _textController.text);
-                      Navigator.pop(context);
+                          Navigator.pop(context);
+                     await getPostDetails();
                     },
                     child: ButtonWidget(
                       text: "Send",

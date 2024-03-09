@@ -126,29 +126,24 @@ class _SubcriptionScreenState extends State<SubcriptionScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 30,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Icon(Icons.arrow_back),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
+
+                SizedBox(height: 40,),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // mainAxisAlignment: MainAxisAlignment.,
                   children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(Icons.arrow_back),
+                    ),SizedBox(width: 15,),
                     Text(
                       'Subscriptions',
                       style: GoogleFonts.roboto(
                           color: Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          ),
                     ),
-
                   ],
                 ),
                 SizedBox(
