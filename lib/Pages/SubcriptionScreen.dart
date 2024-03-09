@@ -34,10 +34,7 @@ class _SubcriptionScreenState extends State<SubcriptionScreen> {
           headers: {
             'Authorization': 'Bearer $usertoken',
           },
-          //     body: {
-          //   'post_id': widget.id
-          //       .toString(), // Assuming this function returns the post ID
-          // }
+
         );
         if (response.statusCode == 200) {
           var responseData = json.decode(response.body);
@@ -116,56 +113,6 @@ class _SubcriptionScreenState extends State<SubcriptionScreen> {
     }
   }
 
-  // Future<void> buySubscription(int postId) async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   var usertoken = prefs.getString('token');
-  //   if (usertoken != null) {
-  //     final Uri uri =
-  //         Uri.parse("https://madadguru.webkype.net/api/buySubscription");
-  //     try {
-  //       final response = await http.post(uri, headers: {
-  //         'Authorization': 'Bearer $usertoken',
-  //       }, body: {
-  //         "plan_id": postId.toString(),
-  //       });
-  //       if (response.statusCode == 200) {
-  //         var responseData = json.decode(response.body);
-  //         print(
-  //             "Response: $responseData"); // Print the entire response for debugging
-  //         if (responseData != null && responseData['success'] == true) {
-  //           var userData1 = responseData['data'];
-  //           if (userData1 != null && userData1 is List) {
-  //             setState(() {
-  //               JsonDataBuy = {
-  //                 'data': List<Map<String, dynamic>>.from(userData1)
-  //               };
-  //               print('API response: ${JsonDataBuy}');
-  //
-  //             });
-  //             await getSubscription();
-  //           }
-  //         } else {
-  //           print(
-  //               'API request failed or success is false: ${responseData?["message"]}');
-  //         }
-  //         print('Data fetched successfully');
-  //         print(response.body);
-  //       } else {
-  //         print('API request failed with status code: ${response.statusCode}');
-  //       }
-  //     } catch (error) {
-  //       print('Error fetching data: $error');
-  //     } finally {
-  //       setState(() {
-  //         isLoading = false;
-  //       });
-  //     }
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -201,35 +148,7 @@ class _SubcriptionScreenState extends State<SubcriptionScreen> {
                           fontSize: 14,
                           fontWeight: FontWeight.bold),
                     ),
-                    // InkWell(
-                    //   onTap: () {
-                    //     // Navigator.push(
-                    //     //   context,
-                    //     //   MaterialPageRoute(builder: (context) {
-                    //     //     return SubscriptionScreen(
-                    //     //       device: widget.device,
-                    //     //     );
-                    //     //   }),
-                    //     // );
-                    //   },
-                    //   child: Container(
-                    //     decoration: BoxDecoration(
-                    //         color: Colors.transparent,
-                    //         borderRadius: BorderRadius.circular(12),
-                    //         border:
-                    //             Border.all(width: 1, color: Colors.black12)),
-                    //     child: Padding(
-                    //       padding: const EdgeInsets.all(10.0),
-                    //       child: Text(
-                    //         'My Subscriptions',
-                    //         style: GoogleFonts.roboto(
-                    //             color: Colors.black,
-                    //             fontSize: 12,
-                    //             fontWeight: FontWeight.bold),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
+
                   ],
                 ),
                 SizedBox(

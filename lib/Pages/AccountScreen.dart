@@ -9,7 +9,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:madadguru/Pages/EnquaryScreen.dart';
 import '../AllWidgets/buttons.dart';
 import '../Allwidgets/AboutUs.dart';
-import '../Allwidgets/Account_JobPreference.dart';
 import '../Allwidgets/ContactsScreen.dart';
 import '../Allwidgets/Editprofile.dart';
 import '../Allwidgets/FaqScreen.dart';
@@ -82,19 +81,7 @@ import 'SubcriptionScreen.dart';
               dobController.text = Mydata['dob'];
               _aboutController.text = Mydata['about'];
               fetchDatagetWant(Mydata['i_want']);
-                // switchStates = List<bool>.filled(DepartmentList.length, false);
-              // if (data['i_want'] is List) {
-              //   for (var iWantId in data['i_want']) {
-              //     var index = DepartmentList.indexWhere(
-              //         (item) => item['id'] == iWantId);
-              //        if (index != -1) {
-              //       switchStates[index] = true;
-              //       }
-              //     }
-              //   }
-              // if (data['need_help_in'] is List) {
-              //   department = List<dynamic>.from(data['need_help_in']);
-              // }
+
               isLoading = false;
                });
                } else {
@@ -146,14 +133,6 @@ import 'SubcriptionScreen.dart';
             print("Data From Api$Data");
           });
           print(response.body);
-
-          // Navigator.of(context).pushAndRemoveUntil(
-          //     MaterialPageRoute(
-          //       builder: (context) => ProfilePreference(
-          //         device: widget.device,
-          //       ),
-          //     ),
-          //         (route) => false);
           
           print('Data fetched successfully');
            } else {
@@ -185,22 +164,8 @@ import 'SubcriptionScreen.dart';
     } else {
       print('i_want data not found');
       }
-       // if (Mydata.containsKey('i_need_help')) {
-      //    setState(() {
-      //       department = DepartmentList.where(
-      //           (item) => Mydata['i_need_help'].contains(item['id'].toString()))
-      //       .toList();
-      // });
-    // }
+
 }
-
-  //   void onChangedSwitch(int index, bool value) {
-  //   setState(() {
-  //     switchStates[index] = value;
-  //     updateIWant(); // Update i_want value
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1098,21 +1063,7 @@ import 'SubcriptionScreen.dart';
                                   ),
                                 ],
                               ),
-                              // code isCorrect but editabled code implemtation is editprofile
 
-                              // Switch(
-                              //     value: switchStates[index],
-                              //     onChanged: (value) {
-                              //       setState(() {
-                              //       switchStates[index] =
-                              //           value; // Update switch state
-                              //       updateIWant(); // Update i_want value
-                              //     });
-                              //   }, // Call onChangedSwitch method
-                              //   activeTrackColor:
-                              //   Colors.lightGreenAccent,
-                              //   activeColor: Colors.green,
-                              // ),
                               Switch(
                                 // value:true,
                                 autofocus: true,
@@ -1238,166 +1189,5 @@ import 'SubcriptionScreen.dart';
   }
 
 
-  void _ShowDialoguePop1() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Contact Madadguru'),
-            content: Container(
-              height: 215,
-              child: Column(
-                children: [
-                  TextField(
-                    maxLines: 5,
-                    // controller: _professionController,
-                    decoration: InputDecoration(
-                      hintText: 'Text here....',
-                      // label: Text('/'),
-                      labelStyle: TextStyle(color: Colors.orange),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.orange),
-                      ),
-                      disabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.orange),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.orange),
-                      ),
-                      contentPadding: EdgeInsets.only(
-                          left: 10,
-                          right: 10,
-                          // bottom: 10,
-                          top: 10),
-                    ),
-                    keyboardType: TextInputType.text,
-                    onChanged: (value) {
-                      // Handle text changes
-                    },
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: ButtonWidget(
-                      text: "Submit",
-                      color: const Color(0xffFF9228),
-                      textColor: Colors.white,
-                      width: 150,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-      }
-
-  // void _onShare(BuildContext context) async {
-  //   final RenderBox box = context.findRenderObject() as RenderBox;
-  //
-  //   if (imagePaths.isNotEmpty) {
-  //     await Share.shareFiles(
-  //       imagePaths,
-  //       text: text,
-  //       subject: subject,
-  //       sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-  //     );
-  //   } else {
-  //     await Share.share(
-  //       text,
-  //       subject: subject,
-  //       sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-  //     );
-  //   }
-  // }
 }
 
-// class _WelcomePopupSplash extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return  Dialog(
-//       backgroundColor: Colors.white,
-//
-//       child: Container(
-//         // height: 350,
-//         decoration: BoxDecoration(borderRadius: BorderRadius.circular(16),
-//           color: Colors.white,
-//         ),
-//
-//         padding: const EdgeInsets.all(15),
-//         child: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             Image.asset('assets/images/mimage.png',
-//
-//                 height: 234, width: 276),
-//             SizedBox(height: 20),
-//
-//             // SizedBox(height: 20),
-//             // ElevatedButton(
-//             //   onPressed: () {
-//             //     Navigator.of(context).pop();
-//             //   },
-//             //   child: Text('Close'),
-//             // ),
-//             SizedBox(height: 20),
-//             Text('Welcome',
-//               style: TextStyle(color:Colors.orange,fontSize: 25,fontWeight:FontWeight.bold),),
-//             SizedBox(height: 20),
-//             Text('I need help is a statement that indicates the speakers current situation or request for assistance.',textAlign:TextAlign.center,
-//                 style: TextStyle(color:Colors.black38,fontSize: 12,fontWeight:FontWeight.w400)),
-//             SizedBox(height: 20),
-//             Text('Just Second Wait.....',
-//               style: TextStyle(color:Colors.black38,fontSize: 12,fontWeight:FontWeight.w400),),
-//
-//             SizedBox(height: 30),
-//
-//             InkWell(
-//               onTap: () {
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(builder: (context) {
-//                     return BottomNavBar(device: '',
-//                       // device: widget.device,
-//                     );
-//                   }),
-//                 );
-//               },
-//               child: Padding(
-//                 padding: const EdgeInsets.only(
-//                     right: 40, left: 40, top: 20, bottom: 10),
-//                 child: Card(
-//                   elevation: 2,
-//                   child: Container(
-//                     height: 45,
-//                     width: MediaQuery.of(context).size.width,
-//                     decoration: BoxDecoration(
-//                         borderRadius: BorderRadius.circular(12),
-//                         color: Color(0xffFBCD96)),
-//                     child: Center(
-//                       child: Text(
-//                         'Continue',
-//                         style: TextStyle(
-//                             color: Colors.orange,
-//                             fontWeight: FontWeight.bold,
-//                             fontSize: 16),
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//
-//   }
-// }

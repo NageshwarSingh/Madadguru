@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -24,7 +22,7 @@ class _feedScreenPostState extends State<feedScreenPost> {
   bool isLoading = false;
   Map jsonData = {};
   bool showButton = true;
- bool contactButton=true;
+  bool contactButton = true;
   bool alreadyContacted = false;
   TextEditingController _textController = TextEditingController();
   @override
@@ -34,7 +32,6 @@ class _feedScreenPostState extends State<feedScreenPost> {
   }
 
   Future<void> getPostDetails() async {
-    print("TheUserdPost:${widget.postId}");
     setState(() {
       isLoading = true;
     });
@@ -64,11 +61,11 @@ class _feedScreenPostState extends State<feedScreenPost> {
 
               if (addByUserId == myUserId) {
                 showButton = false;
-                // Hide the button
               }
               var myUsermobile = prefs.getString('userId');
-              var addByUsermobile = jsonData['post_contacts'][0]['id'].toString();
-              if (myUsermobile==addByUsermobile){
+              var addByUsermobile =
+                  jsonData['post_contacts'][0]['id'].toString();
+              if (myUsermobile == addByUsermobile) {
                 contactButton = false;
               }
             });
@@ -169,7 +166,6 @@ class _feedScreenPostState extends State<feedScreenPost> {
                   children: [
                     Card(
                       elevation: 2,
-                      // color: Colors.white,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(0)),
                       margin: EdgeInsets.only(bottom: 10),
@@ -207,10 +203,8 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                                     jsonData[
                                                         'add_by_user_image'],
                                                     fit: BoxFit.cover,
-                                                    width:
-                                                        90.0, // adjust width as needed
-                                                    height:
-                                                        90.0, // adjust height as needed
+                                                    width: 90.0,
+                                                    height: 90.0,
                                                   )
                                                 : Icon(
                                                     Icons.person,
@@ -221,7 +215,6 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                         ),
                                       ),
                                     ),
-
                                     SizedBox(
                                       width: 15,
                                     ),
@@ -245,7 +238,6 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                                       null)
                                                   ? jsonData["category_name"]
                                                   : 'Name not available',
-                                              // "Type: ${(jsonData["add_by_user_type"] != null) ? jsonData["add_by_user_type"] : 'Name not available'}",
                                               style: GoogleFonts.roboto(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w400,
@@ -255,7 +247,6 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                               (jsonData["topic_name"] != null)
                                                   ? jsonData["topic_name"]
                                                   : 'Name not available',
-                                              // "Type: ${(jsonData["add_by_user_type"] != null) ? jsonData["add_by_user_type"] : 'Name not available'}",
                                               style: GoogleFonts.roboto(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w400,
@@ -263,7 +254,6 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                             ),
                                           ]),
                                     ),
-
                                     Container(
                                       //   height: 40,
                                       // width: 100,
@@ -280,7 +270,6 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                         ),
                                       ),
                                     )
-                                    // Image.asset('assets/images/x.png',height: 10,width: 10,)
                                   ]),
                             ),
                             Padding(
@@ -353,7 +342,6 @@ class _feedScreenPostState extends State<feedScreenPost> {
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        // mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -600,8 +588,6 @@ class _feedScreenPostState extends State<feedScreenPost> {
                         ),
                       ),
                     ),
-                    // ///////////////////////////////////////////
-
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -620,7 +606,7 @@ class _feedScreenPostState extends State<feedScreenPost> {
                     ),
                     jsonData == null || jsonData['post_contacts'] == null
                         ? Padding(
-                            padding: const EdgeInsets.only(top: 250),
+                            padding: const EdgeInsets.only(top: 150),
                             child: Center(
                               child: CircularProgressIndicator(
                                 // radius: 30,
@@ -630,10 +616,10 @@ class _feedScreenPostState extends State<feedScreenPost> {
                           )
                         : jsonData['post_contacts'].length == 0
                             ? Padding(
-                                padding: const EdgeInsets.only(top: 200),
+                                padding: const EdgeInsets.only(top: 50),
                                 child: Center(
                                   child: Text(
-                                    'No Post Available',
+                                    'No Contact Available',
                                     style: TextStyle(fontSize: 25),
                                   ),
                                 ),
@@ -641,7 +627,6 @@ class _feedScreenPostState extends State<feedScreenPost> {
                             : ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: jsonData['post_contacts'].length,
-                                // itemCount: Mydata['data'].length,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   var post = jsonData['post_contacts'][index];
@@ -660,7 +645,7 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                             right: 10,
                                             left: 10.0,
                                             top: 10,
-                                            bottom: 10),
+                                            ),
                                         child: Column(
                                           children: [
                                             Row(
@@ -677,9 +662,9 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                                         padding:
                                                             const EdgeInsets
                                                                 .only(left: 10),
-                                                        child: CircleAvatar(
-                                                          radius: 30,
-                                                          child: ClipOval(
+                                                          child: CircleAvatar(
+                                                           radius: 30,
+                                                           child: ClipOval(
                                                             child:
                                                                 Image.network(
                                                               (post["profile"] !=
@@ -687,8 +672,7 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                                                   ? post[
                                                                       "profile"]
                                                                   : 'profile not available',
-                                                              // post['profile'] ??
-                                                              //     '',
+
                                                               fit: BoxFit.cover,
                                                               width:
                                                                   60.0, // adjust width as needed
@@ -716,7 +700,6 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
                                                                 .start,
-                                                        // mainAxisAlignment: MainAxisAlignment.s,
                                                         children: [
                                                           Text(
                                                             (post["name"] !=
@@ -751,22 +734,22 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                                           SizedBox(
                                                             height: 3,
                                                           ),
-                                                          Text(
-                                                            (post["mobile"] !=
-                                                                    null)
-                                                                ? post["mobile"]
-                                                                : 'mobile not available',
-                                                            style: GoogleFonts.roboto(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 3,
-                                                          ),
+                                                          // Text(
+                                                          //   (post["mobile"] !=
+                                                          //           null)
+                                                          //       ? post["mobile"]
+                                                          //       : 'mobile not available',
+                                                          //   style: GoogleFonts.roboto(
+                                                          //       color: Colors
+                                                          //           .black,
+                                                          //       fontSize: 12,
+                                                          //       fontWeight:
+                                                          //           FontWeight
+                                                          //               .w400),
+                                                          // ),
+                                                          // SizedBox(
+                                                          //   height: 3,
+                                                          // ),
                                                           Text(
                                                             (post["profession"] !=
                                                                     null)
@@ -785,10 +768,7 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                                       ),
                                                     ],
                                                   ),
-                                                  // SizedBox(width: 100,),
-
                                                   Column(
-                                                    // crossAxisAlignment: CrossAxisAlignment.end,
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .center,
@@ -796,68 +776,60 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                                       Visibility(
                                                         visible: contactButton,
                                                         child: InkWell(
-                                                            onTap: () {
-                                                              showDialog(
-                                                                  context:
-                                                                      context,
-                                                                  builder:
-                                                                      (BuildContext
-                                                                          context) {
-                                                                    return AlertDialog(
-                                                                      title: Text(
-                                                                          'Call'),
-                                                                      content: Text(
-                                                                          'Are you sure you want to Call?'),
-                                                                      actions: [
-                                                                        TextButton(
-                                                                          onPressed:
-                                                                              () {
-                                                                            Navigator.of(context)
-                                                                                .pop();
-                                                                          },
-                                                                          child: Text(
-                                                                              'No'),
-                                                                        ),
-                                                                        TextButton(
-                                                                          onPressed:
-                                                                              () async {
-                                                                            var phoneNumber =
-                                                                                post['mobile'] ?? '';
-                                                                            var url =
-                                                                                "tel:$phoneNumber";
-                                                                            print(
-                                                                                "Calling $phoneNumber");
-                                                                            await launchUrl(
-                                                                                Uri.parse(url));
-                                                                            //   // onPressed: () async {
-                                                                            //   var phoneNumber =
-                                                                            //       "";
-                                                                            //   var url =
-                                                                            //       "tel:$phoneNumber";
-                                                                            //   print("Calling $phoneNumber");
-                                                                            //   await launchUrl(Uri.parse(url));
-                                                                            //   Navigator.of(context).pop();
-                                                                          },
-                                                                          child: Text(
-                                                                              'Yes'),
-                                                                        ),
-                                                                      ],
-                                                                    );
-                                                                  });
-                                                            },
-                                                            child: Icon(
-                                                                Icons.call,
-                                                                color: Colors
-                                                                    .greenAccent),
-                                                           ),
+                                                          onTap: () {
+                                                            showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (BuildContext
+                                                                        context) {
+                                                                  return AlertDialog(
+                                                                    title: Text(
+                                                                        'Call'),
+                                                                    content: Text(
+                                                                        'Are you sure you want to Call?'),
+                                                                    actions: [
+                                                                      TextButton(
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.of(context)
+                                                                              .pop();
+                                                                        },
+                                                                        child: Text(
+                                                                            'No'),
+                                                                      ),
+                                                                      TextButton(
+                                                                        onPressed:
+                                                                            () async {
+                                                                          var phoneNumber =
+                                                                              post['mobile'] ?? '';
+                                                                          var url =
+                                                                              "tel:$phoneNumber";
+                                                                          print(
+                                                                              "Calling $phoneNumber");
+                                                                          await launchUrl(
+                                                                              Uri.parse(url));
+                                                                        },
+                                                                        child: Text(
+                                                                            'Yes'),
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                });
+                                                          },
+                                                          child: Icon(
+                                                              Icons.call,
+                                                              color: Colors
+                                                                  .greenAccent),
+                                                        ),
                                                       ),
                                                       Visibility(
                                                         visible: contactButton,
                                                         child: InkWell(
                                                           onTap: () {
-                                                            // _showPopup(context);
                                                             showDialog(
-                                                                context: context,
+                                                                context:
+                                                                    context,
                                                                 builder:
                                                                     (BuildContext
                                                                         context) {
@@ -880,10 +852,9 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                                                         onPressed:
                                                                             () async {
                                                                           var phoneNumber =
-                                                                              post['mobile'] ??
-                                                                                  ''; // Extract mobile number from post
+                                                                              post['mobile'] ?? '';
                                                                           var message =
-                                                                              "Hello"; // Predefined message
+                                                                              "Hello";
                                                                           var url =
                                                                               "https://wa.me/$phoneNumber?text=${Uri.encodeFull(message)}";
                                                                           print(
@@ -914,11 +885,10 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                           ],
                                         ),
                                       ),
-                                      // subtitle:
                                     ),
                                   );
                                 }),
-                              SizedBox(
+                    SizedBox(
                       height: 20,
                     ),
                     Visibility(
@@ -979,16 +949,11 @@ class _feedScreenPostState extends State<feedScreenPost> {
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(color: Colors.orange),
                       ),
-                      contentPadding: EdgeInsets.only(
-                          left: 10,
-                          right: 10,
-                          // bottom: 10,
-                          top: 10),
+                      contentPadding:
+                          EdgeInsets.only(left: 10, right: 10, top: 10),
                     ),
                     keyboardType: TextInputType.text,
-                    onChanged: (value) {
-                      // Handle text changes
-                    },
+                    onChanged: (value) {},
                   ),
                   SizedBox(
                     height: 30,

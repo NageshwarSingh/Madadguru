@@ -496,18 +496,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        // child: Text(
-                        //   DataList[index]['name'],
-                        //   style: TextStyle(
-                        //     color: Colors.white,
-                        //
-                        //     fontSize: 14,
-                        //     fontWeight: FontWeight.w400,
-                        //   ),
-                        //   textDirection: Align(alignment: Alignment.bottomCenter,),
-                        //   // "Total 07",
-                        //   // textAlign: Alignment.center,
-                        // ),
+
                       ),
                     ],
                   ),
@@ -601,20 +590,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         DropdownMenuItem(
                             child: Text("Aadhar Card"), value: "aadhar_card"),
                       ],
-                      // items: documents
-                      //     .map<DropdownMenuItem<String>>((String value) {
-                      //   return DropdownMenuItem<String>(
-                      //     value: value,
-                      //     child: Text(
-                      //       value,
-                      //       style: GoogleFonts.roboto(
-                      //         fontSize: 12,
-                      //         fontWeight: FontWeight.w400,
-                      //         color: Colors.black,
-                      //       ),
-                      //     ),
-                      //   );
-                      // }).toList(),
+
                     ),
                   ),
                   SizedBox(
@@ -713,7 +689,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Container(
                             height: 100,
                             decoration: BoxDecoration(
-                              color: Colors.transparent,
+                               color: Colors.transparent,
                               borderRadius: BorderRadius.circular(12),
                               border:
                                   Border.all(width: 1, color: Colors.orange),

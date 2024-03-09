@@ -27,8 +27,8 @@ import '../Allwidgets/textForm_filed.dart';
   TextEditingController _problemYearController = TextEditingController();
   TextEditingController _solutionMonthController = TextEditingController();
   TextEditingController _solutionYearController = TextEditingController();
-  var Problems;
-  var problems = [
+  var Months;
+  var months = [
     'January',
     'February',
     'March',
@@ -78,62 +78,6 @@ import '../Allwidgets/textForm_filed.dart';
   bool isLoading=false;
   @override
 
-  // Future<void> addPostApi() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   var usertoken = prefs.getString('token');
-  //   final Uri uri = Uri.parse("https://madadguru.webkype.net/api/addPost");
-  //   var request = http.MultipartRequest('Post', uri);
-  //   Map<String, String> headers = {
-  //     "Accept": "multipart/form-data",
-  //     "Authorization": 'Bearer $usertoken',
-  //   };
-  //   request.headers.addAll(headers);
-  //   if (imageFile != null) {
-  //     request.files
-  //
-  //         .add(await http.MultipartFile.fromPath('upload_document[]', imageFile!.path),
-  //          );
-  //         }
-  //   request.fields['topic_id'] = selectedTopic!= null ? selectedTopic!['id'].toString() : '';
-  //   request.fields['category_id']=   selectedCategory != null ? selectedCategory!['id'].toString() : '';
-  //   request.fields['second_party'] = _secondpartyController.text;
-  //   request.fields['problem_statement'] = _problemStatementController.text;
-  //   request.fields['problem_start_month'] = _problemMonthController.text;
-  //   request.fields['problem_start_year'] = _problemYearController.text;
-  //   request.fields['exp_solution_month'] = _solutionMonthController.text;
-  //   request.fields['exp_solution_year'] = _solutionYearController.text;
-  //   request.fields['already_reported'] = _alreadyReportedController.text;
-  //   request.fields['problem_desc'] = _probleDescController.text;
-  //   request.fields['financial_status'] = _financialStatusController.text;
-  //   try {
-  //     final streamedResponse = await request.send();
-  //     final response = await http.Response.fromStream(streamedResponse);
-  //
-  //     print(response.body);
-  //     if (response.statusCode == 200) {
-  //       var responseData = jsonDecode(response.body);
-  //       setState(() {
-  //         data = responseData;
-  //       });
-  //       print(responseData);
-  //       Navigator.pop(context);
-  //           // Navigator.of(context).pushAndRemoveUntil(
-  //           //   MaterialPageRoute(
-  //           //   builder: (context) => FeedScreen(
-  //           //     device: widget.device,
-  //           //
-  //           //   ),
-  //           // ),
-  //           //     (route) => false);
-  //        } else {
-  //       print('HTTP request failed with status code: ${response.statusCode}');
-  //     }
-  //   } catch (error) {
-  //     print('Error making HTTP request: $error');
-  //   }
-  // }
-  // bool isLoading = false;
-
   Future<void> addPostApi() async {
     setState(() {
       isLoading = true; // Set isLoading to true when API call starts
@@ -149,14 +93,12 @@ import '../Allwidgets/textForm_filed.dart';
     };
     request.headers.addAll(headers);
 
-    // Add image file if available
     if (imageFile != null) {
       request.files.add(
         await http.MultipartFile.fromPath('upload_document[]', imageFile!.path),
       );
     }
 
-    // Add other fields
     request.fields['topic_id'] = selectedTopic != null ? selectedTopic!['id'].toString() : '';
     request.fields['category_id'] = selectedCategory != null ? selectedCategory!['id'].toString() : '';
     request.fields['second_party'] = _secondpartyController.text;
@@ -180,12 +122,6 @@ import '../Allwidgets/textForm_filed.dart';
         });
         print(responseData);
         Navigator.pop(context); // Close the current screen
-        // Navigator.of(context).pushAndRemoveUntil(
-        //   MaterialPageRoute(
-        //     builder: (context) => FeedScreen(device: widget.device),
-        //   ),
-        //   (route) => false,
-        // );
       } else {
         print('HTTP request failed with status code: ${response.statusCode}');
       }
@@ -554,24 +490,6 @@ import '../Allwidgets/textForm_filed.dart';
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Container(
-                    //   height: 50,
-                    //   width: 170,
-                    //   decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(12),
-                    //       color: Colors.white),
-                    //   child: TextFormFieldWidget2(
-                    //     maxLines: 1,
-                    //     cursorColor: Color(0xffFF9228),
-                    //     controller: _problemMonthController,
-                    //     inputType: TextInputType.text,
-                    //     inputAction: TextInputAction.next,
-                    //     obscureText: false,
-                    //     hintText: "",
-                    //     labeltext: 'Month',
-                    //   ),
-                    // ),
-
                     Container(width: 170,
                       height: 50,
                       padding: EdgeInsets.only(left: 7),
@@ -598,7 +516,7 @@ import '../Allwidgets/textForm_filed.dart';
                                 color: Colors.orange),
                             dropdownColor: Colors.white,
                             borderRadius: BorderRadius.circular(10),
-                            value: Problems,
+                            value: Months,
                             isExpanded: true,
                             icon: const Icon(
                               Icons.keyboard_arrow_down,
@@ -616,11 +534,11 @@ import '../Allwidgets/textForm_filed.dart';
                             underline: Container(height: 1, color: Colors.orange),
                             onChanged: (String? newValue) {
                               setState(() {
-                                Problems = newValue!;
+                                Months = newValue!;
                                 _problemMonthController.text = newValue;
                               });
                             },
-                            items: problems
+                            items: months
                                 .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -675,23 +593,7 @@ import '../Allwidgets/textForm_filed.dart';
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Container(
-                    //   height: 50,
-                    //   width: 170,
-                    //   decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(12),
-                    //       color: Colors.white),
-                    //   child: TextFormFieldWidget2(
-                    //     maxLines: 1,
-                    //     cursorColor: Color(0xffFF9228),
-                    //     controller: _solutionMonthController,
-                    //     inputType: TextInputType.text,
-                    //     inputAction: TextInputAction.next,
-                    //     obscureText: false,
-                    //     hintText: "",
-                    //     labeltext: 'Month',
-                    //   ),
-                    // ),
+
                     Container(width: 170,
                       height: 50,
                       padding: EdgeInsets.only(left: 7),
@@ -1040,10 +942,7 @@ import '../Allwidgets/textForm_filed.dart';
                     if(_formKey.currentState!.validate())
                       addPostApi();
                   },
-                  // onTap: () {
-                  //   addPostApi();
-                  //   // Navigator.pop(context);
-                  // },
+
                   child: Padding(
                     padding:
                         const EdgeInsets.only(right: 40, left: 40, bottom: 10),

@@ -159,15 +159,7 @@ class _GalleryImageScreenState extends State<GalleryImageScreen> {
                           width: MediaQuery.of(context).size.width,
                           // decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
                           child:
-                              // CachedNetworkImage(
-                              //   fit: BoxFit.cover,
-                              //   imageUrl: galleryImages[index]["image"],
-                              //   placeholder: (context, url) => Container(
-                              //     color: Colors.red.shade200,
-                              //   ), // Placeholder widget
-                              //   errorWidget: (context, url, error) =>
-                              //       Icon(Icons.error), // Error widget
-                              // ),
+
 
                               Image.network(
                             (galleryImages[index]["image"] != null)
@@ -198,7 +190,6 @@ class photoView extends StatefulWidget {
 }
 
 class _photoViewState extends State<photoView> {
-  // PhotoViewController _imageController = PhotoViewController();
   PageController _pageController = PageController();
   late double scaleCopy;
 
@@ -206,14 +197,12 @@ class _photoViewState extends State<photoView> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: widget.index);
-    // _imageController =  PhotoViewController (initialScale:.index);
-    // fetchData(widget.id);
+
   }
 
   @override
   void dispose() {
     _pageController.dispose();
-    // _imageController.dispose();
     super.dispose();
   }
 

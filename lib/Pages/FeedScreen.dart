@@ -9,7 +9,6 @@ import 'MyProfileDetailScreen.dart';
 import 'NotificationScreen.dart';
 import 'PostContactEnquiry.dart';
 import 'feedScreenPost.dart';
-
 class FeedScreen extends StatefulWidget {
   final String device;
   const FeedScreen({
@@ -75,10 +74,10 @@ class _FeedScreenState extends State<FeedScreen> {
             var userData = responseData['data'];
 
             if (userData is List) {
-                setState(() {
+              setState(() {
                 JsonData = {'data': List<Map<String, dynamic>>.from(userData)};
                 fetchDataCategory();
-                postCount = responseData['postCount'] ;
+                postCount = responseData['postCount'];
                 print('API response: ${JsonData}');
               });
             }
@@ -105,8 +104,8 @@ class _FeedScreenState extends State<FeedScreen> {
   Future<void> fetchDataCategory() async {
     setState(() {
       isLoading = true;
-      });
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     var usertoken = prefs.getString('token');
     if (usertoken != null) {
       final Uri uri =
@@ -150,6 +149,7 @@ class _FeedScreenState extends State<FeedScreen> {
       }
     }
   }
+
   Map<String, dynamic> myProfile = {};
   Future<void> fetchMyProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -185,10 +185,10 @@ class _FeedScreenState extends State<FeedScreen> {
     }
   }
 
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        appBar: AppBar(
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
           automaticallyImplyLeading: false,
           toolbarHeight: 50,
           backgroundColor: Colors.white,
@@ -196,15 +196,14 @@ class _FeedScreenState extends State<FeedScreen> {
           elevation: 0,
           title: Text(
             "Madadguru Feed (${postCount})",
-              style: GoogleFonts.roboto(
+            style: GoogleFonts.roboto(
               fontSize: 20,
               fontWeight: FontWeight.w500,
               color: Colors.black,
-              ),
-              ),
-
-            actions: [
-             IconButton(
+            ),
+          ),
+          actions: [
+            IconButton(
               onPressed: () {
                 Navigator.push(
                   context,
@@ -219,11 +218,11 @@ class _FeedScreenState extends State<FeedScreen> {
                 Icons.notification_important,
                 // width: 23,
                 color: Colors.black,
-                 ),
-               ),
-             ]),
-            backgroundColor: Colors.grey.shade200,
-           body: isLoading
+              ),
+            ),
+          ]),
+      backgroundColor: Colors.grey.shade200,
+      body: isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -241,16 +240,10 @@ class _FeedScreenState extends State<FeedScreen> {
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) => GestureDetector(
                         onTap: () async {
-                          // DataList[index]["id"].toString();
                           String postId = DataList[index]["id"].toString();
                           await getPost(postId);
-
-                          // setState(() {
-                          //   selectIndex = index.toString();
-                          // });
-
-                          },
-                          child: Padding(
+                        },
+                        child: Padding(
                           padding: const EdgeInsets.only(left: 5, right: 5.0),
                           child: Card(
                             elevation: 3,
@@ -382,14 +375,8 @@ class _FeedScreenState extends State<FeedScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   InkWell(
-                                    // onTap:
-                                    // _pickImageFromGallery
-                                    //    () async {
-                                    //   Navigator.pop(context);
-                                    //   await _getFromGallery();
-                                    // },
+                                    onTap: () {},
                                     child: Image.asset(
-                                      // images[index],
                                       'assets/images/gallery.png',
                                       height: 25,
                                       width: 25,
@@ -450,16 +437,6 @@ class _FeedScreenState extends State<FeedScreen> {
                       }
                       return Stack(children: [
                         GestureDetector(
-                          // onTap: () {
-                          //   Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(builder: (context) {
-                          //       return MyJobDetail(
-                          //         device: widget.Device, Device: '',
-                          //       );
-                          //     }),
-                          //   );
-                          // },
                           child: Card(
                             elevation: 2,
                             // color: Colors.white,
@@ -479,13 +456,10 @@ class _FeedScreenState extends State<FeedScreen> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          // 'Posted: 4 Days ago',
                                           " ${post['created_at']}",
                                           style: GoogleFonts.roboto(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w400,
-                                            // color: (selectIndex == index.toString())
-                                            // ? Color(0xff41BFFF):
                                             color: Colors.black54,
                                           ),
                                         ),
@@ -551,7 +525,6 @@ class _FeedScreenState extends State<FeedScreen> {
                                               ),
                                             ),
                                           ),
-
                                           SizedBox(
                                             width: 15,
                                           ),
@@ -570,8 +543,6 @@ class _FeedScreenState extends State<FeedScreen> {
                                                   ),
                                                   Text(
                                                     "${(post["category_name"] != null) ? post["category_name"] : 'Name not available'}",
-
-                                                    // "Type: ${(post["add_by_user_type"] != null) ? post["add_by_user_type"] : 'Name not available'}",
                                                     style: GoogleFonts.roboto(
                                                         fontSize: 12,
                                                         fontWeight:
@@ -588,7 +559,6 @@ class _FeedScreenState extends State<FeedScreen> {
                                                   ),
                                                 ]),
                                           ),
-
                                           Container(
                                             decoration: BoxDecoration(
                                               color: Colors.white,
@@ -607,11 +577,9 @@ class _FeedScreenState extends State<FeedScreen> {
                                                 style: TextStyle(fontSize: 12),
                                               )),
                                             ),
-                                          )
-                                          // Image.asset('assets/images/x.png',height: 10,width: 10,)
+                                          ),
                                         ]),
                                   ),
-
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 10, right: 10, top: 5),
@@ -628,7 +596,6 @@ class _FeedScreenState extends State<FeedScreen> {
                                   SizedBox(
                                     height: 3,
                                   ),
-
                                   InkWell(
                                     onTap: () {
                                       Navigator.push(
@@ -660,14 +627,6 @@ class _FeedScreenState extends State<FeedScreen> {
                                             );
                                           },
                                         ),
-                                        // Image.network(
-                                        //   (post["post_images"][0]["image"] != null)
-                                        //       ? post["post_images"][0]["image"]
-                                        //       : 'Name not available',
-                                        //   // 'assets/images/download.jpeg',
-                                        //   fit: BoxFit.contain,
-                                        //   // fit: BoxFit.contain,
-                                        // ),
                                       ),
                                     ),
                                   ),
@@ -719,11 +678,9 @@ class _FeedScreenState extends State<FeedScreen> {
                                       ],
                                     ),
                                   ),
-
                                   SizedBox(
                                     height: 10,
                                   ),
-
                                 ],
                               ),
                             ),
@@ -734,47 +691,3 @@ class _FeedScreenState extends State<FeedScreen> {
               );
   }
 }
-
-// _getFromGallery() async {
-//   XFile? pickedFile = await ImagePicker().pickImage(
-//     source: ImageSource.gallery,
-//     imageQuality: 50,
-//   );
-//   if (pickedFile != null) {
-//     File? img = File(pickedFile.path);
-//     setState(() {
-//       imageFile = img;
-//     });
-//   }
-// }
-// IconButton(
-//   onPressed: () {
-//     Navigator.push(context, MaterialPageRoute(builder: (context) {
-//       return SearchScreen(
-//         device: widget.device,
-//       );
-//     }));
-//   },
-//   icon: Icon(
-//     Icons.search_rounded,
-//     // width: 23,
-//     color: Colors.black,
-//   ),
-// ),
-// IconButton(
-//             //   onPressed: () {
-//             //     Navigator.push(
-//             //       context,
-//             //       MaterialPageRoute(builder: (context) {
-//             //         return FilterScreen(
-//             //           device: widget.device,
-//             //         );
-//             //       }),
-//             //     );
-//             //   },
-//             //   icon: Image.asset(
-//             //     "assets/images/arrows.png",
-//             //     width: 23,
-//             //     color: Colors.black,
-//             //   ),
-//             // ),

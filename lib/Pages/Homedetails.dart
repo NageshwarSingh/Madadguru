@@ -598,9 +598,9 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                                 right: 10,
                                                 left: 10.0,
                                                 top: 10,
-                                                bottom: 10),
-                                            child: Column(
-                                              children: [
+                                                ),
+                                               child: Column(
+                                                 children: [
                                                 Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -617,12 +617,6 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                                                     .only(
                                                                     left: 10),
                                                             child:
-                                                                // CircleAvatar(
-                                                                //   radius: 35,
-                                                                //   backgroundImage: NetworkImage(
-                                                                //     'https://i.pinimg.com/originals/5a/6b/16/5a6b16956a2753892d9ee5714f6f112a.jpg',
-                                                                //   ),
-                                                                // ),
                                                                 CircleAvatar(
                                                               radius: 30,
                                                               child: ClipOval(
@@ -659,7 +653,7 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
                                                                     .start,
-                                                            // mainAxisAlignment: MainAxisAlignment.s,
+
                                                             children: [
                                                               Text(
                                                                 post['name'] ??
@@ -722,7 +716,7 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                                           ),
                                                         ],
                                                       ),
-                                                      // SizedBox(width: 100,),
+
 
                                                       Column(
                                                         mainAxisAlignment:
@@ -766,26 +760,7 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                                                                   Uri.parse(
                                                                                       url));
                                                                             },
-                                                                            // onPressed:
-                                                                            //     () async {
-                                                                            //   // onPressed: () async {
-                                                                            //   var phoneNumber =
-                                                                            //       "";
-                                                                            //   var url =
-                                                                            //       "tel:$phoneNumber";
-                                                                            //   print(
-                                                                            //       "Calling $phoneNumber");
-                                                                            //   await launchUrl(
-                                                                            //       Uri.parse(
-                                                                            //           url));
-                                                                            //   Navigator.of(
-                                                                            //       context)
-                                                                            //       .pop();
-                                                                            //
-                                                                            //   //                                                                 Navigator.of(
-                                                                            //   //                                                                         context)
-                                                                            //   //                                                                     .pop();
-                                                                            // },
+
                                                                             child: Text(
                                                                                 'Yes'),
                                                                           ),
@@ -835,20 +810,7 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                                                                 Uri.parse(
                                                                                     url));
                                                                           },
-                                                                          // onPressed:
-                                                                          //     () async {
-                                                                          //   var url =
-                                                                          //       "https://wa.me/?text=Hello";
-                                                                          //   print(
-                                                                          //       "the url is $url");
-                                                                          //   await launchUrl(
-                                                                          //     Uri.parse(
-                                                                          //         url),
-                                                                          //   );
-                                                                          //   Navigator.of(
-                                                                          //       context)
-                                                                          //       .pop();
-                                                                          // },
+
                                                                           child:
                                                                           Text('Yes'),
                                                                         ),
@@ -873,21 +835,7 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                      children: [
-                                                    // Text(
-                                                    //   "Gender: ${post['user_gender'] ?? ''}",
-                                                    //   style: GoogleFonts.roboto(
-                                                    //       color: Colors.black,
-                                                    //       fontSize: 12,
-                                                    //       fontWeight: FontWeight.w400),
-                                                    // ),
-                                                    // SizedBox(w)
-                                                    // Text(
-                                                    //   post['created_at'] ?? '',
-                                                    //   style: GoogleFonts.roboto(
-                                                    //       color: Colors.black,
-                                                    //       fontSize: 12,
-                                                    //       fontWeight: FontWeight.w400),
-                                                    // ),
+
                                                   ],
                                                 ),
                                               ],
@@ -898,34 +846,7 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                     );
                                   }),
                          SizedBox(height: 20,)
-                         // InkWell(
-                      //   onTap: () {
-                      //     buildShowdialogue();
-                      //   },
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.only(
-                      //         right: 20, left: 20, top: 20, bottom: 20),
-                      //     child: Card(
-                      //       elevation: 2,
-                      //       child: Container(
-                      //         height: 45,
-                      //         width: MediaQuery.of(context).size.width,
-                      //         decoration: BoxDecoration(
-                      //             borderRadius: BorderRadius.circular(12),
-                      //             color: Color(0xffFBCD96)),
-                      //         child: Center(
-                      //           child: Text(
-                      //             'Contact',
-                      //             style: TextStyle(
-                      //                 color: Colors.orange,
-                      //                 fontWeight: FontWeight.bold,
-                      //                 fontSize: 16),
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
+
                     ],
                   ),
                 ]),

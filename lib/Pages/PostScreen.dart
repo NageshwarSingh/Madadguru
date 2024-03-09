@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:madadguru/Pages/NewPostScreen.dart';
@@ -69,9 +67,6 @@ class _PostScreenState extends State<PostScreen> {
           print('Data fetched successfully');
           print(response.body);
         }
-        // else {
-        //   print('Failed to fetch data. Status code: ${response.statusCode}');
-        // }
       } catch (error) {
         print('Error fetching data: $error');
       } finally {
@@ -119,49 +114,6 @@ class _PostScreenState extends State<PostScreen> {
       }
     }
   }
-
-  // Future<void> deletePost(int index) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   var usertoken = prefs.getString('token');
-  //   if (usertoken != null) {
-  //     final Uri uri = Uri.parse("https://madadguru.webkype.net/api/deletePost");
-  //     try {
-  //       final response = await http.post(
-  //         uri,
-  //         headers: {
-  //           'Authorization': 'Bearer $usertoken',
-  //         },
-  //         body: {
-  //           'post_id': myData['data'][index]['id'],
-  //         },
-  //       );
-  //       if (response.statusCode == 200) {
-  //         var responseData = json.decode(response.body);
-  //         print('response deletPost${responseData}');
-  //         if (responseData['success'] == true) {
-  //           setState(() {
-  //             myData['data'].removeAt(index);
-  //           });
-  //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //             content: Text("Post deleted successfully"),
-  //           ));
-  //         } else {
-  //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //             content: Text("Failed to delete post"),
-  //           ));
-  //         }
-  //       } else {
-  //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //           content: Text("Failed to delete post"),
-  //         ));
-  //       }
-  //     } catch (error) {
-  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //         content: Text("Error deleting post: $error"),
-  //       ));
-  //     }
-  //   }
-  // }
   Future<void> deletePost(int index) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usertoken = prefs.getString('token');
@@ -221,22 +173,7 @@ class _PostScreenState extends State<PostScreen> {
                 color: Colors.black,
               )),
              actions: [
-            // IconButton(
-            //     onPressed: () {
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(builder: (context) {
-            //           return SearchScreen(
-            //             device: widget.device,
-            //           );
-            //         }),
-            //       );
-            //     },
-            //     icon: Icon(
-            //       Icons.search_rounded,
-            //       // width: 23,
-            //       color: Colors.black,
-            //     )),
+
             IconButton(
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -249,24 +186,9 @@ class _PostScreenState extends State<PostScreen> {
                   Icons.notification_important,
                   // width: 23,
                   color: Colors.black,
-                )),
-            // IconButton(
-            //   onPressed: () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(builder: (context) {
-            //         return FilterScreen(
-            //           device: widget.device,
-            //         );
-            //       }),
-            //     );
-            //   },
-            //   icon: Image.asset(
-            //     "assets/images/arrows.png",
-            //     width: 23,
-            //     color: Colors.black,
-            //   ),
-            // ),
+                ),
+            ),
+
           ]),
       backgroundColor: Colors.grey.shade200,
       body: SafeArea(
@@ -275,16 +197,9 @@ class _PostScreenState extends State<PostScreen> {
           // mainAxisAlignment: MainAxisAlignment.start,
           children: [
             InkWell(
-              // onTap: () {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(builder: (context) {
-              //       return GAlleryScreen(
-              //         device: widget.device ,
-              //       );
-              //     }),
-              //   );
-              // },
+              onTap: () {
+
+              },
               child: Container(
                 height: 60,
                 // color: Colors.white,
@@ -633,7 +548,7 @@ class _PostScreenState extends State<PostScreen> {
                                       left: 10, right: 10, top: 5),
                                   child: Text(
                                     (post["problem_statement"] != null) ? post["problem_statement"] : 'Name not available',
-                                    // post["category_name"],
+
                                     style: GoogleFonts.roboto(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400,

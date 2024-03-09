@@ -16,13 +16,13 @@ class MyProfileDetailScreen extends StatefulWidget {
   @override
   State<MyProfileDetailScreen> createState() => _MyProfileDetailScreenState();
 }
+
 class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
   int segmentedControlValue = 0;
   Map JobDetail = {};
   Map<String, dynamic> data = {};
 
   List<dynamic> department = [];
-
 
   List<bool> switchStates = [];
 
@@ -38,15 +38,16 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
     super.initState();
     switchStates = List<bool>.filled(Data2.length, false);
     fetchDataMyProfile();
-        }
-        // ==============      *************    MyProfile    *************      ================
-    Future<void> fetchDataMyProfile() async {
+  }
+
+  // ==============      *************    MyProfile    *************      ================
+  Future<void> fetchDataMyProfile() async {
     setState(() {
       isLoading = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usertoken = prefs.getString('token');
-     if (usertoken != null) {
+    if (usertoken != null) {
       final Uri uri = Uri.parse("https://madadguru.webkype.net/api/myProfile");
       try {
         final response = await http.post(
@@ -60,28 +61,19 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
           print("object $responseData");
           if (responseData['success'] == true) {
             var userData = responseData['data'];
-            // setState(() async {
-            //   data = Map<String, dynamic>.from(userData);
-            //   department = userData['need_help_in'].split(',').map((e) => int.parse(e)).toList();
-            //   print("department : ${department}");
-            //   await fetchDataNeedHelp(data['need_help_in']);
-            //   await fetchDatagetWant(data['i_want']);
-            //   updateSwitchStates();
-            //   isLoading = false;
-            // })
             setState(() async {
               data = Map<String, dynamic>.from(userData);
-             List<String> departmentIds = data['need_help_in'].split(',');
+              List<String> departmentIds = data['need_help_in'].split(',');
               departmentIds = departmentIds.map((e) => e.trim()).toList();
               departmentIds.forEach((departmentId) {
                 DepartmentList.forEach((departmentItem) {
                   if (departmentItem['id'].toString() == departmentId) {
                     departmentItem['isSelected'] = true;
-                      }
-                    });
-                  });
-                await fetchDataNeedHelp(data['need_help_in']);
-                await fetchDatagetWant(data['i_want']);
+                  }
+                });
+              });
+              await fetchDataNeedHelp(data['need_help_in']);
+              await fetchDatagetWant(data['i_want']);
               updateSwitchStates();
               isLoading = false;
             });
@@ -94,11 +86,11 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
         } else {
           print('Failed to fetch data. Status code: ${response.statusCode}');
         }
-           } catch (error) {
-          print('Error fetching data: $error');
-           }
-          }
-        }
+      } catch (error) {
+        print('Error fetching data: $error');
+      }
+    }
+  }
 // ==============        *******     Get Want Api   *******          ============
 
   Future<void> fetchDatagetWant(String activeValues) async {
@@ -118,24 +110,18 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
           setState(() {
             Data = jData;
             Data2 = Data['data'];
-              switchStates = List<bool>.filled(Data2.length, false);
-                for (int i = 0; i < Data2.length; i++) {
-                  if (activeValues.contains(Data2[i]['id'].toString())) {
+            switchStates = List<bool>.filled(Data2.length, false);
+            for (int i = 0; i < Data2.length; i++) {
+              if (activeValues.contains(Data2[i]['id'].toString())) {
                 switchStates[i] = true;
-                  }
-                }
-                switchStates = List.generate(Data2.length, (index) => false);
-              updateSwitchStates();
+              }
+            }
+            switchStates = List.generate(Data2.length, (index) => false);
+            updateSwitchStates();
             print("Data From Api$Data");
-            });
-            print(response.body);
-          // Navigator.of(context).pushAndRemoveUntil(
-          //     MaterialPageRoute(
-          //       builder: (context) => ProfilePreference(
-          //         device: widget.device,
-          //       ),
-          //     ),
-          //         (route) => false);
+          });
+          print(response.body);
+
           print('Data fetched successfully');
         } else {
           print('Failed to fetch Data. Status code: ${response.statusCode}');
@@ -169,14 +155,6 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
     } else {
       print('i_want data not found');
     }
-    // Update department based on i_need_help value
-    // if (data.containsKey('i_need_help')) {
-    //   setState(() {
-    //     department = DepartmentList.where(
-    //             (item) => data['i_need_help'].contains(item['id'].toString()))
-    //         .toList();
-    //   });
-    // }
   }
 
   void onChangedSwitch(int index, bool value) {
@@ -185,19 +163,11 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
       updateIWant(); // Update i_want value
     });
   }
-  void onChangedSwitches(int index, bool value) {
-    setState(() {
-      department[index] = value;
-      updateIWant(); // Update i_want value
-    });
-  }
 
   bool isLoading = false;
   // ==============         *******   Need Help Api   ******          ============
 
-
   Future<void> fetchDataNeedHelp(data) async {
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usertoken = prefs.getString('token');
     if (usertoken != null) {
@@ -220,27 +190,15 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
                       'name': item['name'],
                     })
                 .toList();
-            department=data
+            department = data
                 .map((item) => {
-              'id': item['id'],
-
-            })
+                      'id': item['id'],
+                    })
                 .toList();
-
-
-
-
           });
           print('DepartmentList: $DepartmentList');
           print(response.body);
 
-          // Navigator.of(context).pushAndRemoveUntil(
-          //     MaterialPageRoute(
-          //       builder: (context) => ProfilePreference(
-          //         device: widget.device,
-          //       ),
-          //     ),
-          //         (route) => false);
           print('Data fetched successfully');
         } else {
           print('Failed to fetch data. Status code: ${response.statusCode}');
@@ -248,11 +206,6 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
       } catch (error) {
         print('Error fetching data: $error');
       }
-      // finally {
-      //   setState(() {
-      //     isLoading = false;
-      //   });
-      // }
     }
   }
 
@@ -297,17 +250,6 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
                               color: Colors.black,
                             ),
                           ),
-
-                          // Text(
-                          //   data.containsKey('name')
-                          //       ? data['name']
-                          //       : 'Name not available',
-                          //   style: GoogleFonts.roboto(
-                          //     fontSize: 14,
-                          //     fontWeight: FontWeight.w600,
-                          //     color: Colors.black,
-                          //   ),
-                          // ),
                           SizedBox(
                             height: 5,
                           ),
@@ -421,7 +363,7 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
                                         fit: BoxFit.cover,
                                         width: 90.0, // adjust width as needed
                                         height: 90.0, // adjust height as needed
-                                        )
+                                      )
                                     : Icon(
                                         Icons.person,
                                         size: 20,
@@ -519,16 +461,20 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
                                                 // value:true,
                                                 autofocus: true,
                                                 value: switchStates[index],
-                                                onChanged: switchesEnabled ? (value) {
-                                                  setState(() {
-                                                    switchStates[index] = value;
-                                                    updateIWant();
-                                                  });
-                                                } : null,
+                                                onChanged: switchesEnabled
+                                                    ? (value) {
+                                                        setState(() {
+                                                          switchStates[index] =
+                                                              value;
+                                                          updateIWant();
+                                                        });
+                                                      }
+                                                    : null,
 
                                                 activeTrackColor:
-                                                Colors.lightGreenAccent,
-                                                activeColor: Colors.green.shade200,
+                                                    Colors.lightGreenAccent,
+                                                activeColor:
+                                                    Colors.green.shade200,
                                               ),
                                             ],
                                           ),
@@ -550,7 +496,6 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
                                   ),
                                 ),
                                 ChipsChoice<dynamic>.multiple(
-
                                   choiceItems:
                                       C2Choice.listFrom<dynamic, dynamic>(
                                     source: DepartmentList,
@@ -559,17 +504,10 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
                                     label: (index1, item) =>
                                         item["name"].toString(),
                                   ),
-                                  value:  department,
-
+                                  value: department,
                                   onChanged: (val) {
                                     setState(() {
                                       department = val;
-
-                                      // department = DepartmentList.where(
-                                      //     (item) => val.contains(
-                                      //         item['id'].toString())).toList();
-                                      // needhelpin = val.join(',');
-                                      // updateSwitchStates();
                                     });
                                     print(department);
                                   },
@@ -593,21 +531,6 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                // GestureDetector(
-                                //   onTap: () {
-                                //     showDialogue();
-                                //   },
-                                //   child: Padding(
-                                //     padding: const EdgeInsets.only(
-                                //         left: 40, right: 40.0),
-                                //     child: ButtonWidget(
-                                //       text: " Contact",
-                                //       color: Color(0xffFBCD96),
-                                //       textColor: Colors.orange,
-                                //       width: MediaQuery.of(context).size.width,
-                                //     ),
-                                //   ),
-                                // ),
                                 SizedBox(
                                   height: (widget.device == "IOS") ? 80 : 30,
                                 ),

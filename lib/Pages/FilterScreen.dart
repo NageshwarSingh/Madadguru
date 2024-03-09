@@ -106,7 +106,6 @@ class _FilterScreenState extends State<FilterScreen> {
                 image: DecorationImage(
                   image: AssetImage(
                       "assets/images/rectangle.png"),
-                  //    fit: BoxFit.fill
                 ),
               ),
               child: Text(

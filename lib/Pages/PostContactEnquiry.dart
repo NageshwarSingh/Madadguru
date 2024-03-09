@@ -97,43 +97,10 @@ class _PostContactEnquiryState extends State<PostContactEnquiry> {
           'Contacts',
           style: GoogleFonts.roboto(
             color: Colors.black,
-            // fontSize: 16,
-            // fontWeight: FontWeight.bold
+
            ),
           ),
-        // Container(
-        //   height: 40,
-        //   alignment: Alignment.center,
-        //   decoration: BoxDecoration(
-        //     color: const Color(0xffffffff),
-        //     border: Border.all(color: Colors.black38, width: 1.5),
-        //     borderRadius: const BorderRadius.all(
-        //       Radius.circular(12),
-        //     ),
-        //   ),
-        //   child:
-        //   TextField(
-        //       autofocus: false,
-        //       // controller: searchController,
-        //       keyboardType: TextInputType.text,
-        //       textInputAction: TextInputAction.search,
-        //       decoration: InputDecoration(
-        //           suffixIcon: const Icon(
-        //             Icons.search,
-        //             color: Color(0xff7a7979),
-        //             size: 25,
-        //           ),
-        //           contentPadding: EdgeInsets.only(left: 5, right: 5),
-        //           // const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-        //           border: InputBorder.none,
-        //           hintText: "Search",
-        //           hintStyle: TextStyle(
-        //             color: const Color(0xff7a7979),
-        //             fontSize: 14,
-        //             fontWeight: FontWeight.w500,
-        //           )),
-        //       onSubmitted: (_) {}),
-        // ),
+
       ),
          body: SingleChildScrollView(
           child: Column(
@@ -225,6 +192,7 @@ class _PostContactEnquiryState extends State<PostContactEnquiry> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
+                                                    SizedBox(height: 10,),
                                                     Text(
                                                       post['user_name'] ?? '',
                                                       style: GoogleFonts.roboto(
@@ -248,20 +216,20 @@ class _PostContactEnquiryState extends State<PostContactEnquiry> {
                                                           fontWeight:
                                                               FontWeight.w400),
                                                     ),
-                                                    SizedBox(
-                                                      height: 3,
-                                                    ),
-                                                    Text(
-                                                      (post["user_mobile"] !=
-                                                              null)
-                                                          ? post["user_mobile"]
-                                                          : 'mobile not available',
-                                                      style: GoogleFonts.roboto(
-                                                          color: Colors.black,
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w400),
-                                                    ),
+                                                    // SizedBox(
+                                                    //   height: 3,
+                                                    // ),
+                                                    // Text(
+                                                    //   (post["user_mobile"] !=
+                                                    //           null)
+                                                    //       ? post["user_mobile"]
+                                                    //       : 'mobile not available',
+                                                    //   style: GoogleFonts.roboto(
+                                                    //       color: Colors.black,
+                                                    //       fontSize: 12,
+                                                    //       fontWeight:
+                                                    //           FontWeight.w400),
+                                                    // ),
                                                     SizedBox(
                                                       height: 3,
                                                     ),
@@ -387,14 +355,12 @@ class _PostContactEnquiryState extends State<PostContactEnquiry> {
                                               (post["message"] != null)
                                                   ? post["message"]
                                                   : 'message not available',
-                                              // post['message'] ?? '',
-                                              // textAlign:
-                                              //     TextAlign.center,
+
                                               style: GoogleFonts.roboto(
                                                   color: Colors.black,
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w400),
-                                              // softWrap: true,
+
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 3,
                                             ),
@@ -406,25 +372,16 @@ class _PostContactEnquiryState extends State<PostContactEnquiry> {
                                       ),
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.end,
                                         children: [
-                                          Text(
-                                            "Gender: ${(post["user_gender"] != null) ? post["user_gender"] : 'date not available'}",
-                                            style: GoogleFonts.roboto(
-                                                color: Colors.black,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                          // SizedBox(w)
                                           Text(
                                             (post["created_at"] != null)
                                                 ? post["created_at"]
                                                 : 'date not available',
-                                            // post['created_at'] ?? '',
                                             style: GoogleFonts.roboto(
                                                 color: Colors.black,
                                                 fontSize: 12,
-                                                fontWeight: FontWeight.w500),
+                                                fontWeight: FontWeight.w400),
                                           ),
                                         ],
                                       ),

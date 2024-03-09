@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -170,23 +169,15 @@ bool contactButton=true;
             print("Data From Api$Data");
           });
           print(response.body);
-          // Navigator.of(context).pushAndRemoveUntil(
-          //     MaterialPageRoute(
-          //       builder: (context) => ProfilePreference(
-          //         device: widget.device,
-          //       ),
-          //     ),
-          //         (route) => false);
           print('Data fetched successfully');
         } else {
           print('Failed to fetch Data. Status code: ${response.statusCode}');
-        }
-      } catch (error) {
+          }
+          } catch (error) {
         print('Error fetching data: $error');
       }
     }
   }
-
   void updateIWant() {
     if (userData.containsKey('i_want')) {
       setState(() {
@@ -197,7 +188,6 @@ bool contactButton=true;
   }
 
   void updateSwitchStates() {
-    // Update switchStates based on i_want value
     if (userData.containsKey('i_want')) {
       print('Updating switchStates based on i_want');
       setState(() {
@@ -211,7 +201,7 @@ bool contactButton=true;
     } else {
       print('i_want data not found');
     }
-    // Update department based on i_need_help value
+
     if (userData.containsKey('i_need_help')) {
       setState(() {
         department = DepartmentList.where((item) =>
@@ -223,7 +213,7 @@ bool contactButton=true;
   void onChangedSwitch(int index, bool value) {
     setState(() {
       switchStates[index] = value;
-      updateIWant(); // Update i_want value
+      updateIWant();
     });
   }
 
@@ -275,8 +265,7 @@ bool contactButton=true;
                             (userData["email"] != null)
                                 ? userData["email"]
                                 : 'email not available',
-                            // "Email: email12346@gmail.com",
-                            style: GoogleFonts.roboto(
+                               style: GoogleFonts.roboto(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
                               color: Colors.black,
@@ -288,7 +277,6 @@ bool contactButton=true;
 
                           Text(
                             "Mobile: ${(userData["mobile"] != null) ? userData["mobile"] : 'mobile not available'}",
-                            // "Phone : +918877665544",
                             style: GoogleFonts.roboto(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
@@ -300,7 +288,6 @@ bool contactButton=true;
                           ),
                           Text(
                             "Dob: ${(userData["dob"] != null) ? userData["dob"] : "dob not available"}",
-                            // "DOB : 12/12/1999",
                             style: GoogleFonts.roboto(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
@@ -314,24 +301,13 @@ bool contactButton=true;
                             (userData["profession"] != null)
                                 ? userData["profession"]
                                 : 'profession not available',
-                            // "Profession: Lowyer",
                             style: GoogleFonts.roboto(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
                               color: Colors.black,
                             ),
                           ),
-                          // SizedBox(
-                          //   height: 5,
-                          // ),
-                          // Text(
-                          //   "Location - Greater Noida",
-                          //   style: GoogleFonts.roboto(
-                          //     fontSize: 12,
-                          //     fontWeight: FontWeight.w400,
-                          //     color: Colors.black,
-                          //   ),
-                          // ),
+
                           const SizedBox(
                             height: 10,
                           ),
@@ -348,8 +324,6 @@ bool contactButton=true;
                                   ),
                                   child: Text(
                                     "Gender: ${(userData["gender"] != null) ? userData["gender"] : "dob not available"}",
-
-                                    // "Gender: Female",
                                     style: GoogleFonts.roboto(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w400,
@@ -367,8 +341,6 @@ bool contactButton=true;
                                   ),
                                   child: Text(
                                       "Language: ${(userData["language"] != null) ? userData["language"] : "dob not available"}",
-
-                                      // "Language: English",
                                       style: GoogleFonts.roboto(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400,
@@ -434,8 +406,7 @@ bool contactButton=true;
                                     (userData["about"] != null)
                                         ? userData["about"]
                                         : 'about not available',
-                                    // "Delivery drivers are responsible for transporting goods from distribution centers to customers. They follow a specified schedule and identify the most efficient routes to avoid delays. They also conduct regular vehicle check-ups and maintenance to keep company vehicles in good working condition.",
-                                    style: GoogleFonts.roboto(
+                                     style: GoogleFonts.roboto(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w400,
                                       color: Colors.black,
@@ -449,7 +420,6 @@ bool contactButton=true;
                                   padding: const EdgeInsets.only(left: 10,right: 10),
                                   child: Text(
                                     "I want:",
-                                    // textAlign: TextAlign.center,
                                     style: GoogleFonts.roboto(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -460,7 +430,6 @@ bool contactButton=true;
                                 SizedBox(
                                   height: 10,
                                 ),
-
                                 ListView.builder(
                                   scrollDirection: Axis.vertical,
                                   itemCount: Data.length,
@@ -500,7 +469,7 @@ bool contactButton=true;
                                                 ],
                                               ),
                                               Switch(
-                                                // value:true,
+
                                                 autofocus: true,
                                                 value: switchStates[index],
                                                 onChanged: switchesEnabled
@@ -518,19 +487,6 @@ bool contactButton=true;
                                                 activeColor:
                                                     Colors.green.shade200,
                                               ),
-                                              // Switch(
-                                              //   value: switchStates[index],
-                                              //   onChanged: (value) {
-                                              //     setState(() {
-                                              //       switchStates[index] =
-                                              //           value; // Update switch state
-                                              //       updateIWant(); // Update i_want value
-                                              //     });
-                                              //   }, // Call onChangedSwitch method
-                                              //   activeTrackColor:
-                                              //   Colors.lightGreenAccent,
-                                              //   activeColor: Colors.green,
-                                              // ),
                                             ],
                                           ),
                                         ),
@@ -558,7 +514,7 @@ bool contactButton=true;
                                 ),
                                 userData == null || userData['contactdata'] == null
                                     ? Padding(
-                                  padding: const EdgeInsets.only(top: 250),
+                                  padding: const EdgeInsets.only(top: 150),
                                   child: Center(
                                     child: CircularProgressIndicator(
                                       // radius: 30,
@@ -568,10 +524,10 @@ bool contactButton=true;
                                 )
                                     : userData['contactdata'].length == 0
                                     ? Padding(
-                                  padding: const EdgeInsets.only(top: 200),
+                                  padding: const EdgeInsets.only(top: 50),
                                   child: Center(
                                     child: Text(
-                                      'No Post Available',
+                                      'No Contact Available',
                                       style: TextStyle(fontSize: 25),
                                     ),
                                   ),
@@ -620,12 +576,7 @@ bool contactButton=true;
                                                                 .only(
                                                                 left: 10),
                                                             child:
-                                                            // CircleAvatar(
-                                                            //   radius: 35,
-                                                            //   backgroundImage: NetworkImage(
-                                                            //     'https://i.pinimg.com/originals/5a/6b/16/5a6b16956a2753892d9ee5714f6f112a.jpg',
-                                                            //   ),
-                                                            // ),
+
                                                             CircleAvatar(
                                                               radius: 30,
                                                               child: ClipOval(
@@ -662,8 +613,9 @@ bool contactButton=true;
                                                             crossAxisAlignment:
                                                             CrossAxisAlignment
                                                                 .start,
-                                                            // mainAxisAlignment: MainAxisAlignment.s,
+                                                            // mainAxisAlignment: MainAxisAlignment.center,
                                                             children: [
+                                                              SizedBox(height: 10,),
                                                               Text(
                                                                 post['user_name'] ??
                                                                     '',
@@ -689,21 +641,21 @@ bool contactButton=true;
                                                                     FontWeight
                                                                         .w400),
                                                               ),
-                                                              SizedBox(
-                                                                height: 3,
-                                                              ),
-                                                              Text(
-
-                                                                post['user_mobile'] ??
-                                                                    '',
-                                                                style: GoogleFonts.roboto(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize: 12,
-                                                                    fontWeight:
-                                                                    FontWeight
-                                                                        .w400),
-                                                                  ),
+                                                              // SizedBox(
+                                                              //   height: 3,
+                                                              // ),
+                                                              // Text(
+                                                              //
+                                                              //   post['user_mobile'] ??
+                                                              //       '',
+                                                              //   style: GoogleFonts.roboto(
+                                                              //       color: Colors
+                                                              //           .black,
+                                                              //       fontSize: 12,
+                                                              //       fontWeight:
+                                                              //       FontWeight
+                                                              //           .w400),
+                                                              //     ),
                                                                 SizedBox(
                                                                 height: 3,
                                                               ),
@@ -714,7 +666,6 @@ bool contactButton=true;
                                                       SizedBox(width: 100,),
 
                                                       Column(
-                                                        // crossAxisAlignment: CrossAxisAlignment.end,
                                                         mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .center,
@@ -816,17 +767,7 @@ bool contactButton=true;
                                                                                       url),
                                                                                    );
                                                                                  },
-                                                                            //     {
-                                                                            //   var url =
-                                                                            //       "https://wa.me/?text=Hello";
-                                                                            //   print(
-                                                                            //       "the url is $url");
-                                                                            //   await launchUrl(
-                                                                            //     Uri.parse(url),
-                                                                            //   );
-                                                                            //   Navigator.of(context)
-                                                                            //       .pop();
-                                                                            // },
+
                                                                             child: Text(
                                                                                 'Yes'),
                                                                           ),
@@ -863,24 +804,24 @@ bool contactButton=true;
                                                 ),
                                                 Row(
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment.end,
                                                   children: [
-                                                    Text(
-                                                     "Gender: ${(post["user_gender"] !=null)? post["user_gender"]: 'gender not available'}",
-                                                      // "Gender: ${post['user_gender'] ?? ''}",
-                                                      style: GoogleFonts.roboto(
-                                                          color: Colors.black,
-                                                          fontSize: 12,
-                                                          fontWeight: FontWeight.w500),
-                                                      ),
+                                                    // Text(
+                                                    //  "Gender: ${(post["user_gender"] !=null)? post["user_gender"]: 'gender not available'}",
+                                                    //
+                                                    //   style: GoogleFonts.roboto(
+                                                    //       color: Colors.black,
+                                                    //       fontSize: 12,
+                                                    //       fontWeight: FontWeight.w500),
+                                                    //   ),
                                                     Text(
                                                       (post["created_at"] != null) ? post["created_at"] : 'date not available',
-                                                      // post['created_at'] ?? '',
+
                                                       style: GoogleFonts.roboto(
                                                           color: Colors.black,
                                                           fontSize: 12,
-                                                          fontWeight: FontWeight.w500),
-                                                    ),
+                                                          fontWeight: FontWeight.w400),
+                                                      ),
                                                   ],
                                                 ),
                                               ],

@@ -4,20 +4,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:madadguru/Pages/publicPostProfile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'VolunteerProfileDetail.dart';
-import 'VolunteerUserProfile.dart';
 import 'package:http/http.dart' as http;
 
-class VolunteerScreen extends StatefulWidget {
-  final String device;
-  const VolunteerScreen({
-    super.key,
-    required this.device,
-  });
+  class VolunteerScreen extends StatefulWidget {
+   final String device;
+    const VolunteerScreen({
+     super.key,
+      required this.device,
+     });
   @override
   State<VolunteerScreen> createState() => _VolunteerScreenState();
-}
-
-class _VolunteerScreenState extends State<VolunteerScreen> {
+  }
+  class _VolunteerScreenState extends State<VolunteerScreen> {
   @override
   Widget build(BuildContext context) {
     // searchController
@@ -32,43 +30,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
 
   AppBar buildAppBar() {
     return AppBar(title: Text('Madadguru'),backgroundColor: Colors.grey.shade200,);
-    //   AppBar(
-    //   automaticallyImplyLeading: false,
-    //   backgroundColor: Colors.grey.shade200,
-    //   title: Padding(
-    //     padding: const EdgeInsets.only(left: 20, right: 20),
-    //     child: Container(
-    //       height: 40,
-    //       alignment: Alignment.center,
-    //       decoration: BoxDecoration(
-    //         // color: const Color(0xffffffff),
-    //         border: Border.all(color: Colors.black38, width: 1.5),
-    //         borderRadius: const BorderRadius.all(Radius.circular(12)),
-    //       ),
-    //       child: TextField(
-    //           autofocus: false,
-    //           // controller: searchController,
-    //           keyboardType: TextInputType.text,
-    //           textInputAction: TextInputAction.search,
-    //           decoration: InputDecoration(
-    //               suffixIcon: const Icon(
-    //                 Icons.search,
-    //                 color: Color(0xff7a7979),
-    //                 size: 25,
-    //               ),
-    //               contentPadding: EdgeInsets.only(left: 10, right: 10),
-    //               // const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-    //               border: InputBorder.none,
-    //               hintText: "Search",
-    //               hintStyle: TextStyle(
-    //                 color: const Color(0xff7a7979),
-    //                 fontSize: 14,
-    //                 fontWeight: FontWeight.w500,
-    //               )),
-    //           onSubmitted: (_) {}),
-    //     ),
-    //   ),
-    // );
+
   }
 }
 
@@ -95,14 +57,13 @@ class Body extends StatefulWidget {
     );
   }
   bool isLoading = false;
-  Map jsonData = {};
-
-  Future<void> fetchData() async {
-    setState(() {
+   Map jsonData = {};
+    Future<void> fetchData() async {
+     setState(() {
       isLoading = true;
-    });
+      });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var usertoken = prefs.getString('token');
+     var usertoken = prefs.getString('token');
     if (usertoken != null) {
       final Uri uri = Uri.parse("https://madadguru.webkype.net/api/getVolunteer");
       try {

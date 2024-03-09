@@ -179,8 +179,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     (post["title"] != null)
                                         ? post["title"]
                                         : 'about not available',
-                                    // post['message'] ?? '',
-                                    // "Your job application to Google has been successfully submitted.",
+
                                     style: GoogleFonts.roboto(
                                         color: Colors.black,
                                         fontSize: 13,
@@ -191,8 +190,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     (post["message"] != null)
                                         ? post["message"]
                                         : 'about not available',
-                                    // post['message'] ?? '',
-                                    // "Your job application to Google has been successfully submitted.",
+
                                     style: GoogleFonts.roboto(
                                         color: Colors.black,
                                         fontSize: 12,

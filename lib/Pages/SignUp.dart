@@ -400,27 +400,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           Row(children: [
                             Expanded(
                               child:
-
-                                  // TextFormFieldWidget(
-                                  //   cursorColor: Color(0xffFF9228),
-                                  //   controller: _mobilController,
-                                  //   inputType: TextInputType.number,
-                                  //   inputAction: TextInputAction.next,
-                                  //   obscureText: false,
-                                  //   labeltext: "Mobile Number",
-                                  //   hintText: "0000000000",
-                                  //   validator: (value) {
-                                  //     if (value == null || value.isEmpty) {
-                                  //       return 'Please enter your email';
-                                  //     }
-                                  //     return null;
-                                  //   },
-                                  //   // inputFormatters: [
-                                  //   //   LengthLimitingTextInputFormatter(10), // Limits input length to 10 characters
-                                  //   //   FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$')), // Allows only numeric input
-                                  //   // ],
-                                  // ),
-
                                   Container(
                                 height: 50,
                                 width: MediaQuery.of(context).size.width,
@@ -709,17 +688,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               if (_formKey.currentState!.validate())
                                 ApiProfile();
                             },
-                            // onTap: () {
-                            //   // Navigate to the second page
-                            //   Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => LanguageScreen(
-                            //               device: widget.device,
-                            //         ),
-                            //     ),
-                            //   );
-                            // },
+
                             child: Padding(
                               padding:
                                   const EdgeInsets.only(left: 50, right: 50.0),
