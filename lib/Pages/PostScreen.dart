@@ -19,10 +19,12 @@ class PostScreen extends StatefulWidget {
   @override
   State<PostScreen> createState() => _PostScreenState();
 }
+
 class _PostScreenState extends State<PostScreen> {
   int selectedValue = 0;
-  bool isSelected = false;
+  bool isLoading = false;
   var selectIndex = "";
+  int postCount = 0;
   Map<String, dynamic> myProfile = {};
   Map<String, dynamic> myData = {};
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -33,9 +35,13 @@ class _PostScreenState extends State<PostScreen> {
     fetchDataMyPost();
     fetchMyProfile();
   }
-//============  fetchDataMyPost Api  =================
+
+////////////////      *********  getMyPost Api    *********       ///////////////////
+
   Future<void> fetchDataMyPost() async {
-    // isLoading = true;
+    setState(() {
+      isLoading = true;
+    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usertoken = prefs.getString('token');
     if (usertoken != null) {
@@ -45,10 +51,9 @@ class _PostScreenState extends State<PostScreen> {
           uri,
           headers: {
             'Authorization': 'Bearer $usertoken',
-             },
-             );
-              if (response.statusCode == 200) {
-              // isLoading = false;
+          },
+        );
+        if (response.statusCode == 200) {
           var responseData = json.decode(response.body);
           print("object $responseData");
           if (responseData['success'] == true) {
@@ -57,7 +62,7 @@ class _PostScreenState extends State<PostScreen> {
               setState(() {
                 myData = {'data': List<Map<String, dynamic>>.from(userData)};
                 print('API response: ${myData}');
-
+                postCount = responseData['postCount'];
               });
             }
             if (myData["data"] == null || myData["data"].isEmpty) {}
@@ -71,35 +76,33 @@ class _PostScreenState extends State<PostScreen> {
         print('Error fetching data: $error');
       } finally {
         setState(() {
-          // isLoading = false;
+          isLoading = false;
         });
       }
     }
   }
 
+  /////////  ************  myProfile Api  ************   /////////////////////
+
   Future<void> fetchMyProfile() async {
+    setState(() {
+      isLoading = true;
+    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usertoken = prefs.getString('token');
     if (usertoken != null) {
       final Uri uri = Uri.parse("https://madadguru.webkype.net/api/myProfile");
       try {
-        final response = await http.post(
-          uri,
-          headers: {
-            'Authorization': 'Bearer $usertoken',
-          },
-          body:{
-
-          }
-        );
+        final response = await http.post(uri, headers: {
+          'Authorization': 'Bearer $usertoken',
+        });
         if (response.statusCode == 200) {
           var responseData = json.decode(response.body);
           print("object $responseData");
           if (responseData['success'] == true) {
             var userData = responseData['data'];
             setState(() {
-              myProfile=userData;
-              // deletePost(selectIndex as int);
+              myProfile = userData;
             });
           } else {
             print('API request failed: ${responseData["message"]}');
@@ -111,10 +114,18 @@ class _PostScreenState extends State<PostScreen> {
         }
       } catch (error) {
         print('Error fetching data: $error');
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
       }
     }
   }
+
+///////////////////   ************    delete Post Api    ************  ////////////////////
+
   Future<void> deletePost(int index) async {
+    setState(() {});
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usertoken = prefs.getString('token');
     if (usertoken != null) {
@@ -126,7 +137,7 @@ class _PostScreenState extends State<PostScreen> {
             'Authorization': 'Bearer $usertoken',
           },
           body: {
-            'post_id': myData['data'][index]['id'].toString(), // Convert id to string
+            'post_id': myData['data'][index]['id'].toString(),
           },
         );
         if (response.statusCode == 200) {
@@ -140,9 +151,11 @@ class _PostScreenState extends State<PostScreen> {
               content: Text("Post deleted successfully"),
             ));
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Failed to delete post"),
-            ));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Failed to delete post"),
+              ),
+            );
           }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -157,6 +170,59 @@ class _PostScreenState extends State<PostScreen> {
     }
   }
 
+  // ///////////////////************  getCategory Api  ****************///////////////////////////////
+  List<Map<String, dynamic>> DataList = [];
+  String selectedCategoryId = "";
+
+  Future<void> fetchDataCategory() async {
+    setState(() {
+      isLoading = true;
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var usertoken = prefs.getString('token');
+    if (usertoken != null) {
+      final Uri uri =
+          Uri.parse("https://madadguru.webkype.net/api/getCategory");
+      try {
+        final response = await http.post(
+          uri,
+          headers: {
+            'Authorization': 'Bearer $usertoken',
+          },
+        );
+        if (response.statusCode == 200) {
+          var responseData = json.decode(response.body);
+          List<dynamic> data = responseData['data'] ?? [];
+
+          setState(() {
+            DataList = data
+                .map((item) => {
+                      'id': item['id'].toString(),
+                      'name': item['name'],
+                    })
+                .toList();
+          });
+          print('DepartmentList: $DataList');
+          print('Data fetched successfully');
+          print(response.body);
+          if (DataList.isNotEmpty) {
+            selectedCategoryId = DataList[0]['id'];
+            // fetchDataTopic(selectedCategoryId);
+          }
+          print('Data fetched successfully');
+        } else {
+          print('Failed to fetch data. Status code: ${response.statusCode}');
+        }
+      } catch (error) {
+        print('Error fetching data: $error');
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -166,29 +232,35 @@ class _PostScreenState extends State<PostScreen> {
           backgroundColor: Colors.white,
           leadingWidth: 0,
           elevation: 0,
-          title: Text("My Posts",
-              style: GoogleFonts.roboto(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-              )),
-             actions: [
-
-            IconButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return NotificationScreen(
-                      device: widget.device,
-                    );
-                  }));
-                },
-                icon: Icon(
-                  Icons.notification_important,
-                  // width: 23,
-                  color: Colors.black,
-                ),
+          title: Text(
+            "My Posts (${postCount})",
+            style: GoogleFonts.roboto(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
             ),
-
+          ),
+          // Text("My Posts",
+          //     style: GoogleFonts.roboto(
+          //       fontSize: 20,
+          //       fontWeight: FontWeight.w500,
+          //       color: Colors.black,
+          //     )),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return NotificationScreen(
+                    device: widget.device,
+                  );
+                }));
+              },
+              icon: Icon(
+                Icons.notification_important,
+                // width: 23,
+                color: Colors.black,
+              ),
+            ),
           ]),
       backgroundColor: Colors.grey.shade200,
       body: SafeArea(
@@ -197,9 +269,7 @@ class _PostScreenState extends State<PostScreen> {
           // mainAxisAlignment: MainAxisAlignment.start,
           children: [
             InkWell(
-              onTap: () {
-
-              },
+              onTap: () {},
               child: Container(
                 height: 60,
                 // color: Colors.white,
@@ -226,9 +296,8 @@ class _PostScreenState extends State<PostScreen> {
                         },
                         child: CircleAvatar(
                           radius: 25,
-                          child:ClipOval(
-                            child:
-                            Image.network(
+                          child: ClipOval(
+                            child: Image.network(
                               myProfile['profile'] ?? '',
                               fit: BoxFit.cover,
                               width: 90.0, // adjust width as needed
@@ -241,9 +310,7 @@ class _PostScreenState extends State<PostScreen> {
                                 );
                               },
                             ),
-
                           ),
-
                         ),
                       ),
                       Row(
@@ -263,9 +330,9 @@ class _PostScreenState extends State<PostScreen> {
                                       device: widget.device,
                                     );
                                   }),
-                                ).whenComplete(() =>  fetchDataMyPost());
-                                },
-                                 child: Container(
+                                ).whenComplete(() => fetchDataMyPost());
+                              },
+                              child: Container(
                                 height: 40,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
@@ -280,11 +347,11 @@ class _PostScreenState extends State<PostScreen> {
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400,
                                         color: Colors.black),
-                                    ),
-                                 ),
+                                  ),
                                 ),
-                               ),
-                               ),
+                              ),
+                            ),
+                          ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -307,33 +374,32 @@ class _PostScreenState extends State<PostScreen> {
                 ),
               ),
             ),
-
             buildListView(),
           ],
         ),
       ),
-      );
-     }
+    );
+  }
 
-    Widget buildListView() {
+  Widget buildListView() {
     return myData.isEmpty
         ? Padding(
-            padding: const EdgeInsets.only(top: 250),
+            padding: const EdgeInsets.only(top: 150),
             child: Center(
-                child: CircularProgressIndicator(
-              // radius: 30,
-              color: Colors.indigo[900],
-            ),
+              child: CircularProgressIndicator(
+                // radius: 30,
+                color: Colors.indigo[900],
+              ),
             ),
           )
-          : myData["data"].length == 0
+        : myData["data"].length == 0
             ? Padding(
-                padding: const EdgeInsets.only(top: 200),
+                padding: const EdgeInsets.only(top: 150),
                 child: Center(
-                    child: Text(
-                  'No Post Available',
-                  style: TextStyle(fontSize: 25),
-                ),
+                  child: Text(
+                    'No Post Available',
+                    style: TextStyle(fontSize: 25),
+                  ),
                 ),
               )
             : Expanded(
@@ -345,10 +411,14 @@ class _PostScreenState extends State<PostScreen> {
                     itemBuilder: (context, index) {
                       var post = myData['data'][index];
                       // if (post["post_images"] == null || post["post_images"].isEmpty)
-                      if (post == null || post.isEmpty) {
+                      // if (post == null || post.isEmpty) {
+                      //   return SizedBox();
+                      // }
+                      if (post == null ||
+                          post['post_images'] == null ||
+                          post['post_images'].isEmpty) {
                         return SizedBox();
                       }
-
                       return Stack(children: [
                         Card(
                           elevation: 2,
@@ -392,17 +462,16 @@ class _PostScreenState extends State<PostScreen> {
                                                     actions: [
                                                       TextButton(
                                                         onPressed: () {
-                                                          Navigator.of(
-                                                                  context)
+                                                          Navigator.of(context)
                                                               .pop();
                                                         },
                                                         child: Text('Cancel'),
                                                       ),
                                                       TextButton(
                                                         onPressed: () {
-
                                                           deletePost(index);
-
+                                                          Navigator.of(context)
+                                                              .pop();
                                                         },
                                                         child: Text('Delete'),
                                                       ),
@@ -433,8 +502,8 @@ class _PostScreenState extends State<PostScreen> {
                                           MainAxisAlignment.start,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
-                                         children: [
-                                          Center(
+                                      children: [
+                                        Center(
                                           child: InkWell(
                                             onTap: () {
                                               Navigator.push(
@@ -453,13 +522,15 @@ class _PostScreenState extends State<PostScreen> {
                                               child: CircleAvatar(
                                                 radius: 25,
                                                 child: ClipOval(
-                                                  child:
-                                                  Image.network(
-                                                    post['add_by_user_image'] ?? '',
+                                                  child: Image.network(
+                                                    post['add_by_user_image'] ??
+                                                        '',
                                                     fit: BoxFit.cover,
-                                                    width: 90.0, // adjust width as needed
+                                                    width:
+                                                        90.0, // adjust width as needed
                                                     height: 90.0,
-                                                    errorBuilder: (context, error, stackTrace) {
+                                                    errorBuilder: (context,
+                                                        error, stackTrace) {
                                                       return Icon(
                                                         Icons.person,
                                                         size: 50,
@@ -467,7 +538,6 @@ class _PostScreenState extends State<PostScreen> {
                                                       );
                                                     },
                                                   ),
-
                                                 ),
                                               ),
                                             ),
@@ -482,9 +552,7 @@ class _PostScreenState extends State<PostScreen> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  // myData['data'][index]['add_by_user_name'],
                                                   post['add_by_user_name'],
-                                                  // "Rajesh Rajesh Rajesh ",
                                                   style: GoogleFonts.roboto(
                                                       fontSize: 12,
                                                       fontWeight:
@@ -494,31 +562,25 @@ class _PostScreenState extends State<PostScreen> {
                                                 Text(
                                                   // post["category_name"],
                                                   "${(post["category_name"] != null) ? post["category_name"] : 'Name not available'}",
-                                                  // "Type: ${post['add_by_user_type']} ",
                                                   style: TextStyle(
                                                     fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w400,
+                                                    fontWeight: FontWeight.w400,
                                                     color: Color(0xff150B3D),
                                                   ),
                                                 ),
-
                                                 Text(
                                                   // post["category_name"],
                                                   "${(post["topic_name"] != null) ? post["topic_name"] : 'Name not available'}",
                                                   // "Type: ${post['add_by_user_type']} ",
                                                   style: TextStyle(
                                                     fontSize: 12,
-                                                    fontWeight:
-                                                    FontWeight.w400,
+                                                    fontWeight: FontWeight.w400,
                                                     color: Color(0xff150B3D),
                                                   ),
                                                 ),
                                               ]),
                                         ),
                                         Container(
-                                          //   height: 40,
-                                          // width: 100,
                                           decoration: BoxDecoration(
                                             color: Colors.white,
                                             border: Border.all(
@@ -528,27 +590,24 @@ class _PostScreenState extends State<PostScreen> {
                                                 BorderRadius.circular(12),
                                           ),
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.all(5.0),
+                                            padding: const EdgeInsets.all(5.0),
                                             child: Center(
                                               child: Text(
                                                 post["is_paid"],
-                                                // 'Paid',
-                                                style:
-                                                    TextStyle(fontSize: 12),
+                                                style: TextStyle(fontSize: 12),
                                               ),
                                             ),
                                           ),
-                                        )
-                                        // Image.asset('assets/images/x.png',height: 10,width: 10,)
+                                        ),
                                       ]),
-                                       ),
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.only(
                                       left: 10, right: 10, top: 5),
                                   child: Text(
-                                    (post["problem_statement"] != null) ? post["problem_statement"] : 'Name not available',
-
+                                    (post["problem_statement"] != null)
+                                        ? post["problem_statement"]
+                                        : 'Name not available',
                                     style: GoogleFonts.roboto(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400,
@@ -573,24 +632,54 @@ class _PostScreenState extends State<PostScreen> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(
                                         top: 5, bottom: 5),
-                                    child: Container(
+                                    child:
+
+                                        //   Container(
+                                        //   color: Colors.black,
+                                        //   height: 220,
+                                        //   width:
+                                        //       MediaQuery.of(context).size.width,
+                                        //   child:
+                                        //   Image.network(
+                                        //     post['post_images'][0]["image"] ?? '',
+                                        //     fit: BoxFit.contain,
+                                        //     errorBuilder: (context, error, stackTrace) {
+                                        //       return
+                                        //         Icon(
+                                        //           Icons.person,
+                                        //           color: Colors.grey[400],
+                                        //         );
+                                        //     },
+                                        //    ),
+                                        //
+                                        // ),
+
+                                        Container(
                                       color: Colors.black,
                                       height: 220,
-                                      width:
-                                          MediaQuery.of(context).size.width,
-                                      child:
-                                      Image.network(
-                                        post['post_images'][0]["image"] ?? '',
-                                        fit: BoxFit.contain,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return
-                                            Icon(
-                                              Icons.person,
-                                              color: Colors.grey[400],
-                                            );
+                                      width: MediaQuery.of(context).size.width,
+                                      child: PageView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: post['post_images'].length,
+                                        itemBuilder: (context, index) {
+                                          String imageUrl = post['post_images']
+                                              [index]['image'];
+                                          return Container(
+                                            margin: EdgeInsets.only(right: 8.0),
+                                            child: Image.network(
+                                              imageUrl,
+                                              fit: BoxFit.contain,
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                return Icon(
+                                                  Icons.person,
+                                                  color: Colors.grey[400],
+                                                );
+                                              },
+                                            ),
+                                          );
                                         },
-                                       ),
-
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -603,7 +692,6 @@ class _PostScreenState extends State<PostScreen> {
                                     children: [
                                       Text(
                                         "Party: ${(post["second_party"] != null) ? post["second_party"] : 'Name not available'}",
-                                        // 'Party : ${post["second_party"]}',
                                         style: GoogleFonts.roboto(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w400,
@@ -628,24 +716,21 @@ class _PostScreenState extends State<PostScreen> {
                                                 size: 15),
                                             SizedBox(
                                               width: 5,
-                                               ),
+                                            ),
                                             Text(
                                               "${(post["helper_contacted"] ?? 0)} Contacts",
                                               style: GoogleFonts.roboto(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w400,
                                                 color: Colors.black,
-                                                ),
-                                               ),
-
-
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-
                                 SizedBox(
                                   height: 10,
                                 ),

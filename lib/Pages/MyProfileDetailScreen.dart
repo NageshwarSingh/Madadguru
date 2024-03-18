@@ -301,7 +301,7 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
                           ),
                           const SizedBox(
                             height: 10,
-                          ),
+                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -486,24 +486,26 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
                                 SizedBox(
                                   height: 10,
                                 ),
+
+
                                 Text(
                                   "Need Help In:",
-                                  // textAlign: TextAlign.center,
-                                  style: GoogleFonts.roboto(
+                                    style: GoogleFonts.roboto(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                ChipsChoice<dynamic>.multiple(
-                                  choiceItems:
+                                    color: Colors.black),
+                                    ),
+
+
+                                      ChipsChoice<dynamic>.multiple(
+                                      choiceItems:
                                       C2Choice.listFrom<dynamic, dynamic>(
                                     source: DepartmentList,
                                     value: (index1, item) =>
                                         item["id"].toString(),
                                     label: (index1, item) =>
                                         item["name"].toString(),
-                                  ),
+                                      ),
                                   value: department,
                                   onChanged: (val) {
                                     setState(() {

@@ -65,21 +65,20 @@ class _ContactsScreenState extends State<ContactsScreen> {
         }
       } catch (error) {
         print('Error fetching data: $error');
-      } finally {
-        setState(() {
+         } finally {
+          setState(() {
           isLoading = false;
-        });
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade200,
-      appBar: AppBar(
-        backgroundColor: Colors.grey.shade200,
-        title: Text(
+          });
+           }
+          }
+         }
+        @override
+       Widget build(BuildContext context) {
+      return Scaffold(
+       backgroundColor: Colors.grey.shade200,
+        appBar: AppBar(
+          backgroundColor: Colors.grey.shade200,
+          title: Text(
           'Contacts',
           style: GoogleFonts.roboto(
             color: Colors.black,
@@ -330,13 +329,13 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                             ],
                                                           );
                                                         });
-                                                  },
-                                                  child: Icon(Icons.call,
+                                                        },
+                                                      child: Icon(Icons.call,
                                                       color:
                                                           Colors.greenAccent),
-                                                ),
-                                                InkWell(
-                                                  onTap: () {
+                                                     ),
+                                                   InkWell(
+                                                    onTap: () {
                                                     showDialog(
                                                         context: context,
                                                         builder: (BuildContext
@@ -368,11 +367,11 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                                       "https://wa.me/$phoneNumber?text=${Uri.encodeFull(message)}";
                                                                   print(
                                                                       "The URL is $url");
-                                                                  await launchUrl(
+                                                                    await launchUrl(
                                                                       Uri.parse(
                                                                           url));
-                                                                },
-                                                                child:
+                                                                       },
+                                                                      child:
                                                                     Text('Yes'),
                                                               ),
                                                             ],
@@ -388,24 +387,17 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                               ],
                                             ),
                                           ]),
-                                      // SizedBox(
-                                      //   height: 10,
-                                      // ),
                                       Row(
                                         children: [
                                           Expanded(
                                             child: Text(
                                               post['message'] ?? '',
-                                              // textAlign:
-                                              //     TextAlign.center,
                                               style: GoogleFonts.roboto(
                                                   color: Colors.black,
                                                   fontSize: 12,
-                                                  fontWeight:
-                                                  FontWeight.w400),
+                                                  fontWeight: FontWeight.w400),
                                               // softWrap: true,
-                                              overflow:
-                                              TextOverflow.ellipsis,
+                                              overflow: TextOverflow.ellipsis,
                                               maxLines: 3,
                                             ),
                                           ),

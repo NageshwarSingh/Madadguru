@@ -159,8 +159,6 @@ class _GalleryImageScreenState extends State<GalleryImageScreen> {
                           width: MediaQuery.of(context).size.width,
                           // decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
                           child:
-
-
                               Image.network(
                             (galleryImages[index]["image"] != null)
                                 ? galleryImages[index]["image"]
@@ -187,31 +185,25 @@ class photoView extends StatefulWidget {
   }) : super(key: key);
   @override
   State<photoView> createState() => _photoViewState();
-}
-
-class _photoViewState extends State<photoView> {
+  }
+  class _photoViewState extends State<photoView> {
   PageController _pageController = PageController();
   late double scaleCopy;
-
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: widget.index);
-
   }
-
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
   }
-
   void listener(PhotoViewControllerValue index, id) {
     setState(() {
       scaleCopy = id.scale!;
     });
   }
-
   double _rotationAngle = 0.0;
   void _rotateImage() {
     setState(
@@ -220,7 +212,6 @@ class _photoViewState extends State<photoView> {
       },
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -256,7 +247,6 @@ class _photoViewState extends State<photoView> {
             );
           },
         ),
-
       ),
     );
   }

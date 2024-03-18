@@ -661,12 +661,46 @@ import 'SubcriptionScreen.dart';
                                                       ),
                                                       GestureDetector(
                                                         onTap: () async {
-                                                          SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                        prefs.clear();
-                                                        Navigator.push(context,
-                                                          MaterialPageRoute(builder: (context)=> Login(device: widget.device,),
-                                                        ),
-                                                        );
+                                                          showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (BuildContext context) {
+                                                                return AlertDialog(
+                                                                  title: Text('Confirmation'),
+                                                                  content: Text(
+                                                                      'Are you sure you want to Logout?'),
+                                                                  actions: [
+                                                                    TextButton(
+                                                                      onPressed: () {
+                                                                        Navigator.of(
+                                                                            context)
+                                                                            .pop();
+                                                                      },
+                                                                      child: Text('Cancel'),
+                                                                    ),
+                                                                    TextButton(
+                                                                      onPressed: () async {
+                                                                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                                        prefs.clear();
+                                                                        Navigator.push(context,
+                                                                          MaterialPageRoute(builder: (context)=> Login(device: widget.device,),
+                                                                          ),
+                                                                        );
+                                                                        // deletePost(index);
+                                                                        // Navigator.of(
+                                                                        //     context)
+                                                                        //     .pop();
+                                                                      },
+                                                                      child: Text('Yes'),
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              });
+
+
+
+
+
 
                                                         },
                                                         child: Row(children: [
@@ -782,9 +816,6 @@ import 'SubcriptionScreen.dart';
                             height: 10,
                           ),
                           InkWell(
-                            // onTap: () {
-                            //   Navigator.pop(context);
-                            // },
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -1106,7 +1137,6 @@ import 'SubcriptionScreen.dart';
                 // ),
                 // ===========================================   Choice Chips List        ========================================================
 
-
               ],
             ),
           ),
@@ -1115,8 +1145,8 @@ import 'SubcriptionScreen.dart';
     );
   }
 
-  void _ShowDialogue(BuildContext context) {
-    showDialog(
+        void _ShowDialogue(BuildContext context) {
+        showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -1137,17 +1167,15 @@ import 'SubcriptionScreen.dart';
                         width: MediaQuery.of(context).size.width,
                         height: 160,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(32),
-                            bottomRight: Radius.circular(12),
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12
-                              // bottomLeft: Radius.circular(32),
-                              // bottomRight: Radius.circular(32),
+                              borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(32),
+                              bottomRight: Radius.circular(12),
                               ),
-                          child:
+                              ),
+                              child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12
+                              ),
+                              child:
                               // Image.network('')
                               Image.asset(
                             'assets/images/images.jpg',
@@ -1177,9 +1205,9 @@ import 'SubcriptionScreen.dart';
             ),
           );
         });
-  }
+       }
 
-  void launchFacebookURL() async {
+         void launchFacebookURL() async {
     const facebookURL = 'https://www.facebook.com/socialservicesmadadguru/';
     if (await canLaunch(facebookURL)) {
       await launch(facebookURL);
@@ -1187,7 +1215,5 @@ import 'SubcriptionScreen.dart';
       print('Could not launch Facebook URL');
     }
   }
-
-
 }
 

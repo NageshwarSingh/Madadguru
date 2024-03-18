@@ -222,11 +222,13 @@ class _FeedScreenState extends State<FeedScreen> {
             ),
           ]),
       backgroundColor: Colors.grey.shade200,
-      body: isLoading
+      body:
+      isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : Column(
+          :
+      Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
@@ -394,13 +396,13 @@ class _FeedScreenState extends State<FeedScreen> {
                         ],
                       ),
                     ),
+                    ),
                   ),
-                ),
                 if (JsonData.isNotEmpty) buildListView(),
               ],
             ),
-    );
-  }
+      );
+    }
 
   Widget buildListView() {
     return JsonData.isEmpty
@@ -611,23 +613,50 @@ class _FeedScreenState extends State<FeedScreen> {
                                     child: Padding(
                                       padding: const EdgeInsets.only(
                                           top: 5, bottom: 5),
-                                      child: Container(
+                                      child:
+
+                                      // Container(
+                                      //   color: Colors.black,
+                                      //   height: 220,
+                                      //   width:
+                                      //       MediaQuery.of(context).size.width,
+                                      //   child: Image.network(
+                                      //     post['post_images'][0]["image"] ?? '',
+                                      //     fit: BoxFit.contain,
+                                      //     errorBuilder:
+                                      //         (context, error, stackTrace) {
+                                      //       return Icon(
+                                      //         Icons.person,
+                                      //         color: Colors.grey[400],
+                                      //       );
+                                      //     },
+                                      //   ),
+                                      // ),
+                                      Container(
                                         color: Colors.black,
                                         height: 220,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: Image.network(
-                                          post['post_images'][0]["image"] ?? '',
-                                          fit: BoxFit.contain,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return Icon(
-                                              Icons.person,
-                                              color: Colors.grey[400],
+                                        width: MediaQuery.of(context).size.width,
+                                        child: PageView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: post['post_images'].length,
+                                          itemBuilder: (context, index) {
+                                            String imageUrl = post['post_images'][index]['image'];
+                                            return Container(
+                                              margin: EdgeInsets.only(right: 8.0),
+                                              child: Image.network(
+                                                imageUrl,
+                                                fit: BoxFit.contain,
+                                                errorBuilder: (context, error, stackTrace) {
+                                                  return Icon(
+                                                    Icons.person,
+                                                    color: Colors.grey[400],
+                                                  );
+                                                },
+                                              ),
                                             );
                                           },
                                         ),
-                                      ),
+                                      )
                                     ),
                                   ),
                                   Padding(

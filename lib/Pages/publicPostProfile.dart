@@ -16,15 +16,14 @@ class PublicPostProfile extends StatefulWidget {
   });
   @override
   State<PublicPostProfile> createState() => _PublicPostProfileState();
-}
-
-class _PublicPostProfileState extends State<PublicPostProfile> {
+  }
+  class _PublicPostProfileState extends State<PublicPostProfile> {
   int segmentedControlValue = 0;
   bool isLoading = false;
   bool alreadyContacted = false;
-bool contactButton=true;
+  bool contactButton = true;
   Map JobDetail = {};
-  bool showButton=true;
+  bool showButton = true;
   Map profileData = {};
   TextEditingController _textController = TextEditingController();
   get switchesEnabled => false;
@@ -33,21 +32,19 @@ bool contactButton=true;
     super.initState();
     fetchuserProfile();
   }
-
-  Map<String, dynamic> userData = {};
-  // wrong APi
-
-  Future<void> fetchuserProfile() async {
+    Map<String, dynamic> userData = {};
+    // wrong APi
+    Future<void> fetchuserProfile() async {
     print("TheUseridididid${widget.postId}");
     setState(() {
       isLoading = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-     var usertoken = prefs.getString('token');
-      if (usertoken != null) {
-        final Uri uri =
+    var usertoken = prefs.getString('token');
+    if (usertoken != null) {
+      final Uri uri =
           Uri.parse("https://madadguru.webkype.net/api/userProfile");
-        try {
+      try {
         final response = await http.post(uri, headers: {
           'Authorization': 'Bearer $usertoken',
         }, body: {
@@ -65,36 +62,39 @@ bool contactButton=true;
               var addByUserId = userData['id'].toString();
               print('My User ID: $myUserId');
               print('Add By User ID: $addByUserId');
-                 if (addByUserId == myUserId) {
-                  showButton = false;
-                  }
+              if (addByUserId == myUserId) {
+                showButton = false;
+              }
               var myUserid = prefs.getString('userId');
-              var addByUserid = userData['contactdata'][0]['user_id'].toString();
+              var addByUserid =
+                  userData['contactdata'][0]['user_id'].toString();
               print('myUsermobile: $myUserid');
               print('addByUsermobile: $addByUserid');
-              if (myUserid==addByUserid){
-                  contactButton = false;
-                       }
-                    });
-                  } else {
-               print('userData API request failed: ${responseData["message"]}');
-             }
+              if (myUserid == addByUserid) {
+                contactButton = false;
+              }
+            });
+          } else {
+            print('userData API request failed: ${responseData["message"]}');
+          }
           print('userData fetched successfully');
           print(response.body);
-          } else {
-          print('Failed to fetch userData. Status code: ${response.statusCode}');
+        } else {
+          print(
+              'Failed to fetch userData. Status code: ${response.statusCode}');
         }
       } catch (error) {
         print('Error fetching data: $error');
       } finally {
-          setState(() {
+        setState(() {
           isLoading = false;
-            });
-          }
-       }
-     }
-     void contactUserPopUp(String id, String message) async {
-      try {
+        });
+      }
+    }
+  }
+
+  void contactUserPopUp(String id, String message) async {
+    try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       if (prefs != null) {
         var usertoken = prefs.getString('token');
@@ -133,6 +133,7 @@ bool contactButton=true;
       print('Error: $error');
     }
   }
+
   List<bool> switchStates = [];
   Map<String, dynamic> Data = {};
   List<dynamic> Data2 = [];
@@ -172,12 +173,13 @@ bool contactButton=true;
           print('Data fetched successfully');
         } else {
           print('Failed to fetch Data. Status code: ${response.statusCode}');
-          }
-          } catch (error) {
+        }
+      } catch (error) {
         print('Error fetching data: $error');
       }
     }
   }
+
   void updateIWant() {
     if (userData.containsKey('i_want')) {
       setState(() {
@@ -220,652 +222,649 @@ bool contactButton=true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: isLoading
-              ? Center(child: CircularProgressIndicator())
-              : SingleChildScrollView(
-                  child: Column(children: [
-                    Container(
-                      padding: const EdgeInsets.only(left: 15),
-                      alignment: Alignment.centerLeft,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(true);
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          color: Color(0xcd000000),
-                        ),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                child: Column(children: [
+                  Container(
+                    padding: const EdgeInsets.only(left: 15),
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        color: Color(0xcd000000),
                       ),
                     ),
-                    Stack(clipBehavior: Clip.none, children: [
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 15),
-                        padding: const EdgeInsets.only(
-                            top: 65, left: 10, right: 10, bottom: 10),
-                        width: double.infinity,
-                        color: Colors.grey.shade100,
-                        child: Column(children: [
-                          Text(
-                            (userData["name"] != null)
-                                ? userData["name"]
-                                : 'Name not available',
-                            // "Gajendra Singh",
-                            style: GoogleFonts.roboto(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                            ),
+                  ),
+                  Stack(clipBehavior: Clip.none, children: [
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 15),
+                      padding: const EdgeInsets.only(
+                          top: 65, left: 10, right: 10, bottom: 10),
+                      width: double.infinity,
+                      color: Colors.grey.shade100,
+                      child: Column(children: [
+                        Text(
+                          (userData["name"] != null)
+                              ? userData["name"]
+                              : 'Name not available',
+                          // "Gajendra Singh",
+                          style: GoogleFonts.roboto(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
                           ),
-                          const SizedBox(
-                            height: 5,
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          (userData["email"] != null)
+                              ? userData["email"]
+                              : 'email not available',
+                          style: GoogleFonts.roboto(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
                           ),
-                          Text(
-                            (userData["email"] != null)
-                                ? userData["email"]
-                                : 'email not available',
-                               style: GoogleFonts.roboto(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black,
-                            ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          "Mobile: ${(userData["mobile"] != null) ? userData["mobile"] : 'mobile not available'}",
+                          style: GoogleFonts.roboto(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
                           ),
-                          const SizedBox(
-                            height: 5,
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          "Dob: ${(userData["dob"] != null) ? userData["dob"] : "dob not available"}",
+                          style: GoogleFonts.roboto(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
                           ),
-
-                          Text(
-                            "Mobile: ${(userData["mobile"] != null) ? userData["mobile"] : 'mobile not available'}",
-                            style: GoogleFonts.roboto(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black,
-                            ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          (userData["profession"] != null)
+                              ? userData["profession"]
+                              : 'profession not available',
+                          style: GoogleFonts.roboto(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
                           ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "Dob: ${(userData["dob"] != null) ? userData["dob"] : "dob not available"}",
-                            style: GoogleFonts.roboto(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            (userData["profession"] != null)
-                                ? userData["profession"]
-                                : 'profession not available',
-                            style: GoogleFonts.roboto(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black,
-                            ),
-                          ),
-
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 5),
-                                  margin: EdgeInsets.only(top: 10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Color(0x4d6cabff),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 5),
+                                margin: EdgeInsets.only(top: 10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Color(0x4d6cabff),
+                                ),
+                                child: Text(
+                                  "Gender: ${(userData["gender"] != null) ? userData["gender"] : "dob not available"}",
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xff3600FF),
                                   ),
-                                  child: Text(
-                                    "Gender: ${(userData["gender"] != null) ? userData["gender"] : "dob not available"}",
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 5),
+                                margin: EdgeInsets.only(top: 10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Color(0x4D8EE386),
+                                ),
+                                child: Text(
+                                    "Language: ${(userData["language"] != null) ? userData["language"] : "dob not available"}",
                                     style: GoogleFonts.roboto(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w400,
-                                      color: Color(0xff3600FF),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 5),
-                                  margin: EdgeInsets.only(top: 10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Color(0x4D8EE386),
-                                  ),
-                                  child: Text(
-                                      "Language: ${(userData["language"] != null) ? userData["language"] : "dob not available"}",
-                                      style: GoogleFonts.roboto(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400,
-                                        color: Color(0xff096001),
-                                      )),
-                                ),
-                              ])
-                        ]),
-                      ),
-                      Positioned(
-                        top: -40,
-                        left: MediaQuery.of(context).size.width / 2.7,
-                        child: CircleAvatar(
-                          radius: 46.5,
-                          backgroundColor: Colors.black,
-                          child: Center(
-                            child: CircleAvatar(
-                              radius: 45,
-                              child:  ClipOval(
-                                child:
-                                Image.network(
-                                  userData['profile'],
-                                  fit: BoxFit.cover,
-                                  width: 90.0,
-                                  height: 90.0,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Icon(
-                                      Icons.person,
-                                      size: 50,
-                                      color: Colors.grey[400],
-                                    );
-                                  },
-                                ),
+                                      color: Color(0xff096001),
+                                    )),
+                              ),
+                            ])
+                      ]),
+                    ),
+                    Positioned(
+                      top: -40,
+                      left: MediaQuery.of(context).size.width / 2.7,
+                      child: CircleAvatar(
+                        radius: 46.5,
+                        backgroundColor: Colors.black,
+                        child: Center(
+                          child: CircleAvatar(
+                            radius: 45,
+                            child: ClipOval(
+                              child: Image.network(
+                                userData['profile'],
+                                fit: BoxFit.cover,
+                                width: 90.0,
+                                height: 90.0,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(
+                                    Icons.person,
+                                    size: 50,
+                                    color: Colors.grey[400],
+                                  );
+                                },
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ]),
-                    SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10.0),
-                                  child: Text(
-                                    "About",
-                                    style: GoogleFonts.roboto(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
+                    ),
+                  ]),
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Text(
+                                  "About",
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
                                   ),
                                 ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10,right: 10),
-                                  child: Text(
-                                    (userData["about"] != null)
-                                        ? userData["about"]
-                                        : 'about not available',
-                                     style: GoogleFonts.roboto(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black,
-                                    ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                child: Text(
+                                  (userData["about"] != null)
+                                      ? userData["about"]
+                                      : 'about not available',
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black,
                                   ),
                                 ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10,right: 10),
-                                  child: Text(
-                                    "I want:",
-                                    style: GoogleFonts.roboto(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                child: Text(
+                                  "I want:",
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
                                   ),
                                 ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                ListView.builder(
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: Data.length,
-                                  shrinkWrap: true,
-                                  padding: EdgeInsets.zero,
-                                  itemBuilder: (context, index) {
-                                    if (index >= Data2.length) {
-                                      return Container();
-                                    }
-                                    return ListTile(
-                                      title: Container(
-                                        padding: EdgeInsets.zero,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                              width: 1, color: Colors.orange),
-                                        ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                itemCount: Data.length,
+                                shrinkWrap: true,
+                                padding: EdgeInsets.zero,
+                                itemBuilder: (context, index) {
+                                  if (index >= Data2.length) {
+                                    return Container();
+                                  }
+                                  return ListTile(
+                                    title: Container(
+                                      padding: EdgeInsets.zero,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                            width: 1, color: Colors.orange),
+                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 5, right: 5.0),
+                                        padding: const EdgeInsets.only(
+                                            left: 5, right: 5.0),
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Image.asset(
-                                                      'assets/images/icon.png'),
-                                                  Text(
-                                                    Data2[index]['name']
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                        fontSize: 14),
-                                                  ),
-                                                ],
-                                              ),
-                                              Switch(
-
-                                                autofocus: true,
-                                                value: switchStates[index],
-                                                onChanged: switchesEnabled
-                                                    ? (value) {
-                                                        setState(() {
-                                                          switchStates[
-                                                              index] = value;
-                                                          updateIWant();
-                                                        });
-                                                      }
-                                                    : null,
-
-                                                activeTrackColor:
-                                                    Colors.lightGreenAccent,
-                                                activeColor:
-                                                    Colors.green.shade200,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10,right: 10),
-                                  child: Text("Contacts",
-                                    style: GoogleFonts.roboto(
-                                      color: Colors
-                                          .black,
-                                      fontSize: 14,
-                                      fontWeight:
-                                      FontWeight
-                                          .bold),),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                userData == null || userData['contactdata'] == null
-                                    ? Padding(
-                                  padding: const EdgeInsets.only(top: 150),
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      // radius: 30,
-                                      color: Colors.indigo[900],
-                                    ),
-                                  ),
-                                )
-                                    : userData['contactdata'].length == 0
-                                    ? Padding(
-                                  padding: const EdgeInsets.only(top: 50),
-                                  child: Center(
-                                    child: Text(
-                                      'No Contact Available',
-                                      style: TextStyle(fontSize: 25),
-                                    ),
-                                  ),
-                                )
-                                    : ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: userData['contactdata'].length,
-                                    // itemCount: Mydata['data'].length,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      var post = userData['contactdata'][index];
-                                      return GestureDetector(
-                                        onTap: () {},
-                                        child: Container(
-                                          margin: const EdgeInsets.only(
-                                            bottom: 15,
-                                          ),
-                                          decoration: BoxDecoration(
-                                              color: Colors.grey.shade100,
-                                              borderRadius:
-                                              BorderRadius.circular(0)),
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                right: 10,
-                                                left: 10.0,
-                                                top: 10,
-                                                bottom: 10
-                                               ),
-                                               child: Column(
-                                                children: [
-                                                    Row(
-
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                    children: [
-                                                      Row(
-                                                        crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                            const EdgeInsets
-                                                                .only(
-                                                                left: 10),
-                                                            child:
-
-                                                            CircleAvatar(
-                                                              radius: 30,
-                                                              child: ClipOval(
-                                                                child:
-                                                                Image.network(
-                                                                  post['icon'] ??
-                                                                      '',
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                  width:
-                                                                  60.0, // adjust width as needed
-                                                                  height: 60.0,
-                                                                  errorBuilder:
-                                                                      (context,
-                                                                      error,
-                                                                      stackTrace) {
-                                                                    return Icon(
-                                                                      Icons
-                                                                          .person,
-                                                                      size: 50,
-                                                                      color: Colors
-                                                                          .grey[
-                                                                      400],
-                                                                    );
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 15,
-                                                          ),
-                                                          Column(
-                                                            crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                            // mainAxisAlignment: MainAxisAlignment.center,
-                                                            children: [
-                                                              SizedBox(height: 10,),
-                                                              Text(
-                                                                post['user_name'] ??
-                                                                    '',
-                                                                style: GoogleFonts.roboto(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize: 12,
-                                                                    fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                              ),
-                                                              SizedBox(
-                                                                height: 3,
-                                                              ),
-                                                              Text(
-                                                                post['user_email'] ??
-                                                                    '',
-                                                                style: GoogleFonts.roboto(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize: 12,
-                                                                    fontWeight:
-                                                                    FontWeight
-                                                                        .w400),
-                                                              ),
-                                                              // SizedBox(
-                                                              //   height: 3,
-                                                              // ),
-                                                              // Text(
-                                                              //
-                                                              //   post['user_mobile'] ??
-                                                              //       '',
-                                                              //   style: GoogleFonts.roboto(
-                                                              //       color: Colors
-                                                              //           .black,
-                                                              //       fontSize: 12,
-                                                              //       fontWeight:
-                                                              //       FontWeight
-                                                              //           .w400),
-                                                              //     ),
-                                                                SizedBox(
-                                                                height: 3,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      SizedBox(width: 100,),
-
-                                                      Column(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                        children: [
-                                                          Visibility(
-                                                            visible:contactButton,
-                                                            child: InkWell(
-                                                                onTap: () {
-                                                                  showDialog(
-                                                                      context:
-                                                                      context,
-                                                                      builder:
-                                                                          (BuildContext
-                                                                      context) {
-                                                                        return AlertDialog(
-                                                                          title: Text(
-                                                                              'Call'),
-                                                                          content: Text(
-                                                                              'Are you sure you want to Call?'),
-                                                                          actions: [
-                                                                            TextButton(
-                                                                              onPressed:
-                                                                                  () {
-                                                                                Navigator.of(context).pop();
-                                                                              },
-                                                                              child:
-                                                                              Text('No'),
-                                                                            ),
-                                                                            TextButton(
-                                                                              onPressed:
-                                                                                  () async
-                                                                              {
-                                                                                var phoneNumber =
-                                                                                    post['user_mobile'] ??
-                                                                                        '';
-                                                                                var url =
-                                                                                    "tel:$phoneNumber";
-                                                                                print(
-                                                                                    "Calling $phoneNumber");
-                                                                                await launchUrl(
-                                                                                    Uri.parse(
-                                                                                        url));
-
-                                                                              },
-                                                                              child:
-                                                                              Text('Yes'),
-                                                                            ),
-                                                                          ],
-                                                                        );
-                                                                      });
-                                                                    },
-                                                                    child: Icon(
-                                                                    Icons.call,
-                                                                    color: Colors
-                                                                        .greenAccent),
-                                                                   ),
-                                                               ),
-                                                                Visibility(
-                                                                 visible: contactButton,
-                                                                child: InkWell(
-                                                                onTap: () {
-                                                                  showDialog(
-                                                                    context:
-                                                                      context,
-                                                                       builder:
-                                                                        (BuildContext
-                                                                    context) {
-                                                                      return AlertDialog(
-                                                                        title: Text(
-                                                                            'WhatsApp'),
-                                                                        content: Text(
-                                                                            'Are you sure you want to WhatsApp Message?'),
-                                                                        actions: [
-                                                                          TextButton(
-                                                                            onPressed:
-                                                                                () {
-                                                                              Navigator.of(context)
-                                                                                  .pop();
-                                                                            },
-                                                                            child: Text(
-                                                                                'No'),
-                                                                          ),
-                                                                          TextButton(
-                                                                            onPressed:
-                                                                                () async
-                                                                            {
-                                                                              var phoneNumber =
-                                                                                  post['user_mobile'] ??
-                                                                                      '';
-                                                                              var message =
-                                                                                  "Hello";
-                                                                              var url =
-                                                                                  "https://wa.me/$phoneNumber?text=${Uri.encodeFull(message)}";
-                                                                              print(
-                                                                                  "The URL is $url");
-                                                                              await launchUrl(
-                                                                                  Uri.parse(
-                                                                                      url),
-                                                                                   );
-                                                                                 },
-
-                                                                            child: Text(
-                                                                                'Yes'),
-                                                                          ),
-                                                                        ],
-                                                                      );
-                                                                    });
-                                                                    },
-                                                                 child: Image.asset(
-                                                                'assets/images/whats.png',
-                                                                height: 50,
-                                                                width: 50,
-                                                                ),
-                                                               ),
-                                                             ),
-                                                            ],
-                                                           ),
-                                                          ]),
-                                                         Row(
-                                                         children: [
-                                                          Expanded(
-                                                          child: Text(
-                                                          (post["message"] != null) ? post["message"] : 'message not available',
-                                                           style: GoogleFonts.roboto(
-                                                            color: Colors.black,
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                            FontWeight.w400),
-                                                             overflow:
-                                                            TextOverflow.ellipsis,
-                                                           maxLines: 3,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                                  children: [
-                                                    // Text(
-                                                    //  "Gender: ${(post["user_gender"] !=null)? post["user_gender"]: 'gender not available'}",
-                                                    //
-                                                    //   style: GoogleFonts.roboto(
-                                                    //       color: Colors.black,
-                                                    //       fontSize: 12,
-                                                    //       fontWeight: FontWeight.w500),
-                                                    //   ),
-                                                    Text(
-                                                      (post["created_at"] != null) ? post["created_at"] : 'date not available',
-                                                      style: GoogleFonts.roboto(
-                                                          color: Colors.black,
-                                                          fontSize: 12,
-                                                          fontWeight: FontWeight.w400),
-                                                      ),
-                                                  ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Image.asset(
+                                                    'assets/images/icon.png'),
+                                                Text(
+                                                  Data2[index]['name']
+                                                      .toString(),
+                                                  style:
+                                                      TextStyle(fontSize: 14),
                                                 ),
                                               ],
                                             ),
-                                          ),
+                                            Switch(
+                                              autofocus: true,
+                                              value: switchStates[index],
+                                              onChanged: switchesEnabled
+                                                  ? (value) {
+                                                      setState(() {
+                                                        switchStates[index] =
+                                                            value;
+                                                        updateIWant();
+                                                      });
+                                                    }
+                                                  : null,
+                                              activeTrackColor:
+                                                  Colors.lightGreenAccent,
+                                              activeColor:
+                                                  Colors.green.shade200,
+                                            ),
+                                          ],
                                         ),
-                                      );
-                                    }),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Visibility(
-                                  visible: showButton,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      _showDialogue(context);
-                                      setState(() {
-                                        alreadyContacted = true;
-                                      });
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 30, right: 30.0),
-                                      child: ButtonWidget(
-                                        text: alreadyContacted ? "Already Contacted" : "Contact",
-                                        color: Color(0xffFBCD96),
-                                        textColor: Colors.orange,
-                                        width: MediaQuery.of(context).size.width,
                                       ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                child: Text(
+                                  "Contacts",
+                                  style: GoogleFonts.roboto(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              userData == null ||
+                                      userData['contactdata'] == null
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(top: 150),
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          // radius: 30,
+                                          color: Colors.indigo[900],
+                                        ),
+                                      ),
+                                    )
+                                  : userData['contactdata'].length == 0
+                                      ? Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 50),
+                                          child: Center(
+                                            child: Text(
+                                              'No Contact Available',
+                                              style: TextStyle(fontSize: 25),
+                                            ),
+                                          ),
+                                        )
+                                      : ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount:
+                                              userData['contactdata'].length,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            var post =
+                                                userData['contactdata'][index];
+                                            return GestureDetector(
+                                              onTap: () {},
+                                              child: Container(
+                                                margin: const EdgeInsets.only(
+                                                  bottom: 15,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.grey.shade100,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            0),
+                                                      ),
+                                                     child: Padding(
+                                                        padding:
+                                                       EdgeInsets.only(
+                                                          right: 10,
+                                                          left: 10.0,
+                                                          top: 10,
+                                                          bottom: 10),
+                                                  child: Column(
+                                                    children: [
+                                                      Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Row(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .only(
+                                                                          left:
+                                                                              10),
+                                                                  child:
+                                                                      CircleAvatar(
+                                                                    radius: 30,
+                                                                    child:
+                                                                        ClipOval(
+                                                                      child: Image
+                                                                          .network(
+                                                                        post['icon'] ??
+                                                                            '',
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                        width:
+                                                                            60.0,
+                                                                        height:
+                                                                            60.0,
+                                                                        errorBuilder: (context,
+                                                                            error,
+                                                                            stackTrace) {
+                                                                          return Icon(
+                                                                            Icons.person,
+                                                                            size:
+                                                                                50,
+                                                                            color:
+                                                                                Colors.grey[400],
+                                                                          );
+                                                                        },
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 15,
+                                                                ),
+                                                                Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  // mainAxisAlignment: MainAxisAlignment.center,
+                                                                  children: [
+                                                                    SizedBox(
+                                                                      height:
+                                                                          10,
+                                                                    ),
+                                                                    Text(
+                                                                      post['user_name'] ??
+                                                                          '',
+                                                                      style: GoogleFonts.roboto(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontSize:
+                                                                              12,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height: 3,
+                                                                    ),
+                                                                    Text(
+                                                                      post['user_email'] ??
+                                                                          '',
+                                                                      style: GoogleFonts.roboto(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontSize:
+                                                                              12,
+                                                                          fontWeight:
+                                                                              FontWeight.w400),
+                                                                    ),
+                                                                    // SizedBox(
+                                                                    //   height: 3,
+                                                                    // ),
+                                                                    // Text(
+                                                                    //
+                                                                    //   post['user_mobile'] ??
+                                                                    //       '',
+                                                                    //   style: GoogleFonts.roboto(
+                                                                    //       color: Colors
+                                                                    //           .black,
+                                                                    //       fontSize: 12,
+                                                                    //       fontWeight:
+                                                                    //       FontWeight
+                                                                    //           .w400),
+                                                                    //     ),
+                                                                    SizedBox(
+                                                                      height: 3,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            SizedBox(
+                                                              width: 100,
+                                                            ),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Visibility(
+                                                                  visible:
+                                                                      contactButton,
+                                                                  child:
+                                                                      InkWell(
+                                                                    onTap: () {
+                                                                      showDialog(
+                                                                          context:
+                                                                              context,
+                                                                          builder:
+                                                                              (BuildContext context) {
+                                                                            return AlertDialog(
+                                                                              title: Text('Call'),
+                                                                              content: Text('Are you sure you want to Call?'),
+                                                                              actions: [
+                                                                                TextButton(
+                                                                                  onPressed: () {
+                                                                                    Navigator.of(context).pop();
+                                                                                  },
+                                                                                  child: Text('No'),
+                                                                                ),
+                                                                                TextButton(
+                                                                                  onPressed: () async {
+                                                                                    var phoneNumber = post['user_mobile'] ?? '';
+                                                                                    var url = "tel:$phoneNumber";
+                                                                                    print("Calling $phoneNumber");
+                                                                                    await launchUrl(
+                                                                                      Uri.parse(url),
+                                                                                    );
+                                                                                  },
+                                                                                  child: Text('Yes'),
+                                                                                ),
+                                                                              ],
+                                                                            );
+                                                                          });
+                                                                    },
+                                                                    child: Icon(
+                                                                        Icons
+                                                                            .call,
+                                                                        color: Colors
+                                                                            .greenAccent),
+                                                                  ),
+                                                                ),
+                                                                Visibility(
+                                                                  visible:
+                                                                      contactButton,
+                                                                  child:
+                                                                      InkWell(
+                                                                    onTap: () {
+                                                                      showDialog(
+                                                                          context:
+                                                                              context,
+                                                                          builder:
+                                                                              (BuildContext context) {
+                                                                            return AlertDialog(
+                                                                              title: Text('WhatsApp'),
+                                                                              content: Text('Are you sure you want to WhatsApp Message?'),
+                                                                              actions: [
+                                                                                TextButton(
+                                                                                  onPressed: () {
+                                                                                    Navigator.of(context).pop();
+                                                                                  },
+                                                                                  child: Text('No'),
+                                                                                ),
+                                                                                TextButton(
+                                                                                  onPressed: () async {
+                                                                                    var phoneNumber = post['user_mobile'] ?? '';
+                                                                                    var message = "Hello";
+                                                                                    var url = "https://wa.me/$phoneNumber?text=${Uri.encodeFull(message)}";
+                                                                                    print("The URL is $url");
+                                                                                    await launchUrl(
+                                                                                      Uri.parse(url),
+                                                                                    );
+                                                                                  },
+                                                                                  child: Text('Yes'),
+                                                                                ),
+                                                                              ],
+                                                                            );
+                                                                          });
+                                                                    },
+                                                                    child: Image
+                                                                        .asset(
+                                                                      'assets/images/whats.png',
+                                                                      height:
+                                                                          50,
+                                                                      width: 50,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ]),
+                                                      Row(
+                                                        children: [
+                                                          Expanded(
+                                                            child: Text(
+                                                              (post["message"] !=
+                                                                      null)
+                                                                  ? post[
+                                                                      "message"]
+                                                                  : 'message not available',
+                                                              style: GoogleFonts.roboto(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              maxLines: 3,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          // Text(
+                                                          //  "Gender: ${(post["user_gender"] !=null)? post["user_gender"]: 'gender not available'}",
+                                                          //
+                                                          //   style: GoogleFonts.roboto(
+                                                          //       color: Colors.black,
+                                                          //       fontSize: 12,
+                                                          //       fontWeight: FontWeight.w500),
+                                                          //   ),
+                                                          Text(
+                                                            (post["created_at"] !=
+                                                                    null)
+                                                                ? post[
+                                                                    "created_at"]
+                                                                : 'date not available',
+                                                            style: GoogleFonts.roboto(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Visibility(
+                                visible: showButton,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _showDialogue(context);
+                                    setState(() {
+                                      alreadyContacted = true;
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 30, right: 30.0),
+                                    child: ButtonWidget(
+                                      text: alreadyContacted
+                                          ? "Already Contacted"
+                                          : "Contact",
+                                      color: Color(0xffFBCD96),
+                                      textColor: Colors.orange,
+                                      width: MediaQuery.of(context).size.width,
                                     ),
                                   ),
                                 ),
-
-                                SizedBox(
-                                  height: (widget.device == "IOS") ? 80 : 30,
-                                ),
-                              ]),
-                        ],
-                      ),
+                              ),
+                              SizedBox(
+                                height: (widget.device == "IOS") ? 80 : 30,
+                              ),
+                            ]),
+                      ],
                     ),
-                  ]),
-                ),
-        ),
+                  ),
+                ]),
+              ),
+      ),
     );
   }
-  void _showDialogue(BuildContext context){
+
+  void _showDialogue(BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -877,53 +876,26 @@ bool contactButton=true;
                 children: [
                   TextField(
                     maxLines: 5,
-                    controller:
-                    _textController,
-                    decoration:
-                    InputDecoration(
-                      hintText:
-                      'Text here....',
-                      labelStyle: TextStyle(
-                          color:
-                          Colors.orange),
-                      enabledBorder:
-                      OutlineInputBorder(
-                        borderRadius:
-                        BorderRadius
-                            .circular(12),
-                        borderSide:
-                        BorderSide(
-                            color: Colors
-                                .orange),
+                    controller: _textController,
+                    decoration: InputDecoration(
+                      hintText: 'Text here....',
+                      labelStyle: TextStyle(color: Colors.orange),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.orange),
                       ),
-                      disabledBorder:
-                      OutlineInputBorder(
-                        borderRadius:
-                        BorderRadius
-                            .circular(12),
-                        borderSide:
-                        BorderSide(
-                            color: Colors
-                                .orange),
+                      disabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.orange),
                       ),
-                      focusedBorder:
-                      OutlineInputBorder(
-                        borderRadius:
-                        BorderRadius
-                            .circular(12),
-                        borderSide:
-                        BorderSide(
-                            color: Colors
-                                .orange),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.orange),
                       ),
                       contentPadding:
-                      EdgeInsets.only(
-                          left: 10,
-                          right: 10,
-                          top: 10),
-                        ),
-                    keyboardType:
-                    TextInputType.text,
+                          EdgeInsets.only(left: 10, right: 10, top: 10),
+                    ),
+                    keyboardType: TextInputType.text,
                     onChanged: (value) {
                       // Handle text changes
                     },
@@ -931,20 +903,16 @@ bool contactButton=true;
                   SizedBox(
                     height: 30,
                   ),
-                    GestureDetector(
+                  GestureDetector(
                     onTap: () async {
                       contactUserPopUp(
-                          widget.postId
-                              .toString(),
-                          _textController
-                              .text);
+                          widget.postId.toString(), _textController.text);
                       Navigator.pop(context);
-                    await fetchuserProfile();
+                      await fetchuserProfile();
                     },
                     child: ButtonWidget(
                       text: "Send",
-                      color: const Color(
-                          0xffFF9228),
+                      color: const Color(0xffFF9228),
                       textColor: Colors.white,
                       width: 100,
                     ),

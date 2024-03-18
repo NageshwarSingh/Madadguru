@@ -8,14 +8,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../Allwidgets/textForm_filed.dart';
 
-  class NewPostScreen extends StatefulWidget {
+class NewPostScreen extends StatefulWidget {
   final String device;
   const NewPostScreen({super.key, required this.device});
   @override
   State<NewPostScreen> createState() => _NewPostScreenState();
-  }
-  class _NewPostScreenState extends State<NewPostScreen> {
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+}
+
+class _NewPostScreenState extends State<NewPostScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _probleDescController = TextEditingController();
   TextEditingController _categoryController = TextEditingController();
   TextEditingController _topicController = TextEditingController();
@@ -42,6 +43,7 @@ import '../Allwidgets/textForm_filed.dart';
     'November',
     'December',
   ];
+
   var Solutions;
   var solutions = [
     'January',
@@ -70,19 +72,20 @@ import '../Allwidgets/textForm_filed.dart';
     'Other',
   ];
   List<http.MultipartFile> files = [];
+  List<XFile>? _imageFiles = [];
   File? imageFile;
   List<File> imageFiles = [];
   Map<String, dynamic> data = {};
   Map<String, dynamic>? selectedCategory;
   Map<String, dynamic>? selectedTopic;
-  bool isLoading=false;
+  bool isLoading = false;
+  List<File> selectedImages = [];
+  final picker = ImagePicker();
   @override
-
   Future<void> addPostApi() async {
     setState(() {
-      isLoading = true; // Set isLoading to true when API call starts
+      isLoading = true;
     });
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usertoken = prefs.getString('token');
     final Uri uri = Uri.parse("https://madadguru.webkype.net/api/addPost");
@@ -92,15 +95,16 @@ import '../Allwidgets/textForm_filed.dart';
       "Authorization": 'Bearer $usertoken',
     };
     request.headers.addAll(headers);
-
-    if (imageFile != null) {
+    // if (imageFile != null) {
+    for (var imageFile in _imageFiles ?? []) {
       request.files.add(
         await http.MultipartFile.fromPath('upload_document[]', imageFile!.path),
       );
     }
-
-    request.fields['topic_id'] = selectedTopic != null ? selectedTopic!['id'].toString() : '';
-    request.fields['category_id'] = selectedCategory != null ? selectedCategory!['id'].toString() : '';
+    request.fields['topic_id'] =
+        selectedTopic != null ? selectedTopic!['id'].toString() : '';
+    request.fields['category_id'] =
+        selectedCategory != null ? selectedCategory!['id'].toString() : '';
     request.fields['second_party'] = _secondpartyController.text;
     request.fields['problem_statement'] = _problemStatementController.text;
     request.fields['problem_start_month'] = _problemMonthController.text;
@@ -110,7 +114,6 @@ import '../Allwidgets/textForm_filed.dart';
     request.fields['already_reported'] = _alreadyReportedController.text;
     request.fields['problem_desc'] = _probleDescController.text;
     request.fields['financial_status'] = _financialStatusController.text;
-
     try {
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
@@ -139,40 +142,43 @@ import '../Allwidgets/textForm_filed.dart';
     super.initState();
     fetchDataCategory();
   }
+
   List<dynamic> department = [];
   List<Map<String, dynamic>> CategoryList = [];
   List<dynamic> department1 = [];
   List<Map<String, dynamic>> TopicList = [];
-
   String selectedCategoryId = "";
-
   Future<void> fetchDataCategory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usertoken = prefs.getString('token');
     if (usertoken != null) {
-      final Uri uri = Uri.parse("https://madadguru.webkype.net/api/getCategory");
+      final Uri uri =
+          Uri.parse("https://madadguru.webkype.net/api/getCategory");
       try {
         final response = await http.post(
           uri,
           headers: {
             'Authorization': 'Bearer $usertoken',
           },
-          );
+        );
         if (response.statusCode == 200) {
           var responseData = json.decode(response.body);
           List<dynamic> data = responseData['data'] ?? [];
           setState(() {
-            CategoryList = data.map((item) => {
-              'id': item['id'].toString(),
-              'name': item['name'],
-            }).toList();
+            CategoryList = data
+                .map((item) => {
+                      'id': item['id'].toString(),
+                      'name': item['name'],
+                    })
+                .toList();
           });
           print('CategoryList: $CategoryList');
           print('Data fetched successfully');
           print(response.body);
 
           if (CategoryList.isNotEmpty) {
-            selectedCategoryId = CategoryList[0]['id']; // Set the selected category id
+            selectedCategoryId =
+                CategoryList[0]['id']; // Set the selected category id
             fetchDataTopic(selectedCategoryId);
           }
           print('Data fetched successfully');
@@ -182,8 +188,8 @@ import '../Allwidgets/textForm_filed.dart';
       } catch (error) {
         print('Error fetching data: $error');
       }
-     }
     }
+  }
 
   Future<void> fetchDataTopic(String categoryId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -210,17 +216,18 @@ import '../Allwidgets/textForm_filed.dart';
               'id': item['id'].toString(),
               'name': item['name'],
             });
-          }   setState(() {
+          }
+          setState(() {
             TopicList = topics;
           });
 
           print('TopicList: $TopicList');
           print('Data fetched successfully');
           print(response.body);
-              } else {
-            print('Failed to fetch data. Status code: ${response.statusCode}');
-           }
-         } catch (error) {
+        } else {
+          print('Failed to fetch data. Status code: ${response.statusCode}');
+        }
+      } catch (error) {
         print('Error fetching data: $error');
       }
     }
@@ -236,754 +243,806 @@ import '../Allwidgets/textForm_filed.dart';
           height: 45,
           alignment: Alignment.center,
         ),
-        ),
-        body:
-       isLoading
-        ? Center(child: CircularProgressIndicator())
-        : SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 15,
-            right: 15,
-            top: 10,
-          ),
-          child: Form(
-            key: _formKey,
-            autovalidateMode: AutovalidateMode.always,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'I need help for:',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.black),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Select Category',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Colors.black),
-                ),
-
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 7),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child: InputDecorator(
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<Map<String, dynamic>>(
-                        style: GoogleFonts.roboto(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.orange,
-                        ),
-                        dropdownColor: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        value: selectedCategory,
-                        isExpanded: true,
-                        icon: const Icon(
-                          Icons.keyboard_arrow_down,
-                          size: 30,
-                          color: Colors.black38,
-                        ),
-                        hint: Text(
-                          "category",
-                          style: GoogleFonts.roboto(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black38,
-                          ),
-                        ),
-                        elevation: 1,
-                        underline: Container(height: 1, color: Colors.orange),
-                        onChanged: (Map<String, dynamic>? newValue) {
-                          setState(() {
-                            selectedCategory = newValue;
-                            _categoryController.text = newValue!['name'].toString();
-                            // '${newValue!['id']}: ${newValue['name']}';
-                          });
-                          },
-                        items: CategoryList.map<DropdownMenuItem<Map<String, dynamic>>>((department) {
-                          return DropdownMenuItem<Map<String, dynamic>>(
-                            value: department,
-                            child: Text(
-                              department['name'].toString(),
-                              // '${department['id']}: ${department['name']}',
-                              style: GoogleFonts.roboto(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Select topic',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Colors.black),
-                ),
-
-                SizedBox(
-                  height: 15,
-                ),
-
-
-                Container(
-                  padding: EdgeInsets.only(left: 7),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child: InputDecorator(
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<Map<String, dynamic>>(
-                        style: GoogleFonts.roboto(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.orange,
-                        ),
-                        dropdownColor: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        value: selectedTopic,
-                        isExpanded: true,
-                        icon: const Icon(
-                          Icons.keyboard_arrow_down,
-                          size: 30,
-                          color: Colors.black38,
-                        ),
-                        hint: Text(
-                          "Topics",
-                          style: GoogleFonts.roboto(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black38,
-                          ),
-                        ),
-                        elevation: 1,
-                        underline: Container(height: 1, color: Colors.orange),
-                        onChanged: (Map<String, dynamic>? newValue) {
-                          setState(() {
-                            selectedTopic = newValue;
-                            _topicController.text = newValue!['name'].toString();
-                            // '${newValue!['id']}: ${newValue['name']}';
-                          });
-                        },
-                        items: TopicList.map<DropdownMenuItem<Map<String, dynamic>>>((department1) {
-                          return DropdownMenuItem<Map<String, dynamic>>(
-                            value: department1,
-                            child: Text(
-                              department1['name'].toString(),
-                              // '${department['id']}: ${department['name']}',
-                              style: GoogleFonts.roboto(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                ),
-
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  '2nd Party (if any)',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Colors.black),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  child: TextFormFieldWidget2(
-                    maxLines: 1,
-                    cursorColor: Color(0xffFF9228),
-                    controller: _secondpartyController,
-                    inputType: TextInputType.text,
-                    inputAction: TextInputAction.next,
-                    obscureText: false,
-                    hintText: "Any Party",
-                    labeltext: '',
-                  ),
-                ),
-
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Problem Statement',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Colors.black),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  child: TextFormFieldWidget2(
-                    maxLines: 1,
-                    cursorColor: Color(0xffFF9228),
-                    controller: _problemStatementController,
-                    inputType: TextInputType.text,
-                    inputAction: TextInputAction.next,
-                    obscureText: false,
-                    hintText: "Problem Statement",
-                    labeltext: '',
-                  ),
-                ),
-                SizedBox(height: 15),
-
-                Text(
-                  'Problem Started State:',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Colors.black),
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(width: 170,
-                      height: 50,
-                      padding: EdgeInsets.only(left: 7),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 1.5, color: Colors.transparent),
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      child: InputDecorator(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 10,
-                          ),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            style: GoogleFonts.roboto(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.orange),
-                            dropdownColor: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            value: Months,
-                            isExpanded: true,
-                            icon: const Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 30,
-                              color: Colors.black38,
-                            ),
-                            hint: Text(
-                              "Months",
-                              style: GoogleFonts.roboto(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black38),
-                            ),
-                            elevation: 1,
-                            underline: Container(height: 1, color: Colors.orange),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                Months = newValue!;
-                                _problemMonthController.text = newValue;
-                              });
-                            },
-                            items: months
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: GoogleFonts.roboto(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      // color: Colors.orange,
-                      width: 170,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.white),
-                      child: TextFormFieldWidget2(
-                        maxLines: 1,
-                        cursorColor: Color(0xffFF9228),
-                        controller: _problemYearController,
-                        inputType: TextInputType.number,
-                        inputAction: TextInputAction.next,
-                        obscureText: false,
-                        hintText: "Year",
-                        labeltext: '',
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(
-                  height: 15,
-                ),
-
-                Text(
-                  'Expected Solution From Madadguru',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Colors.black),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-
-                    Container(width: 170,
-                      height: 50,
-                      padding: EdgeInsets.only(left: 7),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 1.5, color: Colors.transparent),
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      child: InputDecorator(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 10,
-                          ),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            style: GoogleFonts.roboto(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.orange),
-                            dropdownColor: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            value: Solutions,
-                            isExpanded: true,
-                            icon: const Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 30,
-                              color: Colors.black38,
-                            ),
-                            hint: Text(
-                              "Months",
-                              style: GoogleFonts.roboto(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black38),
-                            ),
-                            elevation: 1,
-                            underline: Container(height: 1, color: Colors.orange),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                Solutions = newValue!;
-                                _solutionMonthController.text = newValue;
-                              });
-                            },
-                            items: solutions
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: GoogleFonts.roboto(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                    ),
-
-
-
-                    Container(
-                      height: 50,
-                      // color: Colors.orange,
-                      width: 170,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.white),
-                      child: TextFormFieldWidget2(
-                        maxLines: 1,
-                        cursorColor: Color(0xffFF9228),
-                        controller: _solutionYearController,
-                        inputType: TextInputType.number,
-                        inputAction: TextInputAction.next,
-                        obscureText: false,
-                        hintText: "Year",
-                        labeltext: '',
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Already Reported To:',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Colors.black),
-                ),
-
-                SizedBox(
-                  height: 15,
-                ),
-
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  child: TextFormFieldWidget2(
-                    maxLines: 1,
-                    cursorColor: Color(0xffFF9228),
-                    controller: _alreadyReportedController,
-                    inputType: TextInputType.text,
-                    inputAction: TextInputAction.next,
-                    obscureText: false,
-                    hintText: "Reported",
-                    labeltext: '',
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Problem Description',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Colors.black),
-                ),
-
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  child:
-                  TextField(
-                    style: TextStyle(fontSize: 12),
-                    maxLines: 2,
-                    controller: _probleDescController,
-                    decoration: InputDecoration(
-                      hintText: 'Problems',
-                      label: Text(
-                        '',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                      labelStyle:
-                      TextStyle(color: Colors.black, fontSize: 12),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.transparent),
-                      ),
-
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(width:1.5,color: Colors.orange),
-                      ),
-                      contentPadding: EdgeInsets.only(
-                          left: 15, right: 10, bottom: 10, top: 12),
-                    ),
-                    keyboardType: TextInputType.text,
-                    onChanged: (value) {
-                      // Handle text changes
-                    },
-                  ),
-
-                  // ),
-                ),
-
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Financial Status',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Colors.black),
-                ),
-
-                SizedBox(
-                  height: 10,
-                ),
-
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  child: TextFormFieldWidget2(
-                    maxLines: 1,
-                    cursorColor: Color(0xffFF9228),
-                    controller: _financialStatusController,
-                    inputType: TextInputType.text,
-                    inputAction: TextInputAction.next,
-                    obscureText: false,
-                    hintText: "Financial Status",
-                    labeltext: '',
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Upload Proof & Evidence',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Colors.black),
-                ),
-
-                SizedBox(
-                  height: 15,
-                ),
-
-                Container(
-                  alignment: Alignment.center,
-                  width: double.infinity,
-                  child: GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(25),
-                              topLeft: Radius.circular(25),
-                            ),
-                          ),
-                          context: context,
-                          builder: (BuildContext bc) {
-                            return StatefulBuilder(builder:
-                                (BuildContext context, StateSetter setState) {
-                              return BackdropFilter(
-                                filter:
-                                    ImageFilter.blur(sigmaX: 0.3, sigmaY: 0.3),
-                                child: Container(
-                                  padding: const EdgeInsets.all(20),
-                                  child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () async {
-                                            Navigator.pop(context);
-                                            await _getFromCamera();
-                                          },
-                                          child: Row(children: [
-                                            Icon(
-                                              Icons.camera_alt_outlined,
-                                              color: Colors.blue,
-                                            ),
-                                            SizedBox(
-                                              width: 20,
-                                            ),
-                                            Text(
-                                              "Take Photo",
-                                              style: GoogleFonts.roboto(
-                                                textStyle: const TextStyle(
-                                                  color: Colors.black54,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                          ]),
-                                        ),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () async {
-                                            Navigator.pop(context);
-                                            await _getFromGallery();
-                                          },
-                                          child: Row(children: [
-                                            Image.asset(
-                                              "assets/images/gallery.png",
-                                              width: 25,
-                                              color: Colors.blue,
-                                            ),
-                                            const SizedBox(
-                                              width: 20,
-                                            ),
-                                            Text(
-                                              "Select from gallery",
-                                              style: GoogleFonts.roboto(
-                                                textStyle: const TextStyle(
-                                                  color: Colors.black54,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            )
-                                          ]),
-                                        ),
-                                        const SizedBox(
-                                          height: 15,
-                                        ),
-                                      ]),
-                                ),
-                              );
-                            });
-                          });
-                       },
-
-                        child: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                        Container(
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            // border: Border.all(width: 1, color: Colors.orange),
-                          ),
-                          child: imageFile == null
-                              ? Center(
-                              child: Icon(
-                              Icons.add_a_photo_outlined,
-                              color: Colors.black38,
-                            ),
-                          )
-                              : ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.file(
-                              imageFile!,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                  ),
-                ),
-
-                SizedBox(
-                  height: 30,
-                    ),
-                     InkWell(
-                     onTap: () {
-                      if(_formKey.currentState!.validate())
-                       addPostApi();
-                  },
-
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(right: 40, left: 40, bottom: 10),
-                    child: Card(
-                      elevation: 2,
-                      child: Container(
-                        height: 45,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Color(0xffFBCD96)),
-                        child: Center(
-                          child: Text(
-                            'Save',
-                            style: TextStyle(
-                                color: Colors.orange,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 15,
+                  right: 15,
+                  top: 10,
+                ),
+                child: Form(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.always,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'I need help for:',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        '(All fields are required)*',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                            color: Colors.red),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Select Category',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 7),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: InputDecorator(
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 10),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<Map<String, dynamic>>(
+                              style: GoogleFonts.roboto(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.orange,
+                              ),
+                              dropdownColor: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              value: selectedCategory,
+                              isExpanded: true,
+                              icon: const Icon(
+                                Icons.keyboard_arrow_down,
+                                size: 30,
+                                color: Colors.black38,
+                              ),
+                              hint: Text(
+                                "category",
+                                style: GoogleFonts.roboto(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black38,
+                                ),
+                              ),
+                              elevation: 1,
+                              underline:
+                                  Container(height: 1, color: Colors.orange),
+                              onChanged: (Map<String, dynamic>? newValue) {
+                                setState(
+                                  () {
+                                    selectedCategory = newValue;
+                                    _categoryController.text =
+                                        newValue!['name'].toString();
+                                    // '${newValue!['id']}: ${newValue['name']}';
+                                  },
+                                );
+                              },
+                              items: CategoryList.map<
+                                      DropdownMenuItem<Map<String, dynamic>>>(
+                                  (department) {
+                                return DropdownMenuItem<Map<String, dynamic>>(
+                                  value: department,
+                                  child: Text(
+                                    department['name'].toString(),
+                                    // '${department['id']}: ${department['name']}',
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        'Select topic',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 7),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: InputDecorator(
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 10),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<Map<String, dynamic>>(
+                              style: GoogleFonts.roboto(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.orange,
+                              ),
+                              dropdownColor: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              value: selectedTopic,
+                              isExpanded: true,
+                              icon: const Icon(
+                                Icons.keyboard_arrow_down,
+                                size: 30,
+                                color: Colors.black38,
+                              ),
+                              hint: Text(
+                                "Topics",
+                                style: GoogleFonts.roboto(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black38,
+                                ),
+                              ),
+                              elevation: 1,
+                              underline:
+                                  Container(height: 1, color: Colors.orange),
+                              onChanged: (Map<String, dynamic>? newValue) {
+                                setState(() {
+                                  selectedTopic = newValue;
+                                  _topicController.text =
+                                      newValue!['name'].toString();
+                                  // '${newValue!['id']}: ${newValue['name']}';
+                                });
+                              },
+                              items: TopicList.map<
+                                      DropdownMenuItem<Map<String, dynamic>>>(
+                                  (department1) {
+                                return DropdownMenuItem<Map<String, dynamic>>(
+                                  value: department1,
+                                  child: Text(
+                                    department1['name'].toString(),
+                                    // '${department['id']}: ${department['name']}',
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        '2nd Party (if any)',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ),
+                        child: TextFormFieldWidget2(
+                          maxLines: 1,
+                          cursorColor: Color(0xffFF9228),
+                          controller: _secondpartyController,
+                          inputType: TextInputType.text,
+                          inputAction: TextInputAction.next,
+                          obscureText: false,
+                          hintText: "Any Party",
+                          labeltext: '',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        'Problem Statement',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ),
+                        child: TextFormFieldWidget2(
+                          maxLines: 1,
+                          cursorColor: Color(0xffFF9228),
+                          controller: _problemStatementController,
+                          inputType: TextInputType.text,
+                          inputAction: TextInputAction.next,
+                          obscureText: false,
+                          hintText: "Problem Statement",
+                          labeltext: '',
+                        ),
+                      ),
+                      SizedBox(height: 15),
+                      Text(
+                        'Problem Started State:',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: Colors.black),
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: 170,
+                            height: 50,
+                            padding: EdgeInsets.only(left: 7),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 1.5, color: Colors.transparent),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                            child: InputDecorator(
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.orange),
+                                  dropdownColor: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  value: Months,
+                                  isExpanded: true,
+                                  icon: const Icon(
+                                    Icons.keyboard_arrow_down,
+                                    size: 30,
+                                    color: Colors.black38,
+                                  ),
+                                  hint: Text(
+                                    "Months",
+                                    style: GoogleFonts.roboto(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black38),
+                                  ),
+                                  elevation: 1,
+                                  underline: Container(
+                                      height: 1, color: Colors.orange),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      Months = newValue!;
+                                      _problemMonthController.text = newValue;
+                                    });
+                                  },
+                                  items: months.map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                        style: GoogleFonts.roboto(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 50,
+                            // color: Colors.orange,
+                            width: 170,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors.white),
+                            child: TextFormFieldWidget2(
+                              maxLines: 1,
+                              cursorColor: Color(0xffFF9228),
+                              controller: _problemYearController,
+                              inputType: TextInputType.number,
+                              inputAction: TextInputAction.next,
+                              obscureText: false,
+                              hintText: "Year",
+                              labeltext: '',
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        'Expected Solution From Madadguru',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: 170,
+                            height: 50,
+                            padding: EdgeInsets.only(left: 7),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 1.5, color: Colors.transparent),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                            child: InputDecorator(
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.orange),
+                                  dropdownColor: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  value: Solutions,
+                                  isExpanded: true,
+                                  icon: const Icon(
+                                    Icons.keyboard_arrow_down,
+                                    size: 30,
+                                    color: Colors.black38,
+                                  ),
+                                  hint: Text(
+                                    "Months",
+                                    style: GoogleFonts.roboto(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black38),
+                                  ),
+                                  elevation: 1,
+                                  underline: Container(
+                                      height: 1, color: Colors.orange),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      Solutions = newValue!;
+                                      _solutionMonthController.text = newValue;
+                                    });
+                                  },
+                                  items: solutions
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                        style: GoogleFonts.roboto(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 50,
+                            // color: Colors.orange,
+                            width: 170,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors.white),
+                            child: TextFormFieldWidget2(
+                              maxLines: 1,
+                              cursorColor: Color(0xffFF9228),
+                              controller: _solutionYearController,
+                              inputType: TextInputType.number,
+                              inputAction: TextInputAction.next,
+                              obscureText: false,
+                              hintText: "Year",
+                              labeltext: '',
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        'Already Reported To:',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ),
+                        child: TextFormFieldWidget2(
+                          maxLines: 1,
+                          cursorColor: Color(0xffFF9228),
+                          controller: _alreadyReportedController,
+                          inputType: TextInputType.text,
+                          inputAction: TextInputAction.next,
+                          obscureText: false,
+                          hintText: "Reported",
+                          labeltext: '',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        'Problem Description',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ),
+                        child: TextField(
+                          style: TextStyle(fontSize: 12),
+                          maxLines: 2,
+                          controller: _probleDescController,
+                          decoration: InputDecoration(
+                            hintText: 'Problems',
+                            label: Text(
+                              '',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            labelStyle:
+                                TextStyle(color: Colors.black, fontSize: 12),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.transparent),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide:
+                                  BorderSide(width: 1.5, color: Colors.orange),
+                            ),
+                            contentPadding: EdgeInsets.only(
+                                left: 15, right: 10, bottom: 10, top: 12),
+                          ),
+                          keyboardType: TextInputType.text,
+                          onChanged: (value) {
+                            // Handle text changes
+                          },
+                        ),
+
+                        // ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        'Financial Status',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ),
+                        child: TextFormFieldWidget2(
+                          maxLines: 1,
+                          cursorColor: Color(0xffFF9228),
+                          controller: _financialStatusController,
+                          inputType: TextInputType.text,
+                          inputAction: TextInputAction.next,
+                          obscureText: false,
+                          hintText: "Financial Status",
+                          labeltext: '',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        'Upload Proof & Evidence',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        child: GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(25),
+                                    topLeft: Radius.circular(25),
+                                  ),
+                                ),
+                                context: context,
+                                builder: (BuildContext bc) {
+                                  return StatefulBuilder(builder:
+                                      (BuildContext context,
+                                          StateSetter setState) {
+                                    return BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 0.3, sigmaY: 0.3),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(20),
+                                        child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  Navigator.pop(context);
+                                                  await _getFromCamera();
+                                                },
+                                                child: Row(children: [
+                                                  Icon(
+                                                    Icons.camera_alt_outlined,
+                                                    color: Colors.blue,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 20,
+                                                  ),
+                                                  Text(
+                                                    "Take Photo",
+                                                    style: GoogleFonts.roboto(
+                                                      textStyle:
+                                                          const TextStyle(
+                                                        color: Colors.black54,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ]),
+                                              ),
+                                              const SizedBox(
+                                                height: 20,
+                                              ),
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  Navigator.pop(context);
+                                                  await _getFromGallery();
+                                                },
+                                                child: Row(children: [
+                                                  Image.asset(
+                                                    "assets/images/gallery.png",
+                                                    width: 25,
+                                                    color: Colors.blue,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 20,
+                                                  ),
+                                                  Text(
+                                                    "Select from gallery",
+                                                    style: GoogleFonts.roboto(
+                                                      textStyle:
+                                                          const TextStyle(
+                                                        color: Colors.black54,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ]),
+                                              ),
+                                              const SizedBox(
+                                                height: 15,
+                                              ),
+                                            ]),
+                                      ),
+                                    );
+                                  });
+                                });
+                          },
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Container(
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  // image: DecorationImage(
+                                  //     image: AssetImage(
+                                  //         'assets/icon/add.png',),
+                                  //     // fit: BoxFit.contain,
+                                  //     alignment: Alignment.center),
+                                   ),
+                                   child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: _imageFiles?.length ?? 0,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(right: 8.0),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: Image.file(
+                                          File(_imageFiles![index].path),
+                                          fit: BoxFit.cover,
+                                          width: 100,
+                                          height: 100,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                                    Positioned(
+                                    child: Padding(
+                                    padding: const EdgeInsets.only(top: 30),
+                                    child: Center(child: Image.asset('assets/icon/add.png',
+                                    color: Colors.black87,height: 30,width: 30,)),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) addPostApi();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              right: 20, left: 20, bottom: 30),
+                          child: Card(
+                            elevation: 2,
+                            child: Container(
+                              height: 45,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Color(0xffFBCD96)),
+                              child: Center(
+                                child: Text(
+                                  'Save',
+                                  style: TextStyle(
+                                      color: Colors.orange,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
     );
   }
 
-  _getFromGallery() async {
-    XFile? pickedFile = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 50,
+  Future getImages() async {
+    final pickedFile = await picker.pickMultiImage(
+        imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
+    List<XFile> xfilePick = pickedFile;
+
+    setState(
+      () {
+        if (xfilePick.isNotEmpty) {
+          for (var i = 0; i < xfilePick.length; i++) {
+            selectedImages.add(File(xfilePick[i].path));
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Nothing is selected')));
+        }
+      },
     );
-    if (pickedFile != null) {
-      File? img = File(pickedFile.path);
-      setState(() {
-        imageFile = img;
-      });
+  }
+
+  // _getFromGallery() async {
+  //   XFile? pickedFile = await ImagePicker().pickImage(
+  //     source: ImageSource.gallery,
+  //     imageQuality: 50,
+  //   );
+  //   if (pickedFile != null) {
+  //     File? img = File(pickedFile.path);
+  //     setState(() {
+  //       imageFile = img;
+  //     });
+  //   }
+  // }
+  Future<void> _getFromGallery() async {
+    try {
+      final List<XFile>? pickedFiles = await ImagePicker().pickMultiImage(
+        imageQuality: 70, // Adjust image quality as needed
+      );
+      if (pickedFiles != null && pickedFiles.isNotEmpty) {
+        setState(() {
+          _imageFiles = pickedFiles;
+        });
+      }
+    } catch (e) {
+      print('Error picking images: $e');
     }
   }
 

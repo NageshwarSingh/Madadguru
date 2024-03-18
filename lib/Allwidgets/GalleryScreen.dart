@@ -6,11 +6,7 @@ import 'package:http/http.dart' as http;
 
 import '../Pages/GalleryImagesScreen.dart';
 
-// count Data
-// Text(
-// 'Total Gallery Categories: ${GalleryData.length}',
-// style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-// ),
+
 class GalleryScreen extends StatefulWidget {
   final String device;
   const GalleryScreen({super.key, required this.device});
@@ -28,63 +24,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
     getGalleryCategory();
   }
 
-  // Future<void> getGalleryCategory() async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   var usertoken = prefs.getString('token');
-  //   if (usertoken != null) {
-  //     final Uri uri =
-  //         Uri.parse("https://madadguru.webkype.net/api/getGalleryCategory");
-  //       try {
-  //       final response = await http.post(
-  //         uri,
-  //         headers: {
-  //           'Authorization': 'Bearer $usertoken',
-  //         },
-  //       );
-  //       if (response.statusCode == 200) {
-  //         var responseData = json.decode(response.body);
-  //         List<dynamic> data = responseData['data'] ?? [];
-  //         setState(() {
-  //           // GalleryData = data.map((item) {
-  //           //   return {
-  //           //     'id': item['id']?.toString() ?? '', // Use null-aware and null-coalescing operators
-  //           //     'name': item['name'] ?? '',
-  //           //     'icon': item['icon'] ?? '',
-  //           //     'count': item['count'] ?? 0, // Provide default value for count
-  //           //     'adddate': item['adddate'] ?? '', // Provide default value for adddate
-  //           //   };
-  //           // }).toList();
-  //
-  //           GalleryData = data
-  //               .map((item) => {
-  //                     'id': item['id'].toString(),
-  //                     'name': item['name'],
-  //             'adddate': item['adddate'],
-  //             'count': item['count'],
-  //             'icon': item['icon'],
-  //                   })
-  //               .toList();
-  //         });
-  //         print('DepartmentList: $GalleryData');
-  //         print('Data fetched successfully');
-  //         print(response.body);
-  //
-  //         print('Data fetched successfully');
-  //       } else {
-  //         print('Failed to fetch data. Status code: ${response.statusCode}');
-  //       }
-  //     } catch (error) {
-  //       print('Error fetching data: $error');
-  //     } finally {
-  //       setState(() {
-  //         isLoading = false;
-  //       });
-  //     }
-  //   }
-  // }
   Future<void> getGalleryCategory() async {
     setState(() {
       isLoading = true;
@@ -189,20 +128,18 @@ class _GalleryScreenState extends State<GalleryScreen> {
               ],
             ),
           ]),
-      body: buildListView(),
-    );
-  }
-
-  Widget buildListView() {
-    if (JsonData == null ||
+        body: buildListView(),
+        );
+        }
+        Widget buildListView() {
+        if (JsonData == null ||
         JsonData["data"] == null ||
         JsonData["data"].isEmpty) {
-      // Return a widget indicating no data available
-      return Center(
+        return Center(
         child: Text('No data available'),
-      );
-    }
-    return GridView.builder(
+        );
+        }
+        return GridView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.zero,
@@ -223,8 +160,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   return GalleryImageScreen(
                     postId: post['id'],
                     title: post['name'],
-                    // postId: GalleryData[index]["id"],
-                    // title:GalleryData[index]['name'],
                     device: widget.device,
                   );
                 }),
@@ -261,26 +196,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                           end: Alignment.centerRight,
                         ),
                       ),
-                      // child: Column(
-                      //   children: [
-                      //     // Image.network(
-                      //     //   (post["icon"]!= null)
-                      //     //       ? post["icon"]
-                      //     //       : 'Name not available',
-                      //     //   // 'assets/images/download.jpeg',
-                      //     //   fit: BoxFit.fill,
-                      //     // ),
-                      //     // Text(
-                      //     //   " ${(post["name"] != null) ? post["name"] : 'Name not available'}",
-                      //     //
-                      //     //   style: TextStyle(
-                      //     //     color: Colors.white,
-                      //     //     fontSize: 14,
-                      //     //     fontWeight: FontWeight.w400,
-                      //     //   ),
-                      //     // ),
-                      //   ],
-                      // ),
+
                     ),
                   ),
                   SizedBox(height: 5),
@@ -321,56 +237,58 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 }
 
-class Grid extends StatefulWidget {
-  const Grid({Key? key}) : super(key: key);
 
-  @override
-  State<Grid> createState() => _GridState();
-}
-
-class _GridState extends State<Grid> {
-  final List<String> data = [
-    "container1",
-    "container2",
-    "container3",
-    "container4",
-    "container4",
-    "container4",
-    "container4",
-    "container4",
-    "container4",
-    "container4",
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Center(
-          child: Expanded(
-            child: SizedBox(
-              height: 800,
-              width: 300,
-              child: GridView.builder(
-                itemCount: data.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // Number of columns
-                  crossAxisSpacing: 10.0,
-                  mainAxisSpacing: 10.0,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    color: Colors.amber,
-                    child: Center(
-                      child: Text(data[index]),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//
+// class Grid extends StatefulWidget {
+//   const Grid({Key? key}) : super(key: key);
+//
+//   @override
+//   State<Grid> createState() => _GridState();
+// }
+//
+// class _GridState extends State<Grid> {
+//   final List<String> data = [
+//     "container1",
+//     "container2",
+//     "container3",
+//     "container4",
+//     "container4",
+//     "container4",
+//     "container4",
+//     "container4",
+//     "container4",
+//     "container4",
+//   ];
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: SingleChildScrollView(
+//         child: Center(
+//           child: Expanded(
+//             child: SizedBox(
+//               height: 800,
+//               width: 300,
+//               child: GridView.builder(
+//                 itemCount: data.length,
+//                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+//                   crossAxisCount: 2, // Number of columns
+//                   crossAxisSpacing: 10.0,
+//                   mainAxisSpacing: 10.0,
+//                 ),
+//                 itemBuilder: (BuildContext context, int index) {
+//                   return Card(
+//                     color: Colors.amber,
+//                     child: Center(
+//                       child: Text(data[index]),
+//                     ),
+//                   );
+//                 },
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

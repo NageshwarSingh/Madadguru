@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:madadguru/Pages/publicPostProfile.dart';
@@ -19,6 +20,7 @@ import 'package:http/http.dart' as http;
   @override
   Widget build(BuildContext context) {
     // searchController
+
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: buildAppBar(),
@@ -44,6 +46,8 @@ class Body extends StatefulWidget {
 }
   class _BodyState extends State<Body> with TickerProviderStateMixin {
   var value = 0;
+int Count=0;
+  int Count1=0;
   bool isdataLoading = false;
   late TabController _mainTabController;
   late TabController _tabController;
@@ -86,6 +90,7 @@ class Body extends StatefulWidget {
             // Handle map response
             setState(() {
               jsonData = responseData;
+              Count1 =responseData['count'];
             });
             fetchDataVolunteer();
           } else {
@@ -130,6 +135,7 @@ class Body extends StatefulWidget {
 
             setState(() {
               jsonDataVolunteer = responseData;
+              Count = responseData['count'];
             });
           } else {
             print('API request failed: ${responseData["message"]}');
@@ -182,7 +188,7 @@ class Body extends StatefulWidget {
     );
   }
 
-  Widget _buildMainTabBar() {
+     Widget _buildMainTabBar() {
     return Card(
       color: Colors.grey.shade300,
       shape: RoundedRectangleBorder(
@@ -230,12 +236,12 @@ class Body extends StatefulWidget {
     );
   }
 
-  Widget _buildMainTabBarView() {
-    return SafeArea(
-      child: isLoading
+        Widget _buildMainTabBarView() {
+        return SafeArea(
+        child: isLoading
         ? Center(child: CircularProgressIndicator())
         :
-      Container(
+        Container(
         height: 40,
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
         child: TabBarView(
@@ -251,251 +257,291 @@ class Body extends StatefulWidget {
     }
 
     Widget _buildMainTabContentUser(String s) {
-    return GridView.builder(
-
-      padding: const EdgeInsets.only(bottom: 20, top: 15),
-      itemCount: jsonDataVolunteer != null && jsonDataVolunteer["data"] != null
-          ? jsonDataVolunteer["data"].length
-          : 0,
-           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 15.0,
-        mainAxisSpacing: 15.0,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        var post = jsonDataVolunteer['data'][index];
-        if (post == null || post.isEmpty) {
-          return SizedBox();
-           }
-           return InkWell(
-            onTap: () {
-             Navigator.push(
-              context,
-                 MaterialPageRoute(
-                 // builder: (context) => ProfileDetailScreen(
-                 builder: (context) => PublicPostProfile(
-                  device: widget.device,
-                  postId: post["id"],
-                  ),
-                 ),
-               );
-              },
-             child: Card(
-             elevation: 1,
-              child: Container(
-               padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child:Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 10,
-                     ),
-                    Container(
-                    height: 60,
-                    width: 60,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        border:
-                            Border.all(width: 1, color: Colors.grey.shade200),
-                        borderRadius: BorderRadius.circular(30)),
-                    child: Center(
-                      child: CircleAvatar(
-                        radius: 35,
-                        child: ClipOval(
-                          child:
-                              Image.network(
-                            post['profile'] ?? '',
-                            fit: BoxFit.cover,
-                            width: 90.0, // adjust width as needed
-                            height: 90.0,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Icon(
-                                Icons.person,
-                                size: 50,
-                                color: Colors.grey[400],
-                              );
-                            },
-                          ),
-                          //     : Icon(
-                          //   Icons.person,
-                          //   size: 50,
-                          //   color: Colors.grey[400],
-                          // ),
-                          // post['profile'],
-                          // fit: BoxFit.cover,
-                          // width:
-                          // 90.0, // adjust width as needed
-                          // height:
-                          // 90.0, // adjust height as needed
-                          // )
-                          //     : Icon(
-                          //   Icons.person,
-                          //   size: 50,
-                          //   color: Colors.grey[400],
-                          // ),
-                         ),
-                        ),
-                      ),
-                    ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    (post["name"] != null) ? post["name"] : 'Name not available',
-                    // post['name'] ?? '',
-                    style: GoogleFonts.roboto(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                     ),
-                    SizedBox(
-                    height: 3,
-                       ),
-                     Text(
-                        (post["profession"] != null) ? post["profession"] : 'profession not available',
-                       style: GoogleFonts.roboto(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black38),
-                           ),
-
-                      SizedBox(
-                    height: 3,
-                    ),
-
-                   Text(
-                    (post["location"] != null) ? post["location"] : 'location not available',
-                    // post['location'] ?? '',
-                    // 'Greater Noida',
-                    style: GoogleFonts.roboto(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black38),
-                  ),
-                ],
-              ),
+    if(isLoading){
+      return Center(child: CircularProgressIndicator());
+    } else if (jsonDataVolunteer == null || jsonDataVolunteer["data"] == null || jsonDataVolunteer["data"].isEmpty) {
+      return Center(child: Text("Not available data"));
+    }
+      else
+    {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Text(
+            "Users (${Count})", // Replace "Your Text Here" with your desired text
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
-        );
-      },
-    );
-  }
-  Widget _buildMainTabContentVolunteer(String s) {
-    if (isLoading) {
-      return Center(child: CircularProgressIndicator());
-      } else if (jsonData == null || jsonData["data"] == null || jsonData["data"].isEmpty) {
-      return Center(child: Text("Not available data"));
-      }
-      else {
-      return GridView.builder(
-        padding: const EdgeInsets.only(bottom: 20, top: 15),
-        itemCount: jsonData["data"].length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 15.0,
-          mainAxisSpacing: 15.0,
         ),
-        itemBuilder: (BuildContext context, int index) {
-          var post = jsonData['data'][index];
-          if (post == null || post.isEmpty) {
-            return SizedBox();
-              }
-               return InkWell(
-                 onTap: () {
+        Expanded(
+          child: GridView.builder(
+            padding: const EdgeInsets.only(bottom: 20, top: 5),
+            itemCount: jsonDataVolunteer != null && jsonDataVolunteer["data"] != null
+                ? jsonDataVolunteer["data"].length
+                : 0,
+                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 15.0,
+              mainAxisSpacing: 15.0,
+            ),
+            itemBuilder: (BuildContext context, int index) {
+              var post = jsonDataVolunteer['data'][index];
+              if (post == null || post.isEmpty) {
+                return SizedBox();
+                 }
+                 return InkWell(
+                  onTap: () {
                    Navigator.push(
                     context,
-                      MaterialPageRoute(
-                       builder: (context) =>
-                       VolunteerProfileDetailScreen(
-                       device: widget.device,
-                      postId: post['id'],
-                      ),
-                    ),
-                    );
-                   },
-                 child: Card(
+                       MaterialPageRoute(
+                       // builder: (context) => ProfileDetailScreen(
+                       builder: (context) => PublicPostProfile(
+                        device: widget.device,
+                        postId: post["id"],
+                        ),
+                       ),
+                     );
+                    },
+                   child: Card(
                    elevation: 1,
                     child: Container(
                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                       color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 10),
-                    Container(
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(30),
-                          ),
-                         child: Center(
-                          child: CircleAvatar(
-                          radius: 35,
-                          child: ClipOval(
-                            child: Image.network(
-                              post['profile'] ?? '',
-                              fit: BoxFit.cover,
-                              width: 90.0,
-                              height: 90.0,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Icon(
-                                  Icons.person,
-                                  size: 50,
-                                  color: Colors.grey[400],
-                                );
-                              },
+                    child:Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                           ),
+                          Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              border:
+                                  Border.all(width: 1, color: Colors.grey.shade200),
+                              borderRadius: BorderRadius.circular(30)),
+                          child: Center(
+                            child: CircleAvatar(
+                              radius: 35,
+                              child: ClipOval(
+                                child:
+                                    Image.network(
+                                  post['profile'] ?? '',
+                                  fit: BoxFit.cover,
+                                  width: 90.0, // adjust width as needed
+                                  height: 90.0,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Icon(
+                                      Icons.person,
+                                      size: 50,
+                                      color: Colors.grey[400],
+                                    );
+                                  },
+                                ),
+                                //     : Icon(
+                                //   Icons.person,
+                                //   size: 50,
+                                //   color: Colors.grey[400],
+                                // ),
+                                // post['profile'],
+                                // fit: BoxFit.cover,
+                                // width:
+                                // 90.0, // adjust width as needed
+                                // height:
+                                // 90.0, // adjust height as needed
+                                // )
+                                //     : Icon(
+                                //   Icons.person,
+                                //   size: 50,
+                                //   color: Colors.grey[400],
+                                // ),
+                               ),
+                              ),
                             ),
                           ),
+                        SizedBox(
+                          height: 5,
                         ),
+                        Text(
+                          (post["name"] != null) ? post["name"] : 'Name not available',
+                          style: GoogleFonts.roboto(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                           ),
+                          SizedBox(
+                          height: 3,
+                             ),
+                           Text(
+                              (post["profession"] != null) ? post["profession"] : 'profession not available',
+                             style: GoogleFonts.roboto(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black54),
+                                 ),
+          
+                            SizedBox(
+                          height: 3,
+                          ),
+          
+                         Text(
+                          (post["location"] != null) ? post["location"] : 'location not available',
+                          style: GoogleFonts.roboto(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black54),
+                        ),
+                      ],
                       ),
                     ),
-                    SizedBox(height: 5),
-                    Text(
-                      post["name"] != null ? post["name"] : 'Name not available',
-                      style: GoogleFonts.roboto(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    SizedBox(height: 3),
-                    Text(
-                      post["profession"] != null
-                          ? post["profession"]
-                          : 'Profession not available',
-                      style: GoogleFonts.roboto(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black38,
-                      ),
-                    ),
-                    SizedBox(height: 3),
-                    Text(
-                      post["location"] != null
-                          ? post["location"]
-                          : 'Location not available',
-                      style: GoogleFonts.roboto(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black38,
-                      ),
-                    ),
-                  ],
+                   ),
+                  );
+                 },
                 ),
+        ),
+      ],
+    );
+          }}
+
+      Widget _buildMainTabContentVolunteer(String s) {
+      if (isLoading) {
+        return Center(child: CircularProgressIndicator());
+         } else if (jsonData == null || jsonData["data"] == null || jsonData["data"].isEmpty) {
+          return Center(child: Text("Not available data"));
+            }
+           else {
+            return Column(crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+            Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Text(
+              "Volunteer (${Count1})", // Replace "Your Text Here" with your desired text
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
+              ),
+              ),
+              Expanded(
+              child: GridView.builder(
+              padding: const EdgeInsets.only(bottom: 20, top: 5),
+              itemCount: jsonData["data"].length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                  crossAxisSpacing: 15.0,
+                   mainAxisSpacing: 15.0,
+                     ),
+                       itemBuilder: (BuildContext context, int index) {
+                      var post = jsonData['data'][index];
+                      if (post == null || post.isEmpty){
+                      return SizedBox();
+                      }
+                      return InkWell(
+                          onTap: () {
+                          Navigator.push(
+                          context,
+                            MaterialPageRoute(
+                             builder: (context) =>
+                             VolunteerProfileDetailScreen(
+                             device: widget.device,
+                            postId: post['id'],
+                            ),
+                            ),
+                          );
+                         },
+                       child: Card(
+                         elevation: 1,
+                          child: Container(
+                           padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                             color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                          ),
+                        child: Column(
+                         mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                          SizedBox(height: 10),
+                          Container(
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(30),
+                                ),
+                               child: Center(
+                                child: CircleAvatar(
+                                radius: 35,
+                                child: ClipOval(
+                                  child: Image.network(
+                                    post['profile'] ?? '',
+                                    fit: BoxFit.cover,
+                                    width: 90.0,
+                                    height: 90.0,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(
+                                        Icons.person,
+                                        size: 50,
+                                        color: Colors.grey[400],
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            post["name"] != null ? post["name"] : 'Name not available',
+                            style: GoogleFonts.roboto(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 3),
+                          Text(
+                            post["profession"] != null
+                                ? post["profession"]
+                                : 'Profession not available',
+                            style: GoogleFonts.roboto(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black38,
+                            ),
+                            ),
+
+                            SizedBox(height: 3),
+                            Text(
+                              post["location"] != null
+                                ? post["location"]
+                                : 'Location not available',
+                            style: GoogleFonts.roboto(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black38,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
-          );
-        },
+          ),
+        ],
       );
     }
   }

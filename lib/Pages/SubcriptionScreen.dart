@@ -13,6 +13,9 @@ class SubcriptionScreen extends StatefulWidget {
 class _SubcriptionScreenState extends State<SubcriptionScreen> {
   bool isLoading = false;
   Map<String, dynamic> JsonDataGet = {};
+
+  get postId => null;
+
   @override
   initState() {
     super.initState();
@@ -34,7 +37,6 @@ class _SubcriptionScreenState extends State<SubcriptionScreen> {
           headers: {
             'Authorization': 'Bearer $usertoken',
           },
-
         );
         if (response.statusCode == 200) {
           var responseData = json.decode(response.body);
@@ -71,10 +73,7 @@ class _SubcriptionScreenState extends State<SubcriptionScreen> {
       }
     }
   }
-
   Map<String, dynamic> JsonDataBuy = {};
-
-
   Future<void> buySubscription(int postId) async {
     setState(() {
       isLoading = true;
@@ -133,13 +132,14 @@ class _SubcriptionScreenState extends State<SubcriptionScreen> {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.pop(context);
+
+                        Navigator.pop(context,postId);
                       },
                       child: Icon(Icons.arrow_back),
-                    ),SizedBox(width: 15,),
-                    Text(
-                      'Subscriptions',
-                      style: GoogleFonts.roboto(
+                    ),   SizedBox(width: 15,),
+                          Text(
+                          'Subscriptions',
+                          style: GoogleFonts.roboto(
                           color: Colors.black,
                           fontSize: 18,
                           ),
@@ -342,12 +342,11 @@ class _SubcriptionScreenState extends State<SubcriptionScreen> {
                                     ),
                                   ),
                                 ],
-                              )
-                            else
-                              Padding(
+                                )
+                                 else Padding(
                                 padding: const EdgeInsets.only(top: 15),
-                                child: ElevatedButton(
-                                  onPressed: () {
+                                  child: ElevatedButton(
+                                     onPressed: () {
                                     _showConfirmationDialog(context,
                                         post["id"]); // Pass postId here
                                   },

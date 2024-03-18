@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../AllWidgets/buttons.dart';
 import 'package:http/http.dart' as http;
+import 'GalleryImagesScreen.dart';
 
 class MyPostDetail extends StatefulWidget {
   final String device;
@@ -22,8 +22,9 @@ class MyPostDetail extends StatefulWidget {
 class _MyPostDetailState extends State<MyPostDetail> {
   bool isLoading = false;
   Map Mydata = {};
-  @override
-  void initState() {
+
+   @override
+    void initState() {
     super.initState();
     fetchData();
   }
@@ -164,6 +165,7 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
+
                                           // Text(
                                           //   Mydata['data']['add_by_user_name'],
                                           //   // Mydata.containsKey('add_by_user_name')
@@ -174,6 +176,7 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                           //       fontWeight: FontWeight.bold,
                                           //       color: Colors.black),
                                           // ),
+
                                           Text(
                                             (Mydata["add_by_user_name"] != null)
                                                 ? Mydata["add_by_user_name"]
@@ -192,8 +195,8 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                               color: Colors.black,
                                             ),
                                           ),
-                                          Text(
-                                            " ${(Mydata["topic_name"] != null) ? Mydata["topic_name"] : 'Name not available'}",
+                                            Text(
+                                            "${(Mydata["topic_name"] != null) ? Mydata["topic_name"] : 'Name not available'}",
                                             style: GoogleFonts.roboto(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400,
@@ -215,8 +218,8 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                     ),
                                   )
                                 ]),
-                          ),
-                          Padding(
+                                 ),
+                              Padding(
                             padding: const EdgeInsets.only(
                                 left: 10, right: 10, top: 5),
                             child: Text(
@@ -229,23 +232,61 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                   color: Colors.black),
                             ),
                           ),
-                          const SizedBox(
+                            const SizedBox(
                             height: 3,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5, bottom: 5),
-                            child: Container(
-                              color: Colors.black,
-                              height: 220,
-                              width: MediaQuery.of(context).size.width,
-                              child: Image.network(
-                                (Mydata["post_images"][0]["image"] != null)
-                                    ? Mydata["post_images"][0]["image"]
-                                    : 'Name not available',
-                                // 'assets/images/building.jpg',
-                                fit: BoxFit.contain,
-                              ),
-                            ),
+                             Padding(
+                             padding: const EdgeInsets.only(top: 5, bottom: 5),
+                              child:
+                            //   Container(
+                            //   color: Colors.black,
+                            //   height: 220,
+                            //   width: MediaQuery.of(context).size.width,
+                            //   child: Image.network(
+                            //     (Mydata["post_images"][0]["image"] != null)
+                            //         ? Mydata["post_images"][0]["image"]
+                            //         : 'Name not available',
+                            //     fit: BoxFit.contain,
+                            //   ),
+                            // ),
+                              Container(
+                                color: Colors.black,
+                                height: 220,
+                                width: MediaQuery.of(context).size.width,
+                                child: PageView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: Mydata['post_images'].length,
+                                  itemBuilder: (context, index) {
+                                    String imageUrl = Mydata['post_images'][index]['image'];
+                                    return InkWell(
+                                      onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => photoView(
+                                            index: index,
+                                            id: Mydata['post_images'][index]['id'],
+                                            image: Mydata['post_images'],
+                                            // image: galleryImages,
+                                          ),
+                                        ),
+                                        ),
+                                      child: Container(
+                                        margin: EdgeInsets.only(right: 8.0),
+                                        child: Image.network(
+                                          imageUrl,
+                                          fit: BoxFit.contain,
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Icon(
+                                              Icons.person,
+                                              color: Colors.grey[400],
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
@@ -395,17 +436,17 @@ class _MyPostDetailState extends State<MyPostDetail> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
+                                    Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
                                     Text(
-                                      "2nd party (if Any)",
-                                      style: GoogleFonts.roboto(
+                                         "2nd party (if Any)",
+                                         style: GoogleFonts.roboto(
                                           fontSize: 12,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black),
-                                    ),
+                                        ),
                                     Text(
                                         (Mydata["second_party"] != null)
                                             ? Mydata["second_party"]
@@ -413,7 +454,8 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                         style: GoogleFonts.roboto(
                                             color: Colors.black54,
                                             fontSize: 12,
-                                            fontWeight: FontWeight.w400)),
+                                            fontWeight: FontWeight.w400),
+                                    ),
                                   ]),
                               const SizedBox(
                                 height: 10,
@@ -436,7 +478,8 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                         style: GoogleFonts.roboto(
                                             color: Colors.black54,
                                             fontSize: 12,
-                                            fontWeight: FontWeight.w400)),
+                                            fontWeight: FontWeight.w400),
+                                    ),
                                   ]),
                               const SizedBox(
                                 height: 10,
@@ -459,7 +502,8 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                         style: GoogleFonts.roboto(
                                             color: Colors.black54,
                                             fontSize: 12,
-                                            fontWeight: FontWeight.w400)),
+                                            fontWeight: FontWeight.w400),
+                                    ),
                                   ]),
                               SizedBox(
                                 height: 10,
@@ -482,7 +526,8 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                         style: GoogleFonts.roboto(
                                             color: Colors.black54,
                                             fontSize: 12,
-                                            fontWeight: FontWeight.w400)),
+                                            fontWeight: FontWeight.w400),
+                                    ),
                                   ]),
                               SizedBox(
                                 height: 10,
@@ -548,7 +593,7 @@ class _MyPostDetailState extends State<MyPostDetail> {
                       ),
                       Mydata == null || Mydata['post_contacts'] == null
                           ? Padding(
-                              padding: const EdgeInsets.only(top: 250),
+                              padding: const EdgeInsets.only(top: 50),
                               child: Center(
                                 child: CircularProgressIndicator(
                                   // radius: 30,
@@ -558,10 +603,10 @@ class _MyPostDetailState extends State<MyPostDetail> {
                             )
                           : Mydata['post_contacts'].length == 0
                               ? Padding(
-                                  padding: const EdgeInsets.only(top: 200),
+                                  padding: const EdgeInsets.only(top: 50),
                                   child: Center(
                                     child: Text(
-                                      'No Post Available',
+                                      'No Contact Available',
                                       style: TextStyle(fontSize: 25),
                                     ),
                                   ),
@@ -744,13 +789,13 @@ class _MyPostDetailState extends State<MyPostDetail> {
                                                                         ],
                                                                       );
                                                                     });
-                                                              },
+                                                                      },
                                                               child: Icon(
                                                                   Icons.call,
                                                                   color: Colors
                                                                       .greenAccent)),
-                                                          InkWell(
-                                                            onTap: () {
+                                                               InkWell(
+                                                               onTap: () {
                                                               showDialog(
                                                                   context:
                                                                       context,
@@ -932,3 +977,82 @@ class _MyPostDetailState extends State<MyPostDetail> {
         });
   }
 }
+//
+// class photoView1 extends StatefulWidget {
+//   final int index;
+//   final List image;
+//   final int id;
+//   const photoView1({
+//     Key? key,
+//     required this.index,
+//     required this.image,
+//     required this.id,
+//   }) : super(key: key);
+//   @override
+//   State<photoView1> createState() => _photoView1State();
+// }
+// class _photoView1State extends State<photoView1> {
+//   PageController _pageController = PageController();
+//   late double scaleCopy;
+//   @override
+//   void initState() {
+//     super.initState();
+//     _pageController = PageController(initialPage: widget.index);
+//   }
+//   @override
+//   void dispose() {
+//     _pageController.dispose();
+//     super.dispose();
+//   }
+//   void listener(PhotoViewControllerValue index, id) {
+//     setState(() {
+//       scaleCopy = id.scale!;
+//     });
+//   }
+//   double _rotationAngle = 0.0;
+//   void _rotateImage() {
+//     setState(
+//           () {
+//         _rotationAngle += 90.0;
+//       },
+//     );
+//   }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Colors.grey.shade200,
+//       extendBodyBehindAppBar: true,
+//       appBar: AppBar(
+//         actions: [
+//           IconButton(
+//             icon: Icon(Icons.rotate_right),
+//             onPressed: _rotateImage,
+//           ),
+//           IconButton(
+//             icon: Icon(Icons.share),
+//             onPressed: () {
+//               Share.share('Check out this amazing image!');
+//             },
+//           ),
+//         ],
+//         backgroundColor: Colors.grey.shade200,
+//         elevation: 0,
+//       ),
+//       body: Container(
+//         child: PageView.builder(
+//           controller: _pageController,
+//           itemCount: widget.image.length,
+//           itemBuilder: (BuildContext context, int index) {
+//             return Transform.rotate(
+//               angle: _rotationAngle * (3.1415926535 / 180),
+//               child: PhotoView(
+//                 imageProvider: NetworkImage(widget.image[index]["image"]),
+//                 initialScale: PhotoViewComputedScale.contained * 1.0,
+//               ),
+//             );
+//           },
+//         ),
+//       ),
+//     );
+//   }
+// }

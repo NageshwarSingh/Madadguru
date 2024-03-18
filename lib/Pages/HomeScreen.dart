@@ -8,10 +8,9 @@ import 'package:madadguru/Allwidgets/Editprofile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../AllWidgets/buttons.dart';
 import 'package:http/http.dart' as http;
-
 import '../Allwidgets/GalleryScreen.dart';
 
-class HomeScreen extends StatefulWidget {
+  class HomeScreen extends StatefulWidget {
   final String device;
   const HomeScreen({
     super.key,
@@ -20,9 +19,8 @@ class HomeScreen extends StatefulWidget {
   });
   @override
   State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
+  }
+  class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = false;
   List<dynamic> Data = [];
 
@@ -35,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
     "Driving License",
     "Aadhaar Card",
   ];
-
   List<String> images = [
     "assets/icon/report.png",
     "assets/icon/investigation.png",
@@ -44,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     "assets/icon/signing.png",
     "assets/icon/documentation.png",
   ];
+
   File? panCardImage;
   File? drivingLicenseImage;
   File? aadharCardImage;
@@ -57,20 +55,15 @@ class _HomeScreenState extends State<HomeScreen> {
     void initState() {
     super.initState();
     fetchDataEnquiry();
-    }
-
-  List<Map<String, dynamic>> DataList = [];
-
-  // Kyc not Working Api
-
-  Future<void> updateKyc() async {
-    setState(() {
+      }
+     List<Map<String, dynamic>> DataList = [];
+     Future<void> updateKyc() async {
+      setState(() {
       isLoading = true;
-    });
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var usertoken = prefs.getString('token');
-    if (usertoken != null) {
+      });
+       SharedPreferences prefs = await SharedPreferences.getInstance();
+       var usertoken = prefs.getString('token');
+      if (usertoken != null) {
       final Uri uri = Uri.parse("https://madadguru.webkype.net/api/updateKyc");
       try {
         var request = http.MultipartRequest('POST', uri)
@@ -228,19 +221,19 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  height: 250,
+                  height: 260,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(32),
                       bottomRight: Radius.circular(12),
-                    ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(32),
-                      bottomRight: Radius.circular(32),
-                    ),
-                    child: Image.asset(
+                      ),
+                      ),
+                       child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                         bottomLeft: Radius.circular(32),
+                           bottomRight: Radius.circular(32),
+                          ),
+                        child: Image.asset(
                       'assets/images/imagebg.png',
                       fit: BoxFit.fill,
                     ),
@@ -507,13 +500,13 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
-  String? selectedDocument;
-  void _ShowDialogueKyc(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
+     String? selectedDocument;
+      void _ShowDialogueKyc(BuildContext context) {
+        showDialog(
+         context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
               'KYC Verification',
                 ),
             content: Container(
@@ -681,8 +674,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 );
                               });
-                            });
-                      },
+                            },
+                           );
+                         },
                       child: Stack(
                         clipBehavior: Clip.none,
                         children: [

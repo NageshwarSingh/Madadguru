@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
-
 class PostContactEnquiry extends StatefulWidget {
   final String device;
   final int id;
@@ -12,13 +11,11 @@ class PostContactEnquiry extends StatefulWidget {
     super.key,
     required this.device,
     required this.id,
-  });
-
-  @override
-  State<PostContactEnquiry> createState() => _PostContactEnquiryState();
-}
-
-class _PostContactEnquiryState extends State<PostContactEnquiry> {
+    });
+    @override
+    State<PostContactEnquiry> createState() => _PostContactEnquiryState();
+    }
+  class _PostContactEnquiryState extends State<PostContactEnquiry> {
   bool isActive = false;
   List Notification = [];
   @override
@@ -29,7 +26,6 @@ class _PostContactEnquiryState extends State<PostContactEnquiry> {
       isActive = true;
     });
   }
-
   bool contactButton=true;
   bool isLoading = false;
   Map<String, dynamic> JsonData = {};
@@ -56,7 +52,6 @@ class _PostContactEnquiryState extends State<PostContactEnquiry> {
             if (userData != null && userData is List) {
               setState(() {
                 JsonData = {'data': List<Map<String, dynamic>>.from(userData)};
-
                 var myUsermobile = prefs.getString('userId');
                 var addByUsermobile = JsonData['data'][0]['user_id'].toString();
                 print('My User ID: $myUsermobile');

@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import '../AllWidgets/buttons.dart';
+import 'GalleryImagesScreen.dart';
 
 class feedScreenPost extends StatefulWidget {
   final String device;
@@ -290,17 +291,56 @@ class _feedScreenPostState extends State<feedScreenPost> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 5, bottom: 5),
-                              child: Container(
+                              child:
+                              // Container(
+                              //   color: Colors.black,
+                              //   height: 220,
+                              //   width: MediaQuery.of(context).size.width,
+                              //   child: Image.network(
+                              //     (jsonData["post_images"][0]["image"] != null)
+                              //         ? jsonData["post_images"][0]["image"]
+                              //         : 'Name not available',
+                              //     fit: BoxFit.contain,
+                              //   ),
+                              // ),
+                              Container(
                                 color: Colors.black,
                                 height: 220,
                                 width: MediaQuery.of(context).size.width,
-                                child: Image.network(
-                                  (jsonData["post_images"][0]["image"] != null)
-                                      ? jsonData["post_images"][0]["image"]
-                                      : 'Name not available',
-                                  fit: BoxFit.contain,
+                                child: PageView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: jsonData['post_images'].length,
+                                  itemBuilder: (context, index) {
+                                    String imageUrl = jsonData['post_images'][index]['image'];
+                                    return InkWell(
+                                      onTap: () => Navigator.push(
+                                        context,
+                                           MaterialPageRoute(
+                                            builder: (context) => photoView(
+                                            index: index,
+                                            id: jsonData['post_images'][index]['id'],
+                                            image: jsonData['post_images'],
+                                            // image: galleryImages,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Container(
+                                        margin: EdgeInsets.only(right: 8.0),
+                                        child: Image.network(
+                                          imageUrl,
+                                          fit: BoxFit.contain,
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Icon(
+                                              Icons.person,
+                                              color: Colors.grey[400],
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              ),
+                              )
                             ),
                             Padding(
                               padding:
@@ -642,10 +682,10 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                               BorderRadius.circular(0)),
                                       child: Padding(
                                         padding: const EdgeInsets.only(
-                                            right: 10,
-                                            left: 10.0,
-                                            top: 10,
-                                            ),
+                                          right: 10,
+                                          left: 10.0,
+                                          top: 10,
+                                        ),
                                         child: Column(
                                           children: [
                                             Row(
@@ -662,9 +702,9 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                                         padding:
                                                             const EdgeInsets
                                                                 .only(left: 10),
-                                                          child: CircleAvatar(
-                                                           radius: 30,
-                                                           child: ClipOval(
+                                                        child: CircleAvatar(
+                                                          radius: 30,
+                                                          child: ClipOval(
                                                             child:
                                                                 Image.network(
                                                               (post["profile"] !=
@@ -718,6 +758,23 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                                             height: 3,
                                                           ),
                                                           Text(
+                                                            (post["profession"] !=
+                                                                    null)
+                                                                ? post[
+                                                                    "profession"]
+                                                                : 'profession not available',
+                                                            style: GoogleFonts.roboto(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 3,
+                                                          ),
+                                                          Text(
                                                             (post["location"] !=
                                                                     null)
                                                                 ? post[
@@ -731,9 +788,7 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                                                     FontWeight
                                                                         .w400),
                                                           ),
-                                                          SizedBox(
-                                                            height: 3,
-                                                          ),
+
                                                           // Text(
                                                           //   (post["mobile"] !=
                                                           //           null)
@@ -750,20 +805,6 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                                           // SizedBox(
                                                           //   height: 3,
                                                           // ),
-                                                          Text(
-                                                            (post["profession"] !=
-                                                                    null)
-                                                                ? post[
-                                                                    "profession"]
-                                                                : 'profession not available',
-                                                            style: GoogleFonts.roboto(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400),
-                                                          ),
                                                         ],
                                                       ),
                                                     ],
@@ -962,8 +1003,8 @@ class _feedScreenPostState extends State<feedScreenPost> {
                     onTap: () async {
                       addPostEnquiryPopUp(
                           widget.postId.toString(), _textController.text);
-                          Navigator.pop(context);
-                     await getPostDetails();
+                      Navigator.pop(context);
+                      await getPostDetails();
                     },
                     child: ButtonWidget(
                       text: "Send",
