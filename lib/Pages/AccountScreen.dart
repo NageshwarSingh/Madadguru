@@ -40,9 +40,7 @@ import 'SubcriptionScreen.dart';
   String selectedGender = '';
   String need_help_in = '';
   bool isLoading = false;
-
   get switchesEnabled => false;
-
   @override
   void initState() {
     super.initState();
@@ -56,7 +54,7 @@ import 'SubcriptionScreen.dart';
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usertoken = prefs.getString('token');
-    if (usertoken != null) {
+      if (usertoken != null) {
       final Uri uri = Uri.parse("https://madadguru.webkype.net/api/myProfile");
       try {
         final response = await http.post(
@@ -73,7 +71,7 @@ import 'SubcriptionScreen.dart';
             print("respons${userData}");
             setState(() {
               Mydata = Map<String, dynamic>.from(
-                  userData); // Convert userData to Map
+                  userData);
               nameController.text = Mydata['name'];
               gmailController.text = Mydata['email'];
               phoneController.text = Mydata['mobile'];
@@ -85,6 +83,16 @@ import 'SubcriptionScreen.dart';
               isLoading = false;
                });
                } else {
+            Navigator.of(
+                  context)
+                  .pop();
+               // Navigator.of(context).pushAndRemoveUntil(
+               //  MaterialPageRoute(
+               //    builder: (context) => HomeScreen(
+               //      Device: widget.device, device: '',
+               //    ),
+               //  ),
+               //      (route) => false);
              print('API request failed: ${responseData["message"]}');
           }
           print('Data fetched successfully');
@@ -92,14 +100,13 @@ import 'SubcriptionScreen.dart';
         } else {
           print('Failed to fetch data. Status code: ${response.statusCode}');
         }
-      } catch (error) {
+         } catch (error) {
         print('Error fetching data: $error');
+         }
+        }
       }
-      }
-      }
-
-    List<bool> switchStates = [];
-  Map<String, dynamic> Data = {};
+      List<bool> switchStates = [];
+     Map<String, dynamic> Data = {};
   List<dynamic> Data2 = [];
   String iwant = "";
   String needhelpin = "";
@@ -164,7 +171,6 @@ import 'SubcriptionScreen.dart';
     } else {
       print('i_want data not found');
       }
-
 }
   @override
   Widget build(BuildContext context) {
@@ -174,8 +180,8 @@ import 'SubcriptionScreen.dart';
           : SingleChildScrollView(
         child: Column(
             children: <Widget>[
-          Stack(children: [
-            Container(
+            Stack(children: [
+              Container(
               width: MediaQuery.of(context).size.width,
               height: 300,
               decoration: BoxDecoration(
@@ -185,7 +191,7 @@ import 'SubcriptionScreen.dart';
                   bottomRight: Radius.circular(32),
                 ),
               ),
-              child: ClipRRect(
+               child: ClipRRect(
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(32),
                   bottomRight: Radius.circular(32),
@@ -258,9 +264,9 @@ import 'SubcriptionScreen.dart';
                                   fontSize: 14),
                             ),
                           ),
-                          SizedBox(
+                              SizedBox(
                             height: 20,
-                          ),
+                               ),
                             InkWell(
                               onTap: () {
                               Navigator.push(
@@ -541,7 +547,7 @@ import 'SubcriptionScreen.dart';
                                                                               .w500,
                                                                     ),
                                                                   ),
-                                                                )
+                                                                ),
                                                               ]),
                                                               Icon(
                                                                 Icons

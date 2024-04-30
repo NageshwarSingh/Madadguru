@@ -27,6 +27,7 @@ class _MySplashScreenState extends State<MySplashScreen> {
     );
   }
 }
+
 class WelcomePopupSplash extends StatelessWidget {
   late final String device;
   @override
@@ -38,8 +39,7 @@ class WelcomePopupSplash extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: Colors.white,
-             ),
-
+          ),
         padding: const EdgeInsets.all(15),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -54,6 +54,7 @@ class WelcomePopupSplash extends StatelessWidget {
             //   },
             //   child: Text('Close'),
             // ),
+
             SizedBox(height: 20),
             Text(
               'Welcome',
@@ -111,14 +112,14 @@ class WelcomePopupSplash extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         color: Color(0xffFBCD96)),
-                    child: Center(
+                      child: Center(
                       child: Text(
                         'Continue',
                         style: TextStyle(
                             color: Colors.orange,
                             fontWeight: FontWeight.bold,
                             fontSize: 16),
-                      ),
+                         ),
                     ),
                   ),
                 ),
@@ -156,8 +157,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
     PostScreen(
       back: false,
       device: "Android",
-    ),
-    const AccountScreen(
+      ),
+      const AccountScreen(
       device: "IOS",
     ),
   ];
@@ -176,74 +177,85 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: pages[currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xffFF9228),
-        currentIndex: currentIndex,
-        onTap: onTap,
-        elevation: 0,
-        items: [
-          BottomNavigationBarItem(
-            label: 'Home',
-            activeIcon: Icon(
-              Icons.home,
-              color: Colors.orange,
-            ),
-            icon: Icon(
-              Icons.home,
-              color: Colors.grey,
-            ),
+    return WillPopScope(
+        onWillPop: () async {
+          if (currentIndex != 0) {
+            setState(() {
+              currentIndex = 0;
+            });
+            return false;
+          } else {
+            return true;
+          }
+        },
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: pages[currentIndex],
+          bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: Colors.white,
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: const Color(0xffFF9228),
+            currentIndex: currentIndex,
+            onTap: onTap,
+            elevation: 0,
+            items: [
+              BottomNavigationBarItem(
+                label: 'Home',
+                activeIcon: Icon(
+                  Icons.home,
+                  color: Colors.orange,
+                ),
+                icon: Icon(
+                  Icons.home,
+                  color: Colors.grey,
+                ),
+              ),
+              BottomNavigationBarItem(
+                label: 'Feed',
+                activeIcon: Icon(
+                  Icons.toc_outlined,
+                  color: Colors.orange,
+                ),
+                icon: Icon(
+                  Icons.toc_outlined,
+                  color: Colors.grey,
+                ),
+              ),
+              BottomNavigationBarItem(
+                label: 'Volunteer',
+                activeIcon: Icon(
+                  Icons.room_preferences,
+                  color: Colors.orange,
+                ),
+                icon: Icon(
+                  Icons.room_preferences,
+                  color: Colors.grey,
+                ),
+              ),
+              BottomNavigationBarItem(
+                label: 'My Post',
+                activeIcon: Icon(
+                  Icons.join_right_rounded,
+                  color: Colors.orange,
+                ),
+                icon: Icon(
+                  Icons.join_right_rounded,
+                  color: Colors.grey,
+                ),
+              ),
+              BottomNavigationBarItem(
+                label: 'Account',
+                activeIcon: Icon(
+                  Icons.person,
+                  color: Colors.orange,
+                ),
+                icon: Icon(
+                  Icons.person,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            label: 'Feed',
-            activeIcon: Icon(
-              Icons.toc_outlined,
-              color: Colors.orange,
-            ),
-            icon: Icon(
-              Icons.toc_outlined,
-              color: Colors.grey,
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: 'Volunteer',
-            activeIcon: Icon(
-              Icons.room_preferences,
-              color: Colors.orange,
-            ),
-            icon: Icon(
-              Icons.room_preferences,
-              color: Colors.grey,
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: 'My Post',
-            activeIcon: Icon(
-              Icons.join_right_rounded,
-              color: Colors.orange,
-            ),
-            icon: Icon(
-              Icons.join_right_rounded,
-              color: Colors.grey,
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: 'Account',
-            activeIcon: Icon(
-              Icons.person,
-              color: Colors.orange,
-            ),
-            icon: Icon(
-              Icons.person,
-              color: Colors.grey,
-            ),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 }

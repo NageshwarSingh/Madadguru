@@ -74,7 +74,7 @@ class _GalleryImageScreenState extends State<GalleryImageScreen> {
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
-          PopupMenuButton<String>(
+           PopupMenuButton<String>(
             icon: Icon(Icons.more_vert_rounded),
             onSelected: (value) {
               switch (value) {

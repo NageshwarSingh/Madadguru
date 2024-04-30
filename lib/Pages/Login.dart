@@ -7,7 +7,8 @@ import '../Allwidgets/background_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:pinput/pinput.dart';
 import 'SignUp.dart';
-class Login extends StatefulWidget {
+
+  class Login extends StatefulWidget {
   final String device;
     const Login({
     super.key,
@@ -21,7 +22,6 @@ class Login extends StatefulWidget {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     bool _isButtonEnabled = false;
     bool isLoading = false;
-
       void LoginApi() async {
        setState(() {
        isLoading = true;
