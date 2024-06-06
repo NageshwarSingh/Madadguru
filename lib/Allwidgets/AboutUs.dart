@@ -8,9 +8,8 @@ import 'package:flutter/material.dart';
 
   @override
   State<AboutUs> createState() => _AboutUsState();
-}
-
-class _AboutUsState extends State<AboutUs> {
+  }
+ class _AboutUsState extends State<AboutUs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,11 +162,9 @@ class _AboutUsState extends State<AboutUs> {
                         color: Colors.redAccent.shade100,
                         fontWeight: FontWeight.bold),
                   ),
-                ],
-              ),
-
+                 ],
+                ),
               SizedBox(height: 10),
-
               Row(
                 children: [
 

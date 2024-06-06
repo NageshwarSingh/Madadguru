@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import '../Pages/AccountScreen.dart';
@@ -9,11 +11,9 @@ import '../Pages/Volunteer.dart';
 class MySplashScreen extends StatefulWidget {
   final String device;
   const MySplashScreen({super.key, required this.device});
-
   @override
   State<MySplashScreen> createState() => _MySplashScreenState();
-}
-
+ }
 class _MySplashScreenState extends State<MySplashScreen> {
   @override
   Widget build(BuildContext context) {
@@ -185,6 +185,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
             });
             return false;
           } else {
+            exit(0);
+            // SystemNavigator.pop();
             return true;
           }
         },

@@ -7,28 +7,28 @@ import 'package:image_picker/image_picker.dart';
 import 'package:madadguru/Allwidgets/Editprofile.dart';
 import 'package:madadguru/Pages/SpiritualScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../AllWidgets/buttons.dart';
 import 'package:http/http.dart' as http;
 import '../Allwidgets/GalleryScreen.dart';
-
-class HomeScreen extends StatefulWidget {
-  final String device;
-  const HomeScreen({
+import 'HealthScreen.dart';
+  class HomeScreen extends StatefulWidget {
+    final String device;
+    const HomeScreen({
     super.key,
     required this.device,
     required String Device,
   });
   @override
   State<HomeScreen> createState() => _HomeScreenState();
-}
-
+  }
 class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = false;
   List<dynamic> Data = [];
   final TextEditingController _textController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   List<String> complains = [];
-  File? _imageFile1;
+  // File? _imageFile1;
   var Complains;
   var Documents;
   var documents = [
@@ -49,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
     "assets/icon/signing.png",
     "assets/icon/documentation.png",
   ];
-
   File? panCardImage;
   File? drivingLicenseImage;
   File? aadharCardImage;
@@ -59,13 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
   // List<File> imageFiles = [];
   Map<String, dynamic> value = {};
   Map<String, dynamic> data = {};
-
   @override
   void initState() {
     super.initState();
     fetchDataEnquiry();
-  }
-
+    }
   List<Map<String, dynamic>> DataList = [];
   Future<void> updateKyc() async {
     setState(() {
@@ -89,7 +86,6 @@ class _HomeScreenState extends State<HomeScreen> {
         } else {
           request.fields['pan_card'] = '';
         }
-
         // Add driving license image file if not null, otherwise add an empty string
         if (drivingLicenseImage != null) {
           request.files.add(
@@ -128,10 +124,9 @@ class _HomeScreenState extends State<HomeScreen> {
           isLoading = false;
         });
       }
-    }
-  }
+    }}
 
-  Future<void> fetchDataEnquiry() async {
+    Future<void> fetchDataEnquiry() async {
     setState(() {
       isLoading = true;
     });
@@ -146,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
           headers: {
             'Authorization': 'Bearer $usertoken',
           },
-        );
+          );
         if (response.statusCode == 200) {
           var responseData = json.decode(response.body);
           List<dynamic> data = responseData['data'] ?? [];
@@ -155,6 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 .map((item) => {
                       'id': item['id'].toString(),
                       'name': item['name'],
+              'icon': item['icon'],
                     })
                 .toList();
           });
@@ -172,11 +168,10 @@ class _HomeScreenState extends State<HomeScreen> {
           isLoading = false;
         });
       }
-    }
-  }
+     }}
 
-  void complainPopUp(String id, String message, File? imageFile) async {
-    try {
+    void complainPopUp(String id, String message, File? imageFile) async {
+     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       if (prefs != null) {
         var usertoken = prefs.getString('token');
@@ -215,13 +210,12 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         print('SharedPreferences is null.');
       }
-    } catch (error) {
+        } catch (error) {
       print('Error: $error');
+     }
     }
-  }
 
   // https://madadguru.webkype.net/api/makeVolunteer
-  //
   // volunteer_type:
 
   List<dynamic> department = [];
@@ -286,8 +280,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                ),
-                Positioned(
+                  ),
+                  Positioned(
                   top: 40,
                   right: 10,
                   child: Image.asset(
@@ -295,14 +289,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 60,
                     width: 60,
                   ),
-                ),
-              ],
-            ),
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(
+                 ),
+                 ],
+                 ),
+                 SingleChildScrollView(
+                 child: Padding(
+                 padding: const EdgeInsets.only(
                     top: 15, bottom: 5, left: 10, right: 10),
-                child: Row(
+                  child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
@@ -313,11 +307,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             MaterialPageRoute(builder: (context) {
                               return EditProfile(
                                 device: widget.device,
+                                  );
+                                }),
                               );
-                            }),
-                          );
-                        },
-                        child: Card(
+                            },
+                           child: Card(
                           elevation: 2,
                           child: Column(
                             children: [
@@ -374,27 +368,27 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         child: Card(
                           elevation: 2,
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 35,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
+                                    child: Column(
+                                    children: [
+                                    Container(
+                                    height: 35,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
                                     topRight: Radius.circular(10),
                                     topLeft: Radius.circular(10),
-                                  ),
-                                  color: const Color(0xffED6663),
-                                ),
-                                child: Text(
-                                  "KYC Account",
-                                  style: TextStyle(
+                                    ),
+                                    color: const Color(0xffED6663),
+                                    ),
+                                    child: Text(
+                                    "KYC Account",
+                                    style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
+                                    ),
+                                    ),
+                                    ),
                               Container(
                                 height: 35,
                                 alignment: Alignment.center,
@@ -426,9 +420,9 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 10,
             ),
-            Row(
-              children: [
-                Expanded(
+                    Row(
+                    children: [
+                    Expanded(
                   child: GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -460,7 +454,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 //   begin: Alignment.centerLeft,
                                 //   end: Alignment.centerRight,
                                 // ),
-                              ),
+                                ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -488,24 +482,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                Expanded(
-                  child: GestureDetector(
+                    Expanded(
+                    child: GestureDetector(
                     onTap: () {
-                      _ShowDialogueVolunteer(context);
-                    },
-
-                    // onTap: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(builder: (context) {
-                    //       return GalleryScreen(
-                    //         device: widget.device,
-                    //       );
-                    //     }),
-                    //   );
-                    // },
-
-                    child: Padding(
+                      _ShowDialogueJoinVolunteer(context);
+                       },
+                       child: Padding(
                       padding: const EdgeInsets.only(left: 5, right: 10.0),
                       child: Column(
                         children: [
@@ -518,21 +500,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius: BorderRadius.circular(12),
                                 color: Colors.white,
 
-                                // color: const Color(0xff4E89AE),
-                                // color: const Color(0xffED6663),
-                                //   gradient: LinearGradient(
-                                //     colors: [
-                                //       // Color(0xffED6663),
-                                //       Color(0xffED6663),
-                                //       Colors.orange.shade200,
-                                //       // Colors.white,
-                                //
-                                //
-                                //       // Color(0xff4E89AE),
-                                //     ],
-                                //     begin: Alignment.centerLeft,
-                                //     end: Alignment.centerRight,
-                                //   ),
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -561,21 +528,86 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-              ],
-            ),
+               ],
+              ),
             SizedBox(height: 10),
-            GestureDetector(
+             GestureDetector(
+                onTap: () {
+                 Navigator.push(
+                  context,
+                   MaterialPageRoute(builder: (context) {
+                    return SpiritualScreen(
+                      device: widget.device,
+                      );
+                      }),
+                     );
+                   },
+                  child: Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: Card(
+                  elevation: 2,
+                          child: Stack(
+                          children: [
+                          Container(
+                           height: 170,
+                           decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                             image: DecorationImage(
+                              image: AssetImage(
+                              'assets/images/baba.jpg',
+                                ),
+                                fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: 10,
+                        right:
+                            10,
+                        child: Image.asset(
+                          "assets/images/mimage-removebg.png",
+                          height: 50,
+                          width: 50,
+                          ),
+                        ),
+                      ],
+                    ),
+                   ),
+                  ),
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 10, right: 10),
+              //   child: Card(
+              //     elevation: 2,
+              //     child: Container(
+              //       height: 170,
+              //       decoration: BoxDecoration(
+              //         borderRadius: BorderRadius.circular(12),
+              //         image: DecorationImage(
+              //             image: AssetImage(
+              //               'assets/images/baba.jpg',
+              //             ),
+              //             fit: BoxFit.cover),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              ),
+              SizedBox(
+              height: 10,
+              ),
+              buildListView(),
+              GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
-                    return SpiritualScreen(
+                    return healthScreen(
                       device: widget.device,
                     );
                   }),
-                );
-              },
-              child: Padding(
+                  );
+                },
+                child: Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),
                 child: Card(
                   elevation: 2,
@@ -587,18 +619,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           borderRadius: BorderRadius.circular(12),
                           image: DecorationImage(
                             image: AssetImage(
-                              'assets/images/baba.jpg',
+                              'assets/images/mental health.jpg',
                             ), // Use the current image path
                             fit: BoxFit.cover,
-                          ),
+                            ),
+                           ),
                         ),
-                      ),
-                      Positioned(
-                        top: 10, // Adjust the position of the icon vertically
-                        right:
-                            10, // Adjust the position of the icon horizontally
+                        Positioned(
+                        bottom: 20,
+                        left:
+                        50,
+                        // Adjust the position of the icon horizontally
                         child: Image.asset(
-                          "assets/images/mimage.png",
+                          "assets/images/mimage-removebg.png",
                           height: 50,
                           width: 50,
                         ),
@@ -626,10 +659,7 @@ class _HomeScreenState extends State<HomeScreen> {
               //   ),
               // ),
             ),
-            SizedBox(
-              height: 10,
-            ),
-            buildListView(),
+       SizedBox(height: 10,),
             Text(
               'Version 1.0',
             ),
@@ -639,10 +669,136 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-    );
-  }
 
-  Widget buildListView() {
+      // floatingActionButton: Column(
+      //   mainAxisAlignment: MainAxisAlignment.end,
+      //   children: [
+      //     Container(
+      //       height: 40,
+      //       width: 40,
+      //     decoration: BoxDecoration(
+      //         image: DecorationImage(
+      //
+      //             image: AssetImage("assets/images/phone.png",))),
+      //       child: FloatingActionButton(
+      //
+      //         shape:
+      //         RoundedRectangleBorder(
+      //           borderRadius: BorderRadius.circular(23),
+      //           ),
+      //         backgroundColor: Colors.transparent,
+      //         elevation: 0,
+      //         // child: SizedBox(
+      //         //   // height: 80, // Match the image height
+      //         //   // width: 100,
+      //         //   child: Image.asset(
+      //         //           'assets/images/whats.png',fit: BoxFit.cover,
+      //         //   ),
+      //         // ),
+      //         onPressed:
+      //             () async {
+      //
+      //           var phoneNumber = "7042075812";
+      //           var url =
+      //               "tel:$phoneNumber";
+      //           print(
+      //               "Calling $phoneNumber");
+      //           await launchUrl(
+      //               Uri.parse(
+      //                   url));
+      //         },
+      //       ),
+      //     ),
+      //     Container(
+      //       height: 80,
+      //       width: 80,
+      //       decoration: BoxDecoration(
+      //           image: DecorationImage(image: AssetImage("assets/images/whats.png"))),
+      //       child: FloatingActionButton(
+      //
+      //         shape:
+      //         RoundedRectangleBorder(
+      //           borderRadius: BorderRadius.circular(23),
+      //         ),
+      //         backgroundColor: Colors.transparent,
+      //         elevation: 0,
+      //         // child: SizedBox(
+      //         //   // height: 80, // Match the image height
+      //         //   // width: 100,
+      //         //   child: Image.asset(
+      //         //           'assets/images/whats.png',fit: BoxFit.cover,
+      //         //   ),
+      //         // ),
+      //         onPressed: () async {
+      //           var phoneNumber = "7042075812";
+      //           var message = "Hello";
+      //           var url = "https://wa.me/$phoneNumber?text=${Uri.encodeFull(message)}";
+      //           print("The URL is $url");
+      //           await launchUrl(Uri.parse(url));
+      //         },
+      //       ),
+      //     ),
+      //
+      //   ],
+      // ),
+
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/phone.png"),
+              ),
+            ),
+            child: FloatingActionButton(
+              heroTag: "phoneButton", // Unique heroTag
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(23),
+              ),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              onPressed: () async {
+                var phoneNumber = "+919999693444";
+                var url = "tel:$phoneNumber";
+                print("Calling $phoneNumber");
+                await launchUrl(Uri.parse(url));
+                },
+              ),
+            ),
+            // SizedBox(height: 16), // Add spacing between buttons
+            Container(
+            height: 80,
+            width: 80,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/whats.png"),
+              ),
+            ),
+            child: FloatingActionButton(
+              heroTag: "whatsButton", // Unique heroTag
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(23),
+              ),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              onPressed: () async {
+                var phoneNumber = "+919999693444";
+                var message = "Hello";
+                var url = "https://wa.me/$phoneNumber?text=${Uri.encodeFull(message)}";
+                print("The URL is $url");
+                await launchUrl(Uri.parse(url));
+              },
+            ),
+          ),
+        ],
+      ),
+     );
+    }
+
+    Widget buildListView() {
     return GridView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
@@ -681,8 +837,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     // crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(images[index],
-                          height: 20, width: 20, color: Colors.white),
+                      Image.network( DataList[index]['icon'],
+                          height: 30, width: 30,),
                       Padding(
                         padding:
                             const EdgeInsets.only(left: 8, right: 8, top: 8.0),
@@ -699,37 +855,39 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
+               ),
               ),
-            ),
-          );
-        });
-  }
+             );
+           });
+          }
 
-  String? selectedDocument;
-  void _ShowDialogueKyc(BuildContext context) {
-    showDialog(
+      // kyc Verification
+
+    String? selectedDocument;
+    void _ShowDialogueKyc(BuildContext context) {
+       showDialog(
         context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
+           builder: (BuildContext context) {
+              return AlertDialog(
+              title: Text(
               'KYC Verification',
-            ),
-            content: Container(
+              ),
+              content: Container(
               height: 300,
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
                   SizedBox(
                     height: 20,
-                  ),
-                  Container(
+                           ),
+                    Container(
                     padding: EdgeInsets.only(left: 7),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
+                     alignment: Alignment.center,
+                      decoration: BoxDecoration(
                       border: Border.all(width: 1.5, color: Colors.orange),
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
+                        color: Colors.transparent,
+                         borderRadius: BorderRadius.all(
+                           Radius.circular(10),
                       ),
                     ),
                     child: DropdownButtonFormField<String>(
@@ -755,29 +913,30 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.orange,
                       ),
                       dropdownColor: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      // value: selectedDocument,
-                      isExpanded: true,
-                      icon: const Icon(
-                        Icons.keyboard_arrow_down,
-                        size: 30,
-                        color: Colors.black38,
-                      ),
-                      hint: Text(
-                        "ID Proof",
-                        style: GoogleFonts.roboto(
+                          borderRadius: BorderRadius.circular(10),
+                        // value: selectedDocument,
+                          isExpanded: true,
+                          icon: const Icon(
+                          Icons.keyboard_arrow_down,
+                          size: 30,
+                          color: Colors.black38,
+                          ),
+                          hint: Text(
+                          "ID Proof",
+                          style: GoogleFonts.roboto(
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
                           color: Colors.black38,
-                        ),
-                      ),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedDocument = newValue!;
-                        });
-                      },
-                      items: [
-                        DropdownMenuItem(
+                          ),
+                          ),
+                          onChanged: (String? newValue1) {
+                          setState(() {
+                          print("Item tapped: $newValue1");
+                          selectedDocument = newValue1!;
+                           });
+                            },
+                            items: [
+                            DropdownMenuItem(
                             child: Text(
                               "Pan Card",
                             ),
@@ -850,6 +1009,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             Navigator.pop(context);
                                             await _getFromGallery();
                                           },
+
+
                                           child: Row(children: [
                                             Image.asset(
                                               "assets/images/gallery.png",
@@ -915,10 +1076,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 40,
                   ),
+
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     updateKyc();
+                  //     // Navigator.pop(context);
+                  //     // Navigator.pop(context);
+                  //   },
+                  //   child: ButtonWidget(
+                  //     text: "Submit",
+                  //     color: const Color(0xffFF9228),
+                  //     textColor: Colors.white,
+                  //     width: 130,
+                  //   ),
+                  // ),
                   GestureDetector(
                     onTap: () {
                       updateKyc();
-                      // Navigator.pop(context);
+                      // Navigator.of(context).pop();
                     },
                     child: ButtonWidget(
                       text: "Submit",
@@ -934,8 +1109,8 @@ class _HomeScreenState extends State<HomeScreen> {
          },
         );
        }
-
-  void _ShowDialogueVolunteer(BuildContext context) {
+// join as volunteer
+  void _ShowDialogueJoinVolunteer(BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -969,6 +1144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: DropdownButtonFormField<String>(
                       value: selectedDocument,
                       validator: (value) {
+                        // print("Item tapped: $value");
                         if (value == null || value.isEmpty) {
                           return 'Please select a value';
                         }
@@ -982,15 +1158,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         errorStyle: TextStyle(
                           color: Colors.red,
                         ),
-                      ),
-                      style: GoogleFonts.roboto(
+                        ),
+                        style: GoogleFonts.roboto(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                         color: Colors.orange,
-                      ),
-                      dropdownColor: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      // value: selectedDocument,
+                        ),
+                        dropdownColor: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        // value: selectedDocument,
                       isExpanded: true,
                       icon: const Icon(
                         Icons.keyboard_arrow_down,
@@ -1007,17 +1183,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onChanged: (String? newValue) {
                         setState(() {
+                          print("Item tapped: $newValue");
                           selectedDocument = newValue!;
                         });
                       },
                       items: [
                         DropdownMenuItem(
                             child: Text(
-                              "Full time",
+                              "Full Time",
                             ),
-                            value: "pan_card"),
+                            value: "Full Time"),
                         DropdownMenuItem(
-                            child: Text("Part time"), value: "driving_license"),
+                            child: Text("Part Time"), value: "Part Time"),
                       ],
                     ),
                   ),
@@ -1042,189 +1219,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         });
-  }
+       }
 
-  // void _ShowDialoguePopText(String id, {required title}) {
-  //   TextEditingController _textController = TextEditingController();
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text("${title}"),
-  //           content: Container(
-  //             height: 300,
-  //             child: Column(
-  //               children: [
-  //                 TextField(
-  //                   maxLines: 3,
-  //                   controller: _textController,
-  //                   decoration: InputDecoration(
-  //                     hintText: 'Text here....',
-  //                     labelStyle: TextStyle(color: Colors.orange),
-  //                     enabledBorder: OutlineInputBorder(
-  //                       borderRadius: BorderRadius.circular(12),
-  //                       borderSide: BorderSide(color: Colors.orange),
-  //                     ),
-  //                     disabledBorder: OutlineInputBorder(
-  //                       borderRadius: BorderRadius.circular(12),
-  //                       borderSide: BorderSide(color: Colors.orange),
-  //                     ),
-  //                     focusedBorder: OutlineInputBorder(
-  //                       borderRadius: BorderRadius.circular(12),
-  //                       borderSide: BorderSide(color: Colors.orange),
-  //                     ),
-  //                     contentPadding:
-  //                         EdgeInsets.only(left: 10, right: 10, top: 10),
-  //                   ),
-  //                   keyboardType: TextInputType.text,
-  //                   onChanged: (value) {
-  //                   },
-  //                 ),
-  //                 SizedBox(height: 10),
-  //                 Container(
-  //                   alignment: Alignment.center,
-  //                   width: double.infinity,
-  //                   child: GestureDetector(
-  //                     onTap: () {
-  //                       showModalBottomSheet(
-  //                         shape: RoundedRectangleBorder(
-  //                           borderRadius: BorderRadius.only(
-  //                             topRight: Radius.circular(25),
-  //                             topLeft: Radius.circular(25),
-  //                           ),
-  //                         ),
-  //                         context: context,
-  //                         builder: (BuildContext bc) {
-  //                           return StatefulBuilder(builder:
-  //                               (BuildContext context, StateSetter setState) {
-  //                             return BackdropFilter(
-  //                               filter:
-  //                                   ImageFilter.blur(sigmaX: 0.3, sigmaY: 0.3),
-  //                               child: Container(
-  //                                 padding: const EdgeInsets.all(20),
-  //                                 child: Column(
-  //                                     mainAxisSize: MainAxisSize.min,
-  //                                     children: [
-  //                                       GestureDetector(
-  //                                         onTap: () async {
-  //                                           Navigator.pop(context);
-  //                                           await _getFromCamera();
-  //                                         },
-  //                                         child: Row(children: [
-  //                                           Icon(
-  //                                             Icons.camera_alt_outlined,
-  //                                             color: Colors.blue,
-  //                                           ),
-  //                                           SizedBox(
-  //                                             width: 20,
-  //                                           ),
-  //                                           Text(
-  //                                             "Take Photo",
-  //                                             style: GoogleFonts.roboto(
-  //                                               textStyle: const TextStyle(
-  //                                                 color: Colors.black54,
-  //                                                 fontSize: 14,
-  //                                                 fontWeight: FontWeight.w500,
-  //                                               ),
-  //                                             ),
-  //                                           ),
-  //                                         ]),
-  //                                       ),
-  //                                       const SizedBox(
-  //                                         height: 20,
-  //                                       ),
-  //                                       GestureDetector(
-  //                                         onTap: () async {
-  //                                           Navigator.pop(context);
-  //                                           await _getFromGallery();
-  //                                         },
-  //                                         child: Row(children: [
-  //                                           Image.asset(
-  //                                             "assets/images/gallery.png",
-  //                                             width: 25,
-  //                                             color: Colors.blue,
-  //                                           ),
-  //                                           const SizedBox(
-  //                                             width: 20,
-  //                                           ),
-  //                                           Text(
-  //                                             "Select from gallery",
-  //                                             style: GoogleFonts.roboto(
-  //                                               textStyle: const TextStyle(
-  //                                                 color: Colors.black54,
-  //                                                 fontSize: 14,
-  //                                                 fontWeight: FontWeight.w500,
-  //                                               ),
-  //                                             ),
-  //                                           ),
-  //                                         ]),
-  //                                       ),
-  //                                       const SizedBox(
-  //                                         height: 15,
-  //                                       ),
-  //                                     ]),
-  //                               ),
-  //                             );
-  //                           });
-  //                         },
-  //                       );
-  //                     },
-  //                     child: Stack(
-  //                       clipBehavior: Clip.none,
-  //                       children: [
-  //                         Container(
-  //                           height: 100,
-  //                           decoration: BoxDecoration(
-  //                             color: Colors.transparent,
-  //                             borderRadius: BorderRadius.circular(12),
-  //                             border:
-  //                                 Border.all(width: 1, color: Colors.orange),
-  //                           ),
-  //                           child: imageFile == null
-  //                               ? Center(
-  //                                   child: Icon(
-  //                                     Icons.add_a_photo_outlined,
-  //                                     color: Colors.black38,
-  //                                   ),
-  //                                 )
-  //                               : ClipRRect(
-  //                                   borderRadius: BorderRadius.circular(12),
-  //                                   child: Image.file(
-  //                                     imageFile!,
-  //                                     fit: BoxFit.cover,
-  //                                     width: double.infinity,
-  //                                   ),
-  //                                 ),
-  //                         ),
-  //                       ],
-  //                     ),
-  //                     ),
-  //                   ),
-  //
-  //                   SizedBox(
-  //                   height: 30,
-  //                 ),
-  //                 GestureDetector(
-  //                   onTap: () {
-  //                     complainPopUp(id, _textController.text,imageFile);
-  //                     // complainPopUp(id);
-  //                     Navigator.pop(context);
-  //                     },
-  //                   child: ButtonWidget(
-  //                     text: "Send",
-  //                     color: const Color(0xffFF9228),
-  //                     textColor: Colors.white,
-  //                     width: 100,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       });
-  // }
+   //All requests popup
 
-  void _ShowDialoguePopText(String id, {required title}) {
+    void _ShowDialoguePopText(String id, {required title}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1256,122 +1255,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       contentPadding:
                           EdgeInsets.only(left: 10, right: 10, top: 10),
-                    ),
+                       ),
                     keyboardType: TextInputType.text,
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                    },
                   ),
                   SizedBox(height: 10),
-
-                  // Container(
-                  // alignment: Alignment.center,
-                  // width: double.infinity,
-                  // child: GestureDetector(
-                  //   onTap: () {
-                  //     showModalBottomSheet(
-                  //       shape: RoundedRectangleBorder(
-                  //         borderRadius: BorderRadius.only(
-                  //           topRight: Radius.circular(25),
-                  //           topLeft: Radius.circular(25),
-                  //         ),
-                  //       ),
-                  //       context: context,
-                  //       builder: (BuildContext bc) {
-                  //         return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-                  //           return BackdropFilter(
-                  //             filter: ImageFilter.blur(sigmaX: 0.3, sigmaY: 0.3),
-                  //             child: Container(
-                  //               padding: EdgeInsets.all(20),
-                  //               child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  //                 GestureDetector(
-                  //                   onTap: () async {
-                  //                     Navigator.pop(context);
-                  //                     File? pickedImage = await _getFromCamera();
-                  //                     setState(() {
-                  //                       _imageFile1 = pickedImage; // Update the selected image
-                  //                     });
-                  //                   },
-                  //                   child: Row(children: [
-                  //                     Icon(
-                  //                       Icons.camera_alt_outlined,
-                  //                       color: Colors.blue,
-                  //                     ),
-                  //                       SizedBox(width: 20),
-                  //                       Text(
-                  //                       "Take Photo",
-                  //                       style: TextStyle(
-                  //                         color: Colors.black54,
-                  //                         fontSize: 14,
-                  //                         fontWeight: FontWeight.w500,
-                  //                          ),
-                  //                        ),
-                  //                      ],
-                  //                     ),
-                  //                   ),
-                  //                 SizedBox(height: 20),
-                  //                 GestureDetector(
-                  //                   onTap: () async {
-                  //                     Navigator.pop(context);
-                  //                     File? pickedImage1 = await _getFromGallery();
-                  //                     setState(() {
-                  //                       _imageFile1 = pickedImage1; // Update the selected image
-                  //                     });
-                  //                   },
-                  //                   child: Row(children: [
-                  //                     Image.asset(
-                  //                       "assets/images/gallery.png",
-                  //                       width: 25,
-                  //                       color: Colors.blue,
-                  //                     ),
-                  //                     SizedBox(width: 20),
-                  //                     Text(
-                  //                       "Select from gallery",
-                  //                       style: TextStyle(
-                  //                         color: Colors.black54,
-                  //                         fontSize: 14,
-                  //                         fontWeight: FontWeight.w500,
-                  //                       ),
-                  //                     ),
-                  //                   ]),
-                  //                   ),
-                  //                   SizedBox(height: 15),
-                  //                   ]),
-                  //                 ),
-                  //               );
-                  //             });
-                  //           },
-                  //         );
-                  //       },
-                  //     child: Stack(
-                  //     clipBehavior: Clip.none,
-                  //     children: [
-                  //       Container(
-                  //         height: 100,
-                  //         decoration: BoxDecoration(
-                  //           color: Colors.transparent,
-                  //           borderRadius: BorderRadius.circular(12),
-                  //           border: Border.all(width: 1, color: Colors.orange),
-                  //         ),
-                  //         child: _imageFile1 == null
-                  //             ? Center(
-                  //           child: Icon(
-                  //             Icons.add_a_photo_outlined,
-                  //             color: Colors.black38,
-                  //               ),
-                  //             )
-                  //             : ClipRRect(
-                  //           borderRadius: BorderRadius.circular(12),
-                  //           child: Image.file(
-                  //             _imageFile1!,
-                  //             fit: BoxFit.cover,
-                  //             width: double.infinity,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //    ),
-                  //  ),
-                  // ),
-
                   Container(
                     alignment: Alignment.center,
                     width: double.infinity,
@@ -1440,44 +1329,45 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               Text(
                                                 "Select from gallery",
-                                                style: GoogleFonts.roboto(
+                                                  style: GoogleFonts.roboto(
                                                   textStyle: const TextStyle(
                                                     color: Colors.black54,
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
-                                              )
+                                              ),
                                             ]),
                                           ),
                                           const SizedBox(
                                             height: 15,
                                           ),
                                         ]),
-                                  ),
+                                     ),
                                 );
                               });
                             });
                       },
-                      child: Stack(clipBehavior: Clip.none, children: [
-                        (imageFile == null)
-                            ? Container(
+                        child: Stack(clipBehavior: Clip.none, children: [
+                            (imageFile == null)
+                                ? Container(
                                 height: 100,
                                 width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  color: Colors.transparent,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
+                                  decoration: BoxDecoration(
+                                   color: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(12),
+                                     border: Border.all(
                                       width: 1, color: Colors.orange),
-                                ),
-                                // radius: 45,
-                                child: Container(
+                                        ),
+                                          // radius: 45,
+                                   child: Container(
                                     // decoration: BoxDecoration(
                                     //   color: Colors.transparent,
                                     //   borderRadius: BorderRadius.circular(12),
                                     //   border: Border.all(
                                     //       width: 1, color: Colors.orange),
                                     // ),
+
                                     // child: Image.asset(
                                     //   'assets/images/people.webp',
                                     //   fit: BoxFit.cover,
@@ -1497,12 +1387,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   // height: 90.0, // adjust height as needed
                                 ),
                               ),
-                        Positioned(
-                          // bottom: ,
-                          // right: 5,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 25),
-                            child: Center(
+                              Positioned(
+                            // bottom: ,
+                            // right: 5,
+                             child: Padding(
+                             padding: const EdgeInsets.only(top: 25),
+                             child: Center(
                               child: CircleAvatar(
                                 // radius: 16,
                                 backgroundColor: Colors.transparent,
@@ -1519,12 +1409,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   SizedBox(height: 30),
-                  GestureDetector(
-                    onTap: () {
-                      complainPopUp(id, _textController.text,
-                          _imageFile1); // Pass the selected image file
+
+                      GestureDetector(
+                      onTap: () {
+                      complainPopUp(
+                          id, _textController.text,
+                          imageFile1); // Pass the selected image file
                       Navigator.pop(context);
-                    },
+                      _textController.clear();
+                      },
                     child: ButtonWidget(
                       text: "Send",
                       color: Color(0xffFF9228),
@@ -1567,168 +1460,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  //File? _imageFile; // Variable for the first dialog
-  // File? _kycImageFile; // Variable for the KYC dialog
-  //
-  // void _ShowDialoguePopText(String id, {required title}) {
-  //   TextEditingController _textController = TextEditingController();
-  //
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-  //         return AlertDialog(
-  //           title: Text("$title"),
-  //           content: Container(
-  //             height: 300,
-  //             child: Column(
-  //               children: [
-  //                 TextField(
-  //                   maxLines: 3,
-  //                   controller: _textController,
-  //                   decoration: InputDecoration(
-  //                     hintText: 'Text here....',
-  //                     labelStyle: TextStyle(color: Colors.orange),
-  //                     enabledBorder: OutlineInputBorder(
-  //                       borderRadius: BorderRadius.circular(12),
-  //                       borderSide: BorderSide(color: Colors.orange),
-  //                     ),
-  //                     disabledBorder: OutlineInputBorder(
-  //                       borderRadius: BorderRadius.circular(12),
-  //                       borderSide: BorderSide(color: Colors.orange),
-  //                     ),
-  //                     focusedBorder: OutlineInputBorder(
-  //                       borderRadius: BorderRadius.circular(12),
-  //                       borderSide: BorderSide(color: Colors.orange),
-  //                     ),
-  //                     contentPadding: EdgeInsets.only(left: 10, right: 10, top: 10),
-  //                   ),
-  //                   keyboardType: TextInputType.text,
-  //                   onChanged: (value) {},
-  //                 ),
-  //                 SizedBox(height: 10),
-  //                 GestureDetector(
-  //                   onTap: () async {
-  //                     File? pickedImage = await _getFromGallery();
-  //                     if (pickedImage != null) {
-  //                       setState(() {
-  //                         _imageFile = pickedImage;
-  //                       });
-  //                     }
-  //                   },
-  //                   child: Container(
-  //                     height: 100,
-  //                     decoration: BoxDecoration(
-  //                       color: Colors.transparent,
-  //                       borderRadius: BorderRadius.circular(12),
-  //                       border: Border.all(width: 1, color: Colors.orange),
-  //                     ),
-  //                     child: _imageFile == null
-  //                         ? Center(
-  //                             child: Icon(
-  //                               Icons.add_a_photo_outlined,
-  //                               color: Colors.black38,
-  //                             ),
-  //                           )
-  //                         : ClipRRect(
-  //                             borderRadius: BorderRadius.circular(12),
-  //                             child: Image.file(
-  //                               _imageFile!,
-  //                               fit: BoxFit.cover,
-  //                               width: double.infinity,
-  //                             ),
-  //                           ),
-  //                   ),
-  //                 ),
-  //                 SizedBox(height: 30),
-  //                 GestureDetector(
-  //                   onTap: () {
-  //                     complainPopUp(id, _textController.text, _imageFile);
-  //                     Navigator.pop(context);
-  //                   },
-  //                   child: ButtonWidget(
-  //                     text: "Send",
-  //                     color: Color(0xffFF9228),
-  //                     textColor: Colors.white,
-  //                     width: 100,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       });
-  //     },
-  //   );
-  // }
-  //
-  // void _ShowDialogueKyc(BuildContext context) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-  //         return AlertDialog(
-  //           title: Text('KYC Verification'),
-  //           content: Container(
-  //             height: 300,
-  //             width: MediaQuery.of(context).size.width,
-  //             child: Column(
-  //               children: [
-  //                 // Other fields for KYC dialog
-  //                 SizedBox(height: 20),
-  //                 GestureDetector(
-  //                   onTap: () async {
-  //                     File? pickedImage = await _getFromGalleryForKYC();
-  //                     if (pickedImage != null) {
-  //                       setState(() {
-  //                         _kycImageFile = pickedImage;
-  //                       });
-  //                     }
-  //                   },
-  //                   child: Container(
-  //                     height: 100,
-  //                     decoration: BoxDecoration(
-  //                       color: Colors.transparent,
-  //                       borderRadius: BorderRadius.circular(12),
-  //                       border: Border.all(width: 1, color: Colors.orange),
-  //                     ),
-  //                     child: _kycImageFile == null
-  //                         ? Center(
-  //                             child: Icon(
-  //                               Icons.add_a_photo_outlined,
-  //                               color: Colors.black38,
-  //                             ),
-  //                           )
-  //                         : ClipRRect(
-  //                             borderRadius: BorderRadius.circular(12),
-  //                             child: Image.file(
-  //                               _kycImageFile!,
-  //                               fit: BoxFit.cover,
-  //                               width: double.infinity,
-  //                             ),
-  //                           ),
-  //                   ),
-  //                 ),
-  //                 SizedBox(height: 40),
-  //                 GestureDetector(
-  //                   onTap: () {
-  //                     updateKyc();
-  //                   },
-  //                   child: ButtonWidget(
-  //                     text: "Submit",
-  //                     color: const Color(0xffFF9228),
-  //                     textColor: Colors.white,
-  //                     width: 130,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       });
-  //     },
-  //   );
-  // }
   _getFromCamera() async {
     XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.camera,
@@ -1755,144 +1486,3 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 }
-// https://madadguru.webkype.net/api/addComplain
-//
-// category_id:38
-// message:test
-
-// void _ShowDialoguePopText(String id, {required title}) {
-//   TextEditingController _textController = TextEditingController();
-//   File? _imageFile; // Variable to store the selected image
-//
-//   showDialog(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-//         return AlertDialog(
-//           title: Text("$title"),
-//           content: Container(
-//             height: 300,
-//             child: Column(
-//               children: [
-//                 TextField(
-//                   maxLines: 3,
-//                   controller: _textController,
-//                   decoration: InputDecoration(
-//                     hintText: 'Text here....',
-//                     labelStyle: TextStyle(color: Colors.orange),
-//                     enabledBorder: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(12),
-//                       borderSide: BorderSide(color: Colors.orange),
-//                     ),
-//                     disabledBorder: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(12),
-//                       borderSide: BorderSide(color: Colors.orange),
-//                     ),
-//                     focusedBorder: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(12),
-//                       borderSide: BorderSide(color: Colors.orange),
-//                     ),
-//                     contentPadding: EdgeInsets.only(left: 10, right: 10, top: 10),
-//                   ),
-//                   keyboardType: TextInputType.text,
-//                   onChanged: (value) {},
-//                 ),
-//                 SizedBox(height: 10),
-//                 GestureDetector(
-//                   onTap: () async {
-//                     // Open gallery to select an image
-//                     File? pickedImage = await _getFromGallery();
-//                     if (pickedImage != null) {
-//                       setState(() {
-//                         _imageFile = pickedImage; // Update the selected image
-//                       });
-//                     }
-//                   },
-//                   child: Container(
-//                     height: 100,
-//                     decoration: BoxDecoration(
-//                       color: Colors.transparent,
-//                       borderRadius: BorderRadius.circular(12),
-//                       border: Border.all(width: 1, color: Colors.orange),
-//                     ),
-//                     child: _imageFile == null
-//                         ? Center(
-//                       child: Icon(
-//                         Icons.add_a_photo_outlined,
-//                         color: Colors.black38,
-//                       ),
-//                     )
-//                         : ClipRRect(
-//                       borderRadius: BorderRadius.circular(12),
-//                       child: Image.file(
-//                         _imageFile!,
-//                         fit: BoxFit.cover,
-//                         width: double.infinity,
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//                 SizedBox(height: 30),
-//                 GestureDetector(
-//                   onTap: () {
-//                     complainPopUp(id, _textController.text, _imageFile); // Pass the selected image file
-//                     Navigator.pop(context);
-//                   },
-//                   child: ButtonWidget(
-//                     text: "Send",
-//                     color: Color(0xffFF9228),
-//                     textColor: Colors.white,
-//                     width: 100,
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         );
-//       });
-//     },
-//   );
-// }
-
-// void complainPopUp(String id, String message,String imageFile) async {
-//   try {
-//     SharedPreferences prefs = await SharedPreferences.getInstance();
-//     if (prefs != null) {
-//              var usertoken = prefs.getString('token');
-//              if (usertoken != null) {
-//              final Uri uri =
-//              Uri.parse("https://madadguru.webkype.net/api/addComplain");
-//              final response = await http.post(
-//              uri,
-//              headers: {
-//               'Authorization': 'Bearer $usertoken',},
-//               body: {
-//             "category_id": id,
-//             "message": message,
-//                "image": imageFile,
-//           },
-//         );
-//         if (response.statusCode == 200) {
-//           print('ResponseaddComplain: ${response.body}');
-//
-//           var Data = jsonDecode(response.body);
-//           if (Data['status'] == 200 && Data['success'] == true) {
-//             print(
-//                 'ResponseaddComplain sent successfully: ${Data['message']}');
-//           } else {
-//             print('Failed to send ResponseaddComplain: ${Data['message']}');
-//           }
-//         } else {
-//           print(
-//               'API request failed with status code: ${response.statusCode}');
-//         }
-//       } else {
-//         print('No token found in SharedPreferences.');
-//       }
-//     } else {
-//       print('SharedPreferences is null.');
-//     }
-//   } catch (error) {
-//     print('Error: $error');
-//   }
-// }

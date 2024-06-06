@@ -33,6 +33,10 @@ class _SpiritualScreenState extends State<SpiritualScreen> {
     });
   }
 
+  Color getColorForItem(String item) {
+    return selectedOptions.contains(item) ? Colors.orange : Colors.blue.shade900;
+  }
+
   List<String> textList = [
     "#Meditation",
     "#Gratitude",
@@ -199,28 +203,23 @@ class _SpiritualScreenState extends State<SpiritualScreen> {
             },
           );
           if (response.statusCode == 200) {
-            print('option: ${response.body}');
+            // print('option: ${response.body}');
             var Data = jsonDecode(response.body);
             if (Data['status'] == 200 && Data['success'] == true) {
-              print('option sent successfully: ${Data['message']}');
-            } else {
-              print('Failed to send option: ${Data['message']}');
+              // print('option sent successfully: ${Data['message']}');
             }
           } else {
             print(
                 'API request failed with status code: ${response.statusCode}');
           }
-        } else {
-          print('No token found ');
         }
       } else {
         print('SharedPreferences is null.');
       }
-    } catch (error) {
+       } catch (error) {
       print('Error: $error');
+     }
     }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -310,7 +309,8 @@ class _SpiritualScreenState extends State<SpiritualScreen> {
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        color: Color(0xffFBCD96)),
+                        color: Color(0xffFBCD96),
+                       ),
                     child: Center(
                       child: Text(
                         'Submit',
@@ -447,8 +447,8 @@ class _SpiritualScreenState extends State<SpiritualScreen> {
                     ),
                   );
                 });
-  }
-  void _ShowDialogueVolunteer(BuildContext context) {
+         }
+    void _ShowDialogueVolunteer(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -495,11 +495,11 @@ class _SpiritualScreenState extends State<SpiritualScreen> {
                               print("Item tapped: $item");
                               setState(() {
                                 toggleOption(item);
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 5, right: 5.0),
-                              child: Center(
+                                    });
+                                },
+                              child: Padding(
+                               padding: const EdgeInsets.only(left: 5, right: 5.0),
+                               child: Center(
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
@@ -535,12 +535,12 @@ class _SpiritualScreenState extends State<SpiritualScreen> {
                   onTap: () async {
                     sendSelectedAPI(value);
                     Navigator.pop(context);
+                    selectedOptions.clear();
                     await fetchData();
-                  },
-
-                  child: Card(
+                    },
+                    child: Card(
                     elevation: 2,
-                    child: ButtonWidget(
+                     child: ButtonWidget(
                       text: "Send",
                       color: Color(0xffFBCD96),
                       textColor: Colors.orange,
@@ -555,9 +555,8 @@ class _SpiritualScreenState extends State<SpiritualScreen> {
       },
     );
   }
-  Color getColorForItem(String item) {
-    return selectedOptions.contains(item) ? Colors.orange : Colors.blue.shade900;
-  }
+
+}
   // void _ShowDialogueVolunteer(BuildContext context) {
   //   showDialog(
   //       context: context,
@@ -700,7 +699,7 @@ class _SpiritualScreenState extends State<SpiritualScreen> {
   //         );
   //       });
   // }
-}
+
 
 // Padding(
 //  padding: const EdgeInsets.all(8.0),

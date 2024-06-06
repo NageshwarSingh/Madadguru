@@ -164,24 +164,7 @@ int Count=0;
         // top: 10,
       ),
       child: Column(children: [
-        // SizedBox(
-        //   height: 10,
-        // ),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.start,
-        //   children: [
-        //     Text(
-        //       'Madadguru',
-        //       style: GoogleFonts.roboto(
-        //           fontSize: 16,
-        //           fontWeight: FontWeight.bold,
-        //           color: Colors.black),
-        //     ),
-        //   ],
-        // ),
-        // SizedBox(
-        //   height: 10,
-        // ),
+
         _buildMainTabBar(),
         Expanded(child: _buildMainTabBarView()),
       ]),

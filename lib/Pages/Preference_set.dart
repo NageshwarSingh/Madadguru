@@ -11,17 +11,15 @@ class PreferenceSet extends StatefulWidget {
     super.key,
     required this.device,
   });
-
   @override
   State<PreferenceSet> createState() => _PreferenceSetState();
-}
+  }
+  class _PreferenceSetState extends State<PreferenceSet> {
 
-class _PreferenceSetState extends State<PreferenceSet> {
   List switchStates = [];
   String iwant ="";
-bool isLoading=false;
+  bool isLoading=false;
   Map<String, dynamic> Data = {};
-
     List<dynamic> Data2 = [];
     Future<void> sendSelectedAPI(String value) async {
       setState(() {
@@ -39,7 +37,7 @@ bool isLoading=false;
           },
           body: {
             "i_want": iwant,
-          },
+            },
           );
         print(" response${response}");
         if (response.statusCode == 200) {
@@ -126,8 +124,6 @@ bool isLoading=false;
       }
     }
   }
-
-
   void updateIWant() {
     List<String> selectedItems = [];
     for (int i = 0; i < switchStates.length; i++) {
@@ -231,7 +227,7 @@ bool isLoading=false;
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
+                   Row(
                     children: [
                       Image.asset('assets/images/icon.png'),
                       Text(
@@ -248,8 +244,8 @@ bool isLoading=false;
                       setState(() {
                         switchStates[index] = value;
                       });
-                      updateIWant();
-                    },
+                        updateIWant();
+                          },
                     // value: switchStates[index],
                     // onChanged: (value) {
                     //   setState(() {

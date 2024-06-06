@@ -877,13 +877,13 @@ class PublicPostProfile extends StatefulWidget {
                   TextField(
                     maxLines: 5,
                     controller: _textController,
-                    decoration: InputDecoration(
+                     decoration: InputDecoration(
                       hintText: 'Text here....',
                       labelStyle: TextStyle(color: Colors.orange),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(color: Colors.orange),
-                      ),
+                        ),
                       disabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(color: Colors.orange),
@@ -901,7 +901,7 @@ class PublicPostProfile extends StatefulWidget {
                     },
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 15,
                   ),
                   GestureDetector(
                     onTap: () async {

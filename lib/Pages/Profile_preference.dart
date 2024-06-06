@@ -22,7 +22,6 @@ class _ProfilePreferenceState extends State<ProfilePreference> {
   String needhelpin = "";
   List<dynamic> department = [];
   List<Map<String, dynamic>> DepartmentList = [];
-
   Future<void> ProfileSelectedAPI(String value) async {
     setState(() {
       isLoading = true;

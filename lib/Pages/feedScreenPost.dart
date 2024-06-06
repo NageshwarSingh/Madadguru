@@ -290,58 +290,61 @@ class _feedScreenPostState extends State<feedScreenPost> {
                               height: 3,
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 5, bottom: 5),
-                              child:
-                              // Container(
-                              //   color: Colors.black,
-                              //   height: 220,
-                              //   width: MediaQuery.of(context).size.width,
-                              //   child: Image.network(
-                              //     (jsonData["post_images"][0]["image"] != null)
-                              //         ? jsonData["post_images"][0]["image"]
-                              //         : 'Name not available',
-                              //     fit: BoxFit.contain,
-                              //   ),
-                              // ),
-                              Container(
-                                color: Colors.black,
-                                height: 220,
-                                width: MediaQuery.of(context).size.width,
-                                child: PageView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: jsonData['post_images'].length,
-                                  itemBuilder: (context, index) {
-                                    String imageUrl = jsonData['post_images'][index]['image'];
-                                    return InkWell(
-                                      onTap: () => Navigator.push(
-                                        context,
-                                           MaterialPageRoute(
+                                padding:
+                                    const EdgeInsets.only(top: 5, bottom: 5),
+                                child:
+                                    // Container(
+                                    //   color: Colors.black,
+                                    //   height: 220,
+                                    //   width: MediaQuery.of(context).size.width,
+                                    //   child: Image.network(
+                                    //     (jsonData["post_images"][0]["image"] != null)
+                                    //         ? jsonData["post_images"][0]["image"]
+                                    //         : 'Name not available',
+                                    //     fit: BoxFit.contain,
+                                    //   ),
+                                    // ),
+                                    Container(
+                                  color: Colors.black,
+                                  height: 220,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: PageView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: jsonData['post_images'].length,
+                                    itemBuilder: (context, index) {
+                                      String imageUrl = jsonData['post_images']
+                                          [index]['image'];
+                                      return InkWell(
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
                                             builder: (context) => photoView(
-                                            index: index,
-                                            id: jsonData['post_images'][index]['id'],
-                                            image: jsonData['post_images'],
-                                            // image: galleryImages,
+                                              index: index,
+                                              id: jsonData['post_images'][index]
+                                                  ['id'],
+                                              image: jsonData['post_images'],
+                                              // image: galleryImages,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      child: Container(
-                                        margin: EdgeInsets.only(right: 8.0),
-                                        child: Image.network(
-                                          imageUrl,
-                                          fit: BoxFit.contain,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return Icon(
-                                              Icons.person,
-                                              color: Colors.grey[400],
-                                            );
-                                          },
+                                        child: Container(
+                                          margin: EdgeInsets.only(right: 8.0),
+                                          child: Image.network(
+                                            imageUrl,
+                                            fit: BoxFit.contain,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Icon(
+                                                Icons.person,
+                                                color: Colors.grey[400],
+                                              );
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              )
-                            ),
+                                      );
+                                    },
+                                  ),
+                                )),
                             Padding(
                               padding:
                                   const EdgeInsets.only(left: 10, right: 10),
@@ -909,8 +912,8 @@ class _feedScreenPostState extends State<feedScreenPost> {
                                                                     ],
                                                                   );
                                                                 });
-                                                          },
-                                                          child: Image.asset(
+                                                              },
+                                                              child: Image.asset(
                                                             'assets/images/whats.png',
                                                             height: 50,
                                                             width: 50,
@@ -997,7 +1000,7 @@ class _feedScreenPostState extends State<feedScreenPost> {
                     onChanged: (value) {},
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 15,
                   ),
                   GestureDetector(
                     onTap: () async {

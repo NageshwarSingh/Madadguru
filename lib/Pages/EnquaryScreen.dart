@@ -156,37 +156,39 @@ class EnquaryScreen extends StatefulWidget {
                                             fontSize: 12,
                                             fontWeight: FontWeight.w400,
                                           ),
+
                                         ),
-                                        // Image.network(
+
+                                          // Image.network(
                                         //   post['image'] ??
                                         //       'Not available image',
                                         //   height: 30,
                                         //   width: 30,
                                         // ),
-                                      ],
-                                    ),
-                                    subtitle: Row(
-                                      mainAxisAlignment:
+
+                                        ],
+                                         ),
+                                          subtitle: Row(
+                                          mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          post['created_at'] ??
-                                              'Date not available',
-                                          style: GoogleFonts.roboto(
-                                            color: Colors.black54,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            _downloadImage(context,post['image'] ?? '');
-                                          },
-                                          child: Icon(Icons.download_outlined),
-                                        ),
-                                      ],
+                                          children: [
+                                                Text(
+                                                post['created_at'] ??
+                                                'Date not available',
+                                                 style: GoogleFonts.roboto(
+                                                 color: Colors.black54,
+                                                 fontSize: 12,
+                                                 fontWeight: FontWeight.w400,
+                                                ),
+                                                ),
+                                               GestureDetector(
+                                               onTap: () {
+                                               _downloadImage(context,post['image'] ?? '');
+                                               },
+                                               child: Icon(Icons.download_outlined),),
+                                          ],
+                                     ),
                                     ),
-                                  ),
                                 ],
                               ),
                             ),
@@ -195,8 +197,8 @@ class EnquaryScreen extends StatefulWidget {
                       ),
                     ],
                   ),
-      ),
-    );
+              ),
+        );
   }
 }
 
@@ -222,9 +224,11 @@ void _downloadImage(BuildContext context,String imageUrl) async {
     }
   } catch (e) {
     print('Error downloading image: $e');
+    }
   }
-}
-//
+
+
+     //
 // void _downloadImage(String imageUrl) async {
 //   try {
 //     var response = await http.get(Uri.parse(imageUrl));

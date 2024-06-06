@@ -336,22 +336,22 @@ class otpScreen extends StatefulWidget {
         fontSize: 20,
         color: Color.fromRGBO(30, 60, 87, 1),
         fontWeight: FontWeight.w600),
-    decoration: BoxDecoration(
-      border: Border.all(color: Color.fromRGBO(234, 239, 243, 1)),
-      borderRadius: BorderRadius.circular(20),
+        decoration: BoxDecoration(
+        border: Border.all(color: Colors.orange, width: 1),
+      borderRadius: BorderRadius.circular(22),
     ),
   );
 
   late PinTheme focusedPinTheme = defaultPinTheme.copyDecorationWith(
-    border: Border.all(color: Colors.orange, width: 1),
-    borderRadius: BorderRadius.circular(8),
+    border: Border.all(color: Colors.blue.shade700),
+    borderRadius: BorderRadius.circular(6),
   );
 
-  late PinTheme submittedPinTheme = defaultPinTheme.copyWith(
-    decoration: defaultPinTheme.decoration?.copyWith(
-      color: Color.fromRGBO(234, 239, 246, 1),
+    late PinTheme submittedPinTheme = defaultPinTheme.copyWith(
+     decoration: defaultPinTheme.decoration?.copyWith(
+      color: Colors.white24,
     ),
-  );
+    );
 
   @override
   Widget build(BuildContext context) {

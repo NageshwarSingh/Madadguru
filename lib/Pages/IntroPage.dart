@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_slider/source/presentation/pages/introduction_slider.dart';
 import 'package:introduction_slider/source/presentation/widgets/buttons.dart';
@@ -7,41 +8,61 @@ import 'package:introduction_slider/source/presentation/widgets/introduction_sli
 import 'package:madadguru/Allwidgets/background_screen.dart';
 import 'Login.dart';
 
-  class IntroSliderScreen extends StatefulWidget {
+class IntroSliderScreen extends StatefulWidget {
   final String device;
   const IntroSliderScreen({super.key, required this.device});
   @override
   State<IntroSliderScreen> createState() => _IntroSliderScreenState();
-  }
-  class _IntroSliderScreenState extends State<IntroSliderScreen> {
+}
+
+class _IntroSliderScreenState extends State<IntroSliderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
-        children:[
+        children: [
           Background(),
-           IntroductionSlider(
+          IntroductionSlider(
             items: [
-                   IntroductionSliderItem(
-                     title: Text(
-                  "Community Help",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 25,
-                    color: const Color(0xFFEC7224),
-                    ),
-                    ),
-                    logo: Padding(
-                    padding:EdgeInsets.only(top: 20  , bottom: 10), child: Stack(clipBehavior: Clip.none, children: [
-                       Padding(
+              IntroductionSliderItem(
+                title: SizedBox(
+                  height: 70,
+                  child: AnimatedTextKit(
+                    animatedTexts: [
+                      ScaleAnimatedText(
+                        'Community Help',
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 25,
+                          color: const Color(0xFFEC7224),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                //    Text(
+                // "Community Help",
+                // textAlign: TextAlign.center,
+                // style:
+                // TextStyle(
+                //   fontWeight: FontWeight.w500,
+                //   fontSize: 25,
+                //   color: const Color(0xFFEC7224),
+                //   ),
+                //   ),
+
+                logo: Padding(
+                  padding: EdgeInsets.only(top: 20, bottom: 10),
+                  child: Stack(clipBehavior: Clip.none, children: [
+                    Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Image.asset(
                         "assets/images/enjoy.png",
                       ),
-                      ),
-                      Positioned(
+                    ),
+                    Positioned(
                       right: 10,
                       top: -MediaQuery.of(context).size.height / 7,
                       child: Container(
@@ -72,15 +93,30 @@ import 'Login.dart';
                 backgroundColor: Colors.transparent,
               ),
               IntroductionSliderItem(
-                title: Text(
-                  "Help In Crises",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 25,
-                    color: const Color(0xFFEC7224),
+                title: SizedBox(
+                  height: 70,
+                  child: AnimatedTextKit(
+                    animatedTexts: [
+                      ScaleAnimatedText(
+                        'Help In Crises',
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 25,
+                          color: const Color(0xFFEC7224),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                // Text(
+                //   "Help In Crises",
+                //   textAlign: TextAlign.center,
+                //   style: TextStyle(
+                //     fontWeight: FontWeight.w500,
+                //     fontSize: 25,
+                //     color: const Color(0xFFEC7224),
+                //   ),
+                // ),
                 logo: Padding(
                   padding: const EdgeInsets.only(top: 40, bottom: 90),
                   child: Stack(clipBehavior: Clip.none, children: [
@@ -116,15 +152,30 @@ import 'Login.dart';
                 backgroundColor: Colors.transparent,
               ),
               IntroductionSliderItem(
-                  title: Text(
-                  "Legal Help & advice",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 25,
-                    color: const Color(0xFFEC7224),
+                title: SizedBox(
+                  height: 70,
+                  child: AnimatedTextKit(
+                    animatedTexts: [
+                      ScaleAnimatedText(
+                        'Legal Help & advice',
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 25,
+                          color: const Color(0xFFEC7224),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                //   Text(
+                //   "Legal Help & advice",
+                //   textAlign: TextAlign.center,
+                //   style: TextStyle(
+                //     fontWeight: FontWeight.w500,
+                //     fontSize: 25,
+                //     color: const Color(0xFFEC7224),
+                //   ),
+                // ),
                 logo: Padding(
                   padding: const EdgeInsets.only(top: 40, bottom: 110),
                   child: Column(
@@ -145,10 +196,10 @@ import 'Login.dart';
                             width: 180,
                             decoration: const BoxDecoration(
                               image: DecorationImage(
-                                  image: AssetImage(
-                                      "assets/images/rectangle.png"),
-                                       ),
-                                    ),
+                                image:
+                                    AssetImage("assets/images/rectangle.png"),
+                              ),
+                            ),
                             child: Text(
                               "Helping Legal",
                               textAlign: TextAlign.center,
@@ -206,7 +257,7 @@ import 'Login.dart';
               unselectedColor: Color(0x80EC7224),
             ),
             showStatusBar: true,
-                     ),
+          ),
         ],
       ),
     );
